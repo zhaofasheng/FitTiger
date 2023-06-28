@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>questions</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Why use Vox？</string>
+			<key>answers</key>
+			<array>
+				<string>Better listen to my heart</string>
+				<string>Better examine my thoughts</string>
+				<string>Just curious</string>
+			</array>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>How do you want Vox help you?</string>
+			<key>answers</key>
+			<array>
+				<string>Record my feelings</string>
+				<string>Record my ideas</string>
+				<string>Capture the happiness in life</string>
+			</array>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>In Vox I want to encounter:</string>
+			<key>answers</key>
+			<array>
+				<string>Deep soul</string>
+				<string>Deep thinking</string>
+				<string>Humour and stories</string>
+			</array>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>In Vox I hate most in talking:</string>
+			<key>answers</key>
+			<array>
+				<string>Insincerity</string>
+				<string>Without logic</string>
+				<string>Over enthusiasm</string>
+			</array>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>In Vox I value most in talking:</string>
+			<key>answers</key>
+			<array>
+				<string>Sincerity</string>
+				<string>Logic and clear</string>
+				<string>Funny and comfortable</string>
+			</array>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>In Vox I want to record:</string>
+			<key>answers</key>
+			<array>
+				<string>My inner world</string>
+				<string>My thoughts</string>
+				<string>My dream</string>
+			</array>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>In Vox I want to hear most：</string>
+			<key>answers</key>
+			<array>
+				<string>“I know, I’ve been there”</string>
+				<string>“Agree, and…”</string>
+				<string>“I got it”</string>
+			</array>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>In Vox I want to see most:</string>
+			<key>answers</key>
+			<array>
+				<string>How people face pain</string>
+				<string>People’s insights </string>
+				<string>People’s stories</string>
+			</array>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>After one year，I want to become:</string>
+			<key>answers</key>
+			<array>
+				<string>More pure</string>
+				<string>Deeper</string>
+				<string>More peaceful</string>
+			</array>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>After one year，I want to achieve in Vox:</string>
+			<key>answers</key>
+			<array>
+				<string>A friend to share pain</string>
+				<string>A friend to talk to</string>
+				<string>A friend who gets me</string>
+			</array>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>I feel myself:</string>
+			<key>answers</key>
+			<array>
+				<string>Quite social fear</string>
+				<string>Not social fear</string>
+			</array>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>I feel myself:</string>
+			<key>answers</key>
+			<array>
+				<string>Imaginative, mostly unrealistic</string>
+				<string>Imaginative, mostly realistic</string>
+			</array>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>I feel myself:</string>
+			<key>answers</key>
+			<array>
+				<string>Mostly cold-blooded</string>
+				<string>Mostly not cold-blooded</string>
+			</array>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>I feel myself:</string>
+			<key>answers</key>
+			<array>
+				<string>Won’t change even if I know I&apos;m wrong</string>
+				<string>Probably will accept what makes sense</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

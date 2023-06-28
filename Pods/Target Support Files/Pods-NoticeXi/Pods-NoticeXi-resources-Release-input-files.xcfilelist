@@ -1,0 +1,12 @@
+${PODS_ROOT}/Target Support Files/Pods-NoticeXi/Pods-NoticeXi-resources.sh
+${PODS_ROOT}/AlipaySDK-iOS/AlipaySDK.bundle
+${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle
+${PODS_ROOT}/SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle
+${PODS_CONFIGURATION_BUILD_DIR}/TUICallKit/TUICallingKitBundle.bundle
+${PODS_ROOT}/TUICore/TUICore/Resources/TUICore.bundle
+${PODS_ROOT}/TUICore/TUICore/Resources/TUICoreTheme.bundle
+${PODS_ROOT}/TUICore/TUICore/Resources/TUICoreTheme_Minimalist.bundle
+${PODS_ROOT}/TUICore/TUICore/Resources/TUIKitLocalizable.bundle
+${PODS_ROOT}/mob_sharesdk/SDK/ShareSDK/Support/Required/ShareSDK.bundle
+${PODS_ROOT}/mob_sharesdk/SDK/ShareSDK/Support/PlatformSDK/SinaWeiboSDK/WeiboSDK.bundle
+${PODS_ROOT}/mob_sharesdk/SDK/ShareSDK/Support/Optional/ShareSDKUI.bundle

@@ -1,0 +1,192 @@
+//
+//  PrefixHeader.pch
+//  NoticeXi
+//
+//  Created by li lei on 2018/10/18.
+//  Copyright © 2018年 zhaoxiaoer. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+/*****************  屏幕适配  ******************/
+#define DR_SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
+#define DR_SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
+#define iphone6p ([UIScreen mainScreen].bounds.size.width == 763)
+#define iphone6 ([UIScreen mainScreen].bounds.size.width == 667)
+#define iphone5 ([UIScreen mainScreen].bounds.size.width == 568)
+#define iphone4 ([UIScreen mainScreen].bounds.size.width == 480)
+#define NAVBAR_TRANSLATION_POINT 0
+
+#define IPHONE_X \
+({BOOL isPhoneX = NO;\
+if (@available(iOS 11.0, *)) {\
+isPhoneX = [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bottom > 0.0;\
+}\
+(isPhoneX);})
+
+
+// 状态栏高度
+#define STATUS_BAR_HEIGHT (IPHONE_X ? 44.0 : 20.0)
+// 导航栏高度
+#define NAVIGATION_BAR_HEIGHT (IPHONE_X ? 88.0 : 64.0)
+
+// tabBar高度
+#define TAB_BAR_HEIGHT (IPHONE_X ? 83.0 : 49.0)
+// 底部高度
+#define BOTTOM_HEIGHT (IPHONE_X ? 34.f : 0.f)
+
+#define ISIPHONEXORLATER (IPHONE_X ? 1 : 0)
+
+#define RGBColor(r, g, b) [UIColor rgbWithRed:(r) green:(g) blue:(b)]
+//通过十六进制获取颜色
+#define HEXColor(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+//字体大小
+#define ELEVENTEXTFONTSIZE [UIFont systemFontOfSize:11]
+#define TWOTEXTFONTSIZE [UIFont systemFontOfSize:12]
+#define THRETEENTEXTFONTSIZE [UIFont systemFontOfSize:13]
+#define FOURTHTEENTEXTFONTSIZE [UIFont systemFontOfSize:14]
+#define FIFTHTEENTEXTFONTSIZE [UIFont systemFontOfSize:15]
+#define SIXTEENTEXTFONTSIZE [UIFont systemFontOfSize:16]
+#define SEVENTEENTEXTFONTSIZE [UIFont systemFontOfSize:17]
+#define EIGHTEENTEXTFONTSIZE [UIFont systemFontOfSize:18]
+#define NINETEENTEXTFONTSIZE [UIFont systemFontOfSize:19]
+#define TWOFOURTEXTFONTSIZE [UIFont systemFontOfSize:24]
+#define TWOThretyTEXTFONTSIZE [UIFont systemFontOfSize:23]
+#define FIFTYTEXTFONTSIZE [UIFont systemFontOfSize:51]
+#define XGFontName @"PingFangSC-Regular"
+#define XGBoldFontName @"PingFangSC-Medium"
+#define XGTWOBoldFontSize    [UIFont fontWithName:XGBoldFontName size:12]
+#define XGELEVENBoldFontSize    [UIFont fontWithName:XGBoldFontName size:11]
+#define XGTHREEBoldFontSize    [UIFont fontWithName:XGBoldFontName size:13]
+#define XGFourthBoldFontSize    [UIFont fontWithName:XGBoldFontName size:14]
+#define XGFifthBoldFontSize  [UIFont fontWithName:XGBoldFontName size:15]
+#define XGSIXBoldFontSize  [UIFont fontWithName:XGBoldFontName size:16]
+#define XGEightBoldFontSize    [UIFont fontWithName:XGBoldFontName size:18]
+#define XGSevenBoldFontSize    [UIFont fontWithName:XGBoldFontName size:17]
+#define XGTwentyTwoBoldFontSize    [UIFont fontWithName:XGBoldFontName size:22]
+#define XGTwentyFifBoldFontSize    [UIFont fontWithName:XGBoldFontName size:25]
+#define XGTwentyEigthBoldFontSize    [UIFont fontWithName:XGBoldFontName size:28]
+#define XGTwentySevenBoldFontSize    [UIFont fontWithName:XGBoldFontName size:27]
+#define XGTwentyBoldFontSize    [UIFont fontWithName:XGBoldFontName size:20]
+#define THIRTTYBoldFontSize    [UIFont fontWithName:XGBoldFontName size:30]
+#define THIRTTYSIXBoldFontSize    [UIFont fontWithName:XGBoldFontName size:36]
+//
+#define NOTICECUSTUMEFONT(fontSize) [UIFont fontWithName:@"zihun133hao-mokekubi" size:(fontSize)]
+#define NOTICEHANTIFONT(fontSize) [UIFont fontWithName:@"zihun119hao-tianzhenerfengti" size:(fontSize)]
+//字体颜色
+#define DR_TEXT_DARKCOLOER [UIColor blackColor]
+#define DR_TEXT_GRAYCOLOER [UIColor rgbWithRed:174 green:174 blue:174]
+#define DR_TEXT_MIDDLECOLOER [UIColor rgbWithRed:78 green:78 blue:78]
+
+//获取字体宽高
+#define GET_STRHEIGHT(_str_, _font_, _width_)   [_str_ boundingRectWithSize:CGSizeMake(_width_, 9999999999) options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:_font_]} context:nil].size.height
+#define GET_STRWIDTH(_str_, _font_, _height_)   [_str_ boundingRectWithSize:CGSizeMake(9999999999, _height_) options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:_font_]} context:nil].size.width
+
+//录音最长时间
+#define MAXRECORDTIME 120
+
+//白天背景颜色
+#define WHITEBACKCOLOR @"#FFFFFF"//控制器背景颜色，也是主色调
+#define WHITENAVTITLECOLOR @"#333333"//白间模式文字颜色
+#define WHITEDarkCOLOR @"#999999"//文字颜色
+#define XGGrayDeepColor  RGBA(126, 134, 121, 1)
+#define WHITELINECOLOR @"#EDEDED"//线条颜色
+#define WHITEMAINCOLOR @"#0099E6"//按钮主题是
+#define WHITEBUTTONGRAYCOLOR @"#E4E4E4"//按钮灰色
+#define WHITELISTHEADERVIEW @"#F7F7F7"//列表背景颜色
+#define WHITRECODERCOLOR @"#F3F3F3"//录音背景颜色
+#define WHITEREDCOLOR @"#D12500"//红色文字
+//左侧边距
+#define LEFTSPACE 15
+
+//统一主题是KEY
+#define VSiChatColor @"siliaolayerColor"
+#define VMainTextColor @"MainTextColor"
+#define VDarkTextColor @"DarkTextColor"
+#define VRecodBackColor @"RecodBackColor"
+#define VlineColor @"lineColor"
+#define VlistColor @"listColor"
+#define VBackColor @"BackColor"
+#define VBigLineColor @"bigLineColor"
+#define VSearchBarBackColor @"searchVarBackColor"
+#define VMainThumeColor @"mainThumeColor"
+#define VMainThumeWhiteColor @"whiteColor"
+// 日志
+#ifdef DEBUG
+#define DRLog(FORMAT, ...) fprintf(stderr,"%s:%d\t%s\n",[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String])
+#else
+#define DRLog(...)
+#endif
+
+#define CHOICECARTYPENOTIATION @"choicecarTypeNotificantion"
+#define CHANGEADRESSNOTICENTERPOST @"CHANGEADRESSNOTICENTERPOSVALUE"
+#define DRUpdateUserInfoNotification  @"DRUpdateUserInfoNotification"
+
+//声网appId
+#define SHENGWANGAPPID @"0529fbd7db8645349cb872fb90378587"
+
+#define UIImageNamed(imageName) [[UIImage imageNamed:imageName] imageWithRenderingMode:UIImageRenderingModeAutomatic]
+
+#define Localized(key)  [[NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"appLanguage"]] ofType:@"lproj"]] localizedStringForKey:(key) value:nil table:@"Langaue"]
+
+
+#define GETTEXTWITE(key)  [[NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"appLanguage"]] ofType:@"lproj"]] localizedStringForKey:(key) value:nil table:@"Langaue"]
+
+
+#ifdef __OBJC__
+#import "VBAddStatusInputView.h"
+#import "NoticeShareGroupView.h"
+#import "YYPhotoGroupView.h"
+#import "TZImagePickerController.h"
+#import "LCActionSheet.h"
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <SDWebImage/SDWebImage.h>
+#import <MJExtension/MJExtension.h>
+#import "NoticeAddFriendTools.h"
+#import "NoticeTools.h"
+#import "UIView+YGPulseView.h"
+#import "UITextField+LXPToolbar.h"
+#import "UIColor+Generate.h"
+#import "NoticeSaveModel.h"
+#import "YZC_AlertView.h"
+#import "DRNetWorking.h"
+#import "Masonry.h"
+#import "UIViewController+ToastAndHUD.h"
+#import "MBProgressHUD+Extension.h"
+#import "NoiticePlayerView.h"
+#import "XLAlertView.h"
+#import "NoticeRecoderView.h"
+#import "CoreAnimationEffect.h"
+#import "NoticeFile.h"
+#import "XGUploadDateManager.h"
+#import "NoticeShareView.h"
+#import "CLAnimationView.h"
+#import "NoticeNull.h"
+#import <YYKit/YYImage.h>
+#import <YYKit/YYFrameImage.h>
+#import <YYKit/YYSpriteSheetImage.h>
+#import <YYKit/YYAnimatedImageView.h>
+#import <YYKit/YYImageCoder.h>
+#import <YYKit/YYImageCache.h>
+#import <YYKit/YYWebImageOperation.h>
+#import <YYKit/YYWebImageManager.h>
+#import <YYKit/UIImageView+YYWebImage.h>
+#import <YYKit/UIButton+YYWebImage.h>
+#import <YYKit/MKAnnotationView+YYWebImage.h>
+#import <YYKit/CALayer+YYWebImage.h>
+#import <Bugly/Bugly.h>
+#import "NoticeComTools.h"
+#import "NoticePrivacySetViewController.h"
+#import "NoticePinBiView.h"
+#import "NoticeRecoderMain.h"
+#import "NoticeMJIDModel.h"
+#import "NoticeTostWhtieVoiceView.h"
+#import "TUITool.h"
+#import "UIView+TUIToast.h"
+#endif
+
+//获取主题图片和颜色
+#define GetColorWithName(colorKey) [UIColor getColorWithString:colorKey]
+#define GETUIImageNamed(imageName) [[UIImage imageNamed:[NoticeTools getThemeImageNameWithKey:imageName]] imageWithRenderingMode:UIImageRenderingModeAutomatic]
+#endif /* PrefixHeader_pch */
