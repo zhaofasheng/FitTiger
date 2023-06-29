@@ -70,7 +70,7 @@
         self.chocieImageView.hidden = self.canChoiceMore?NO:YES;
         self.chocieImageView.image = UIImageNamed(!person.isAt?@"Image_agreereg_nomol":@"Image_choiceadd_b");
     }else{
-        self.chocieImageView.hidden = NO;
+        self.chocieImageView.hidden = self.canChoiceMore? NO : YES;
         if(self.identity.intValue==3){
             if(person.identity.intValue == 3){
                 self.chocieImageView.image = UIImageNamed(@"cannotchoicepersong");
