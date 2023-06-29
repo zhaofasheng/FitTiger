@@ -50,11 +50,11 @@ NSString *const AppDelegateReceiveRemoteEventsNotification = @"AppDelegateReceiv
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-    //新版本4月29
+    //新版本4月29下午2.17
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
-        
+    
     // 启动图片延时: 1秒
     [NSThread sleepForTimeInterval:1];
     [NoticeTools changeThemeWith:@"whiteColor"];
