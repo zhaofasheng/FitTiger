@@ -24,6 +24,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    //社团首页列表
     self.view.backgroundColor = [UIColor colorWithHexString:@"#F7F8FC"];
     UIImageView *backImageV = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT-TAB_BAR_HEIGHT)];
     backImageV.image = UIImageNamed(@"groupBackiMG");
