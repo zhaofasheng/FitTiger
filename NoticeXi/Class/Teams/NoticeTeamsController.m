@@ -24,7 +24,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //社团首页列表
+    //社团首页列表 bug修复完成
     self.view.backgroundColor = [UIColor colorWithHexString:@"#F7F8FC"];
     UIImageView *backImageV = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT-TAB_BAR_HEIGHT)];
     backImageV.image = UIImageNamed(@"groupBackiMG");
@@ -33,7 +33,6 @@
     self.titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_WIDTH*212/375)];
     self.titleImageView.image = UIImageNamed(@"grouptitleimg");
 
-    
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,NAVIGATION_BAR_HEIGHT, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT-NAVIGATION_BAR_HEIGHT-TAB_BAR_HEIGHT)];
     _tableView.dataSource = self;
     _tableView.delegate = self;
