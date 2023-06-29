@@ -386,6 +386,9 @@ LITEAV_EXPORT @interface V2TXLivePusherStatistics : NSObject
 /// 【字段含义】音频码率（Kbps）。
 @property(nonatomic, assign) NSUInteger audioBitrate;
 
+/// 【字段含义】从 SDK 到云端的往返延时（ms）
+@property(nonatomic, assign) NSUInteger rtt;
+
 @end
 
 /**

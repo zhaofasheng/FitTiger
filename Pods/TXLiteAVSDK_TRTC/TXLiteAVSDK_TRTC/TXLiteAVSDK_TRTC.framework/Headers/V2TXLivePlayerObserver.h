@@ -148,6 +148,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)onReceiveSeiMessage:(id<V2TXLivePlayer>)player payloadType:(int)payloadType data:(NSData *)data;
 
+/**
+ * 分辨率无缝切换回调
+ *
+ * @note  调用 {@link V2TXLivePlayer} 中的 `switchStream` 切换分辨率，会收到这个回调通知。
+ * @param player 回调该通知的播放器对象。
+ * @param url    切换的播放地址。
+ * @param code   状态码，0：成功，-1：切换超时，-2：切换失败，服务端错误，-3：切换失败，客户端错误。
+ */
+- (void)onStreamSwitched:(id<V2TXLivePlayer>)player url:(NSString *)url code:(NSInteger)code;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -226,6 +226,11 @@ LITEAV_EXPORT @interface TXDeviceManager : NSObject
  * 设置音频路由为扬声器时，声音比较大，不用将手机贴脸也能听清，因此可以实现“免提”的功能。
  */
 - (NSInteger)setAudioRoute:(TXAudioRoute)route;
+
+/**
+ * 1.10 设置摄像头的曝光参数，取值范围从-1到1
+ */
+- (NSInteger)setExposureCompensation:(CGFloat)value;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -296,8 +301,8 @@ LITEAV_EXPORT @interface TXDeviceManager : NSObject
  * 仅支持设置麦克风和扬声器类型，摄像头暂不支持跟随系统默认设备
  * @param type 设备类型，详见 TXMediaDeviceType 定义。
  * @param enable 是否跟随系统默认的音频设备。
- *         - true：跟随。当系统默认音频设备发生改变时，SDK 立即切换音频设备。
- *         - false：不跟随。只有当 SDK 使用的音频设备被移除后或插入新的音频设备为系统默认设备时，SDK 才切换至系统默认的音频设备。
+ *         - true：跟随。当系统默认音频设备发生改变或者有新音频设备插入时，SDK 立即切换音频设备。
+ *         - false：不跟随。当系统默认音频设备发生改变或者有新音频设备插入时，SDK 不会切换音频设备。
  */
 - (NSInteger)enableFollowingDefaultAudioDevice:(TXMediaDeviceType)type enable:(BOOL)enable;
 

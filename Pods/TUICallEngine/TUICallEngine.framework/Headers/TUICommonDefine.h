@@ -98,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface TUINetworkQualityInfo : NSObject 
+@interface TUINetworkQualityInfo : NSObject
 
 @property(nonatomic, copy, nullable) NSString *userId;
 

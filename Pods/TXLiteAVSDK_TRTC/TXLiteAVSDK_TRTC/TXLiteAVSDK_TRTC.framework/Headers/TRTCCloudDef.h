@@ -897,6 +897,21 @@ typedef NS_ENUM(NSUInteger, TRTCPublishMode) {
 
 };
 
+/**
+ * 4.13 加密算法
+ *
+ * 该枚举类型用于媒体流私有加密算法选择。
+ */
+typedef NS_ENUM(NSUInteger, TRTCEncryptionAlgorithm) {
+
+    /// AES GCM 128。
+    TRTCEncryptionAlgorithmAes128Gcm = 0,
+
+    /// AES GCM 256。
+    TRTCEncryptionAlgorithmAes256Gcm = 1,
+
+};
+
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                      TRTC 核心类型定义
@@ -1777,5 +1792,25 @@ LITEAV_EXPORT @interface TRTCStreamMixingConfig : NSObject
 ///【字段含义】指定混合画面的中每一路水印画面的位置、大小、图层等信息。
 ///【推荐取值】该字段是一个 TRTCWatermark 类型的数组，数组中的每一个元素都用来代表每一路水印的信息。
 @property(nonatomic, copy, nullable) NSArray<TRTCWatermark *> *watermarkList;
+
+@end
+
+/**
+ * 5.32 媒体流私有加密配置
+ *
+ * 该配置用于设置媒体流私有加密的算法和密钥。
+ */
+LITEAV_EXPORT @interface TRTCPayloadPrivateEncryptionConfig : NSObject<NSCopying>
+
+///【字段含义】加密算法，默认为 TRTCEncryptionAlgorithmAes128Gcm。
+@property(nonatomic, assign) TRTCEncryptionAlgorithm encryptionAlgorithm;
+
+///【字段含义】加密用密钥，字符串类型。
+///【推荐取值】若加密算法为 TRTCEncryptionAlgorithmAes128Gcm，密匙长度需为 16 字节，若加密算法为 TRTCEncryptionAlgorithmAes256Gcm，密匙长度需为 32 字节。
+@property(nonatomic, copy, nonnull) NSString *encryptionKey;
+
+///【字段含义】盐，加密用初始向量。
+///【推荐取值】需确保填入该参数的数组不为空、不全为 0 且数据长度为 32 字节。
+@property(nonatomic, strong, nonnull) NSData *encryptionSalt;
 
 @end

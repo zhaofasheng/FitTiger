@@ -80,11 +80,29 @@ NS_ASSUME_NONNULL_BEGIN
 + (V2TXLiveCode)enableAudioPlayoutObserver:(BOOL)enable format:(V2TXLiveAudioFrameObserverFormat *)format;
 
 /**
+ * 开启/关闭耳返音频数据的监听回调
+ *
+ * @param enable 是否开启。 【默认值】：false。
+ */
++ (V2TXLiveCode)enableVoiceEarMonitorObserver:(BOOL)enable;
+
+/**
  * 设置 userId
  *
  * @param userId 业务侧自身维护的用户/设备id。
  */
 + (void)setUserId:(NSString *)userId;
+
+/**
+ * 调用实验性 API 接口
+ *
+ * @note  该接口用于调用一些实验性功能。
+ * @param jsonStr 接口及参数描述的 JSON 字符串。
+ * @return 返回值 {@link V2TXLiveCode}。
+ *         - V2TXLIVE_OK: 成功。
+ *         - V2TXLIVE_ERROR_INVALID_PARAMETER: 操作失败，参数非法。
+ */
++ (V2TXLiveCode)callExperimentalAPI:(NSString *)jsonStr;
 
 @end
 
@@ -139,6 +157,20 @@ NS_ASSUME_NONNULL_BEGIN
  * 3. 此接口回调出的是对各路待播放音频数据的混合，但其中并不包含耳返的音频数据。
  */
 - (void)onPlayoutAudioFrame:(V2TXLiveAudioFrame *)frame;
+
+/**
+ * 耳返的音频数据
+ *
+ * 当您设置完音频数据自定义回调之后，SDK 内部会把耳返的音频数据在播放之前以 PCM 格式的形式通过本接口回调给您。
+ * - 此接口回调出的音频时间帧长不固定，格式为 PCM 格式。
+ * - 由时间帧长转化为字节帧长的公式为 `采样率 × 时间帧长 × 声道数 × 采样点位宽`。
+ * - 以 TRTC 默认的音频录制格式 48000 采样率、单声道、16采样点位宽为例，0.02s 的音频数据字节帧长为 `48000 × 0.02s × 1 × 16bit = 15360bit = 1920字节`。
+ * @param frame PCM 格式的音频数据帧。
+ * @note
+ * 1. 请不要在此回调函数中做任何耗时操作，否则会导致声音异常。
+ * 2. 此接口回调出的音频数据是可读写的，也就是说您可以在回调函数中同步修改音频数据，但请保证处理耗时。
+ */
+- (void)onVoiceEarMonitorAudioFrame:(V2TXLiveAudioFrame *)frame;
 
 @end
 

@@ -33,12 +33,29 @@ NS_SWIFT_NAME(onError(code:message:));
  * @param calleeIdList  被叫 ID 列表（被邀请方）
  * @param groupId       群组通话 ID
  * @param callMediaType 通话的媒体类型，比如视频通话、语音通话
+ * @param userData 用户增加的扩展字段,对应主叫端发出邀请时设置的 TUICallDefine.CallParams.userData 字段.
  */
 - (void)onCallReceived:(NSString *)callerId
           calleeIdList:(NSArray<NSString *> *)calleeIdList
                groupId:(NSString * _Nullable)groupId
          callMediaType:(TUICallMediaType)callMediaType
-NS_SWIFT_NAME(onCallReceived(callerId:calleeIdList:groupId:callMediaType:));
+              userData:(NSString * _Nullable)userData
+NS_SWIFT_NAME(onCallReceived(callerId:calleeIdList:groupId:callMediaType:userData:));
+
+/**
+ * 收到通话请求的回调(仅被叫收到)
+ *
+ * @param callerId      主叫 ID（邀请方）
+ * @param calleeIdList  被叫 ID 列表（被邀请方）
+ * @param groupId       群组通话 ID
+ * @param callMediaType 通话的媒体类型，比如视频通话、语音通话
+ */
+- (void)onCallReceived:(NSString *)callerId
+          calleeIdList:(NSArray<NSString *> *)calleeIdList
+               groupId:(NSString * _Nullable)groupId
+         callMediaType:(TUICallMediaType)callMediaType
+NS_SWIFT_NAME(onCallReceived(callerId:calleeIdList:groupId:callMediaType:))
+__attribute__((deprecated("use onCallReceived:calleeIdList:groupId:callMediaType:userData:")));
 
 /**
  * 通话取消的回调

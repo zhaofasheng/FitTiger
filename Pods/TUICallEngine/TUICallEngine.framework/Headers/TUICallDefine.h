@@ -15,7 +15,7 @@ typedef void (^TUICallSucc)(void);
 typedef void (^TUICallFail)(int code, NSString *_Nullable errMsg);
 
 /// TUICallEngine 版本号
-static const NSString * _Nullable TUICALL_VERSION = @"1.5.0.305";
+static const NSString * _Nullable TUICALL_VERSION = @"1.5.1.310";
 
 /// 您当前未购买音视频通话能力套餐，请前往控制台开通免费体验：（https://console.cloud.tencent.com/im/detail）
 /// 或加购正式版：（https://buy.cloud.tencent.com/avc）
@@ -76,6 +76,11 @@ typedef NS_ENUM(NSUInteger, TUICallScene) {
     TUICallSceneSingle,
 };
 
+typedef NS_ENUM(NSInteger, TUICallIOSOfflinePushType) {
+    TUICallIOSOfflinePushTypeAPNs = 0,  // 普通的 APNs 推送
+    TUICallIOSOfflinePushTypeVoIP = 1,  // VoIP 推送
+};
+
 /**
  * 离线推送自定义类
  */
@@ -87,6 +92,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, copy) NSString *desc;
 
+@property(nonatomic, assign) BOOL isDisablePush;
+
+// Default: TUICallIOSOfflinePushTypeAPNs
+@property(nonatomic, assign) TUICallIOSOfflinePushType iOSPushType;
+
 @property(nonatomic, assign) BOOL ignoreIOSBadge;
 
 @property(nonatomic, copy) NSString *iOSSound;
@@ -94,8 +104,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) NSString *AndroidSound;
 
 @property(nonatomic, copy) NSString *AndroidOPPOChannelID;
-/// 0-运营消息,1-系统消息，默认值为：1
+
+@property(nonatomic, copy) NSString *AndroidFCMChannelID;
+
+@property(nonatomic, copy) NSString *AndroidXiaoMiChannelID;
+
 @property(nonatomic, assign) NSInteger AndroidVIVOClassification;
+
+@property(nonatomic, copy) NSString *AndroidHuaWeiCategory;
 
 @end
 
@@ -105,6 +121,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) TUIOfflinePushInfo *offlinePushInfo;
 
 @property(nonatomic, assign) int timeout;
+
+// 扩展字段: 用于在邀请信令中增加扩展信息
+@property(nonatomic, copy) NSString *userData;
 
 @end
 

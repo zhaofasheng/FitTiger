@@ -125,11 +125,11 @@ install_xcframework() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_xcframework "${PODS_ROOT}/TXLiteAVSDK_TRTC/TXLiteAVSDK_TRTC/TXSoundTouch.xcframework" "" "true" "ios-x86_64-simulator/TXSoundTouch.framework" "ios-arm64_armv7/TXSoundTouch.framework"
-  install_xcframework "${PODS_ROOT}/TXLiteAVSDK_TRTC/TXLiteAVSDK_TRTC/TXFFmpeg.xcframework" "" "true" "ios-x86_64-simulator/TXFFmpeg.framework" "ios-arm64_armv7/TXFFmpeg.framework"
+  install_xcframework "${PODS_ROOT}/TXLiteAVSDK_TRTC/TXLiteAVSDK_TRTC/TXFFmpeg.xcframework" "" "true" "ios-arm64_armv7/TXFFmpeg.framework" "ios-x86_64-simulator/TXFFmpeg.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_xcframework "${PODS_ROOT}/TXLiteAVSDK_TRTC/TXLiteAVSDK_TRTC/TXSoundTouch.xcframework" "" "true" "ios-x86_64-simulator/TXSoundTouch.framework" "ios-arm64_armv7/TXSoundTouch.framework"
-  install_xcframework "${PODS_ROOT}/TXLiteAVSDK_TRTC/TXLiteAVSDK_TRTC/TXFFmpeg.xcframework" "" "true" "ios-x86_64-simulator/TXFFmpeg.framework" "ios-arm64_armv7/TXFFmpeg.framework"
+  install_xcframework "${PODS_ROOT}/TXLiteAVSDK_TRTC/TXLiteAVSDK_TRTC/TXFFmpeg.xcframework" "" "true" "ios-arm64_armv7/TXFFmpeg.framework" "ios-x86_64-simulator/TXFFmpeg.framework"
 fi
 
 echo "Artifact list stored at $ARTIFACT_LIST_FILE"

@@ -759,7 +759,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 2. 此接口回调出的音频数据是可读写的，也就是说您可以在回调函数中同步修改音频数据，但请保证处理耗时。
  * 3. 此接口回调出的音频数据已经经过了前处理(ANS、AEC、AGC），但**不包含**背景音、音效、混响等前处理效果，延迟较低。
  */
-- (void)onCapturedRawAudioFrame:(TRTCAudioFrame *)frame;
+- (void)onCapturedAudioFrame:(TRTCAudioFrame *)frame;
 
 /**
  * 本地采集并经过音频模块前处理、音效处理和混 BGM 后的音频数据回调
@@ -775,7 +775,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @note
  * 1. 请不要在此回调函数中做任何耗时操作，由于 SDK 每隔 20ms 就要处理一帧音频数据，如果您的处理时间超过 20ms，就会导致声音异常。
  * 2. 此接口回调出的音频数据是可读写的，也就是说您可以在回调函数中同步修改音频数据，但请保证处理耗时。
- * 3. 此接口回调出的数据已经经过了前处理(ANS、AEC、AGC）、音效和混 BGM 处理，声音的延迟相比于 {@link onCapturedRawAudioFrame} 要高一些。
+ * 3. 此接口回调出的数据已经经过了前处理(ANS、AEC、AGC）、音效和混 BGM 处理，声音的延迟相比于 {@link onCapturedAudioFrame} 要高一些。
  */
 - (void)onLocalProcessedAudioFrame:(TRTCAudioFrame *)frame;
 
@@ -820,6 +820,20 @@ NS_ASSUME_NONNULL_BEGIN
  * 2. 此接口回调出的音频数据不支持修改。
  */
 - (void)onMixedAllAudioFrame:(TRTCAudioFrame *)frame;
+
+/**
+ * 耳返的音频数据
+ *
+ * 当您设置完音频数据自定义回调之后，SDK 内部会把耳返的音频数据在播放之前以 PCM 格式的形式通过本接口回调给您。
+ * - 此接口回调出的音频时间帧长不固定，格式为 PCM 格式。
+ * - 由时间帧长转化为字节帧长的公式为 `采样率 × 时间帧长 × 声道数 × 采样点位宽`。
+ * - 以 TRTC 默认的音频录制格式 48000 采样率、单声道、16采样点位宽为例，0.02s 的音频数据字节帧长为 `48000 × 0.02s × 1 × 16bit = 15360bit = 1920字节`。
+ * @param frame PCM 格式的音频数据帧。
+ * @note
+ * 1. 请不要在此回调函数中做任何耗时操作，否则会导致声音异常。
+ * 2. 此接口回调出的音频数据是可读写的，也就是说您可以在回调函数中同步修改音频数据，但请保证处理耗时。
+ */
+- (void)onVoiceEarMonitorAudioFrame:(TRTCAudioFrame *)frame;
 
 @end
 
