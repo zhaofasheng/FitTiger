@@ -575,12 +575,23 @@
     
     if([message.action isEqualToString:@"memberRemove"] || [message.action isEqualToString:@"memberQuit"]){//移出社团成员
         self.teamModel.member_num = [NSString stringWithFormat:@"%d",self.teamModel.member_num.intValue-1];
+        
         if([chat.to_user_id isEqualToString:[NoticeTools getuserId]]){//被移出的人是自己
             XLAlertView *alerView = [[XLAlertView alloc] initWithTitle:@"你已被移出社团" message:nil cancleBtn:@"知道了"];
             [alerView showXLAlertView];
             [self.navigationController popToRootViewControllerAnimated:YES];
         }else{
             [self.teamChatInputView remvokUserId:chat.to_user_id];
+            for (NoticeTeamChatModel *olM in self.localdataArr) {//判断是否有重复数据
+                if ([olM.fromUserM.userId isEqualToString:chat.to_user_id]) {
+                    olM.fromUserM.member_status = @"2";
+                }
+            }
+            for (NoticeTeamChatModel *olM in self.dataArr) {//判断是否有重复数据
+                if ([olM.fromUserM.userId isEqualToString:chat.to_user_id]) {
+                    olM.fromUserM.member_status = @"2";
+                }
+            }
         }
     }
     

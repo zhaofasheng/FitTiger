@@ -66,6 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *mass_nick_name;
 @property (nonatomic, strong) NSString *level;
+@property (nonatomic, strong) NSString *member_status;
 @end
 
 NS_ASSUME_NONNULL_END

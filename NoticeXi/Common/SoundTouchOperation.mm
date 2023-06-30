@@ -56,15 +56,12 @@
             delete [] samples;
         }
         
-        
         NSMutableData *wavDatas = [[NSMutableData alloc] init];
         NSUInteger fileLength = soundTouchDatas.length;
         void *header = createWaveHeader((int)fileLength, 1, MysoundConfig.sampleRate, 16);
         [wavDatas appendBytes:header length:44];
         [wavDatas appendData:soundTouchDatas];
         
-        
-       
         NSString *savewavfilepath = [self createSavePath];
         DRLog(@"SoundTouch 保存路径 : %@ ",savewavfilepath);
        BOOL isSave = [wavDatas writeToFile:savewavfilepath atomically:YES];
@@ -72,7 +69,6 @@
         if (isSave && !self.isCancelled) {
             [target performSelectorOnMainThread:action withObject:savewavfilepath waitUntilDone:NO];
         }
-    
 }
 
 //创建文件存储路径
@@ -95,7 +91,6 @@
     if (!isExistDic) {
          [[NSFileManager defaultManager] createDirectoryAtPath:wavfilepath withIntermediateDirectories:YES attributes:nil error:nil];
     }
-    
     return writeFilePath;
 }
 
@@ -103,4 +98,8 @@
     NSString *fileName = [NSString stringWithFormat:@"voiceFile%lld",(long long)[NSDate timeIntervalSinceReferenceDate]];
     return fileName;
 }
+
 @end
+       
+
+

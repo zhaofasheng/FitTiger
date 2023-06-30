@@ -425,9 +425,16 @@
 
 //点击头像
 - (void)userInfoTap{
+    
     if (!self.isjoin.boolValue) {
         return;
     }
+    
+    if(self.chatModel.fromUserM.member_status.intValue != 1){
+        [[NoticeTools getTopViewController] showToastWithText:@"对方已不在社团"];
+        return;
+    }
+    
     if(self.clickHeaderBlock){
         self.clickHeaderBlock(YES);
     }
