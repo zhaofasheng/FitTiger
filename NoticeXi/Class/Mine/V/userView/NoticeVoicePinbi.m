@@ -148,7 +148,7 @@
     [[DRNetWorking shareInstance] requestNoNeedLoginWithPath:@"voiceLike" Accept:@"application/vnd.shengxi.v5.5.2+json" isPost:YES parmaer:parm page:0 success:^(NSDictionary *dict, BOOL success) {
         [[NoticeTools getTopViewController] hideHUD];
         if (success) {
-            [[NoticeTools getTopViewController] showToastWithText:@"谢谢你的反馈，对方不会收到通知"];
+            [[NoticeTools getTopViewController] showToastWithText:[NoticeTools chinese:@"谢谢你的反馈，对方不会收到通知" english:@"Got it. The content creator would not receive notification. " japan:@"わかりました。相手は通知を受けません"]];
             [[NSNotificationCenter defaultCenter]postNotificationName:@"NOLIKEVOICENotification" object:self userInfo:@{@"voiceId":self.priModel.voice_id}];
         }
     } fail:^(NSError *error) {
