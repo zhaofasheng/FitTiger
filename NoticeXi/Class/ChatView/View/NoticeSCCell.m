@@ -540,10 +540,12 @@
                          [_sendImageView setImageWithURL:[NSURL URLWithString:[NoticeTools hasChinese:chat.resource_url]] placeholder:GETUIImageNamed(@"img_empty") options:YYWebImageOptionShowNetworkActivity progress:^(NSInteger receivedSize, NSInteger expectedSize) {
                          } transform:nil completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
                              [weakSelf setImageViewFrame:image];
+                             DRLog(@"加载gif图片");
                          }];
                      }else{
                          [_sendImageView sd_setImageWithURL:[NSURL URLWithString:[NoticeTools hasChinese:chat.resource_url]] placeholderImage:GETUIImageNamed(@"img_empty") completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
                              [weakSelf setImageViewFrame:image];
+                             DRLog(@"加载图片");
                          }];
                      }
                  }
@@ -605,7 +607,7 @@
                 }else{
                     _rePlayView.hidden = YES;
                 }
-                
+    
             }else{
                 _rePlayView.hidden = YES;
             }

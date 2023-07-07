@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NoticeBgmHasChoiceShowView : UIView
 @property (nonatomic, assign) BOOL isReedit;
 @property (nonatomic, assign) BOOL isShow;
+@property (nonatomic, assign) BOOL isaddSend;
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) UIImageView *markImageView;
 @property (nonatomic, strong) UIView *nameView;

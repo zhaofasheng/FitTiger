@@ -14,6 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIButton *photoBtn;
 @property (nonatomic, strong) UIButton *topicBtn;
 @property (nonatomic, strong) UIButton *statusBtn;
+@property (nonatomic, strong) UILabel *imgL;
+@property (nonatomic, strong) UILabel *topicL;
+@property (nonatomic, strong) UILabel *bgmL;
+@property (nonatomic, assign) BOOL isSendVoice;
 @property (nonatomic, strong) FSCustomButton *shareButton;
 @end
 

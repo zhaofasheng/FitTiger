@@ -35,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isAdd;//YES  下拉
 @property (nonatomic, assign) BOOL canLoad;
 @property (nonatomic, assign) BOOL isText;
+@property (nonatomic, assign) BOOL isSendVoiceAdd;
 @property (nonatomic, assign) BOOL isGroup;
 @property (nonatomic, assign) BOOL isMove;
 @property (nonatomic,copy) void (^addSuccessBlock)(NoticeZjModel *model);

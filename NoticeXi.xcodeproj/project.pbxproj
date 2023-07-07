@@ -1273,6 +1273,7 @@
 		A45F699A2A2B1C35004A325D /* YYPersonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A45F69962A2B1C34004A325D /* YYPersonItem.m */; };
 		A45F699B2A2B1C35004A325D /* YYAtTextAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = A45F69972A2B1C34004A325D /* YYAtTextAttachment.m */; };
 		A45F69A02A2B1C64004A325D /* YYTextAttachmentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A45F699F2A2B1C64004A325D /* YYTextAttachmentManager.m */; };
+		A476E52B2A57B921001F4E84 /* NoticeSendVoiceTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = A476E52A2A57B921001F4E84 /* NoticeSendVoiceTools.swift */; };
 		A479EF3329E542BE00C9D237 /* NoticerUserShopDetailHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = A479EF3229E542BE00C9D237 /* NoticerUserShopDetailHeaderView.m */; };
 		A47C71A72A3AA8B200B5D5C1 /* NoticeTeamRpelyView.m in Sources */ = {isa = PBXBuildFile; fileRef = A47C71A62A3AA8B200B5D5C1 /* NoticeTeamRpelyView.m */; };
 		A47C71AA2A3ABE6500B5D5C1 /* NoticeUseTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A47C71A82A3ABE6400B5D5C1 /* NoticeUseTextView.m */; };
@@ -3672,6 +3673,7 @@
 		A45F69992A2B1C34004A325D /* YYPersonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYPersonItem.h; sourceTree = "<group>"; };
 		A45F699E2A2B1C63004A325D /* YYTextAttachmentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYTextAttachmentManager.h; sourceTree = "<group>"; };
 		A45F699F2A2B1C64004A325D /* YYTextAttachmentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYTextAttachmentManager.m; sourceTree = "<group>"; };
+		A476E52A2A57B921001F4E84 /* NoticeSendVoiceTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeSendVoiceTools.swift; sourceTree = "<group>"; };
 		A479EF3129E542BE00C9D237 /* NoticerUserShopDetailHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NoticerUserShopDetailHeaderView.h; sourceTree = "<group>"; };
 		A479EF3229E542BE00C9D237 /* NoticerUserShopDetailHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NoticerUserShopDetailHeaderView.m; sourceTree = "<group>"; };
 		A47C71A52A3AA8B200B5D5C1 /* NoticeTeamRpelyView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NoticeTeamRpelyView.h; sourceTree = "<group>"; };
@@ -7400,6 +7402,7 @@
 			children = (
 				A4164A0629C9826C00446CE7 /* CWPopMenu.h */,
 				A4164A1F29C9826C00446CE7 /* CWPopMenu.m */,
+				A476E52A2A57B921001F4E84 /* NoticeSendVoiceTools.swift */,
 				A4164A2929C9826C00446CE7 /* GetColor.h */,
 				A41649FD29C9826B00446CE7 /* GetColor.m */,
 				A4164A2229C9826C00446CE7 /* guanfang.aac */,
@@ -8296,6 +8299,7 @@
 				A4164AC429C9826E00446CE7 /* JXPagerView.m in Sources */,
 				A4164DFE29C9827300446CE7 /* NoticeCenterSetController.m in Sources */,
 				A4164D6029C9827200446CE7 /* NoticeShopGoController.m in Sources */,
+				A476E52B2A57B921001F4E84 /* NoticeSendVoiceTools.swift in Sources */,
 				A4164AA329C9826E00446CE7 /* LGAudioPlayer.m in Sources */,
 				A4164C8429C9827100446CE7 /* NoticeClockTcTag.m in Sources */,
 				A4164CD929C9827100446CE7 /* NoticeCustumButtonInToView.m in Sources */,
@@ -9526,10 +9530,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
 				CODE_SIGN_ENTITLEMENTS = NoticeXi/NoticeXi.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 216;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = NO;
@@ -9566,7 +9569,7 @@
 				MARKETING_VERSION = 5.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gmdoc.xi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = UpAppStore;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRIP_INSTALLED_PRODUCT = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "NoticeXi/Swift/NoticeXi-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -9586,10 +9589,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
 				CODE_SIGN_ENTITLEMENTS = NoticeXi/NoticeXi.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 216;
 				DEFINES_MODULE = NO;
@@ -9626,7 +9628,7 @@
 				MARKETING_VERSION = 5.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gmdoc.xi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = UpAppStore;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRIP_INSTALLED_PRODUCT = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "NoticeXi/Swift/NoticeXi-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;

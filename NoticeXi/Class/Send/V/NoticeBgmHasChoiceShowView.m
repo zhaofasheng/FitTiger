@@ -51,9 +51,17 @@
 - (void)setTitle:(NSString *)title{
     _title = title;
     self.nameL.text = title;
-    self.nameL.frame = CGRectMake(20, 0, GET_STRWIDTH(self.nameL.text, 11, 20), 20);
-    self.nameView.frame = CGRectMake(self.isShow?0: 15, 0, self.nameL.frame.size.width+10+20, 20);
-    self.closeBtn.frame = CGRectMake(CGRectGetMaxX(self.nameView.frame)+12, 0, 20, 20);
+    if(self.isaddSend){
+        self.nameL.font = TWOTEXTFONTSIZE;
+        self.markImageView.frame = CGRectMake(0, 2, 16, 16);
+        self.nameL.frame = CGRectMake(20, 0, GET_STRWIDTH(self.nameL.text, 12, 20), 20);
+        self.nameView.frame = CGRectMake(self.isShow?0: 15, 0, self.nameL.frame.size.width+10+20, 20);
+        self.closeBtn.frame = CGRectMake(CGRectGetMaxX(self.nameView.frame)+12, 0, 20, 20);
+    }else{
+        self.nameL.frame = CGRectMake(20, 0, GET_STRWIDTH(self.nameL.text, 11, 20), 20);
+        self.nameView.frame = CGRectMake(self.isShow?0: 15, 0, self.nameL.frame.size.width+10+20, 20);
+        self.closeBtn.frame = CGRectMake(CGRectGetMaxX(self.nameView.frame)+12, 0, 20, 20);
+    }
 }
 
 

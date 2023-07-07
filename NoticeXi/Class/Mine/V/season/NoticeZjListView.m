@@ -236,6 +236,17 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NoticeZjModel *model = self.dataArr[indexPath.row];
+    if(self.isSendVoiceAdd){
+        if(model.voice_num.intValue >= 100){
+            [[NoticeTools getTopViewController] showToastWithText:@"每个专辑最多只能加入一百个心情哦~"];
+            return;
+        }
+        if(self.addSuccessBlock){
+            self.addSuccessBlock(model);
+        }
+        [self dissMissTap];
+        return;
+    }
     if (self.isMove) {
 
         if (self.delegate && [self.delegate respondsToSelector:@selector(moveToZjId: diaiD:)]) {

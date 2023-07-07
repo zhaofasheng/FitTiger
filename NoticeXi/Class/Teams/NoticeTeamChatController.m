@@ -637,7 +637,6 @@
     }
     
     if (!alerady) {
-        
         [self.localdataArr addObject:chat];
         [self.tableView reloadData];
     }

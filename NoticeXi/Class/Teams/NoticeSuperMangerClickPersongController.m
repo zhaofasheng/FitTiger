@@ -71,6 +71,7 @@
             self.markL.hidden = YES;
         }
     }
+    
     if(self.person){
         [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:_person.avatar_url]];
         self.nickNameL.text = _person.name;
@@ -84,6 +85,7 @@
             self.markL.hidden = YES;
         }
     }
+    
     [self.tableView reloadData];
 }
 

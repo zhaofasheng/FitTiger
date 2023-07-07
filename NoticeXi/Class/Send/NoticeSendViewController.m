@@ -17,6 +17,7 @@
 #import <SDWebImage/UIImage+GIF.h>
 #import <Photos/Photos.h>
 #import "AppDelegate.h"
+#import "NoticeXi-Swift.h"
 #import "NoticeTabbarController.h"
 #import "NoticeSaveVoiceTools.h"
 #import "NoticeCaoGaoController.h"
@@ -37,7 +38,7 @@
 #define Locapaths  @"locapath"
 #define ImageDatas  @"ImageDatas"
 @interface NoticeSendViewController ()<TZImagePickerControllerDelegate,NoticePlayerNumbersDelegate>
-@property (nonatomic, strong) NoticeKeyBordTopView *toolsView;
+@property (nonatomic, strong) NoticeSendVoiceTools*toolsView;
 @property (nonatomic, strong) UIButton *reButton;
 @property (nonatomic, strong) NoiticePlayerView *playerView;
 @property (nonatomic, strong) UIButton *sendBtn;
@@ -70,11 +71,12 @@
 @property (nonatomic, strong) NoticeActShowView *showView;
 @property (nonatomic, strong) NoticeChoiceBgmTypeView *bgmView;
 @property (nonatomic, strong) NoticeBgmHasChoiceShowView *bgmChoiceView;
+@property (nonatomic, strong) NoticeBgmHasChoiceShowView *zjChoiceView;
 @property (nonatomic, strong) NSString *bgmId;
 @property (nonatomic, assign) NSInteger bgmType;
 @property (nonatomic, strong) NSString *bgmName;
 @property (nonatomic, strong) NoticeAudioJoinToAudioModel *audioToAudio;
-
+@property (nonatomic, strong) NSString *albumId;
 @property (nonatomic, strong) UIImageView *clickRecoImageView;
 @property (nonatomic, strong) UIImageView *clickFinishImageView;
 @property (nonatomic, assign) BOOL hasChangeImg;
@@ -196,10 +198,8 @@
         self.moveArr = [NSMutableArray new];
     }
     
-    self.backView = [[UIScrollView alloc] initWithFrame:CGRectMake(20, NAVIGATION_BAR_HEIGHT+10, DR_SCREEN_WIDTH-40, 70)];
-    self.backView.backgroundColor = [UIColor colorWithHexString:@"#FFFFFF"];
-    self.backView.layer.cornerRadius = 10;
-    self.backView.layer.masksToBounds = YES;
+    self.backView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, NAVIGATION_BAR_HEIGHT+10, DR_SCREEN_WIDTH, 70+50)];
+    self.backView.backgroundColor = [UIColor colorWithHexString:@"#F7F8FC"];
     [self.view addSubview:self.backView];
     
     self.view.backgroundColor = [UIColor colorWithHexString:@"#F7F8FC"];
@@ -214,30 +214,15 @@
     longPress.minimumPressDuration = 0.17;
     [dragView addGestureRecognizer:longPress];
     
-    self.toolsView = [[NoticeKeyBordTopView alloc] initWithFrame:CGRectMake(0,self.sendBtn.frame.origin.y-45-8-17-5, DR_SCREEN_WIDTH, 45)];
+    self.toolsView = [[NoticeSendVoiceTools alloc] initWithFrame:CGRectMake(0,DR_SCREEN_HEIGHT-BOTTOM_HEIGHT-50, DR_SCREEN_WIDTH, 50)];
     [self.view addSubview:self.toolsView];
-    [self.toolsView.topicBtn addTarget:self action:@selector(insertClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.toolsView.photoBtn addTarget:self action:@selector(openPhotoClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.toolsView.topicButton addTarget:self action:@selector(insertClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.toolsView.imgButton addTarget:self action:@selector(openPhotoClick) forControlEvents:UIControlEventTouchUpInside];
     [self.toolsView.shareButton addTarget:self action:@selector(typeVClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.toolsView.statusBtn addTarget:self action:@selector(bgmClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.toolsView.statusBtn setBackgroundImage:UIImageNamed((self.isEditVoice || self.isSave)?@"ly_bgmn": @"ly_bgm") forState:UIControlStateNormal];
-    for (int i = 0; i < 3; i++) {
-        UILabel *btnL = [[UILabel alloc] initWithFrame:CGRectMake(10+60*i, CGRectGetMaxY(self.toolsView.frame)+8, 60, 17)];
-        btnL.font = TWOTEXTFONTSIZE;
-        btnL.textAlignment = NSTextAlignmentCenter;
-        btnL.textColor = [UIColor colorWithHexString:@"#5C5F66"];
-        [self.view addSubview:btnL];
-        if (i==0) {
-            btnL.text = [NoticeTools getLocalStrWith:@"group.imgs"];
-        }else if (i == 1){
-            btnL.text = [NoticeTools getLocalStrWith:@"search.topic"];
-           
-        }else if (i == 2){
-            if (self.isEditVoice) {
-                btnL.textColor = [UIColor colorWithHexString:@"#A1A7B3"];
-            }
-            btnL.text = @"BGM";
-        }
+    [self.toolsView.bgmButton addTarget:self action:@selector(bgmClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.toolsView.bgmButton setImage:UIImageNamed((self.isEditVoice || self.isSave)?@"senbgmv_imgn": @"senbgmv_img") forState:UIControlStateNormal];
+    if (self.isEditVoice) {
+        [self.toolsView.bgmButton setTitleColor:[UIColor colorWithHexString:@"#A1A7B3"] forState:UIControlStateNormal];
     }
         
     self.reButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.playerView.frame)+5,self.playerView.frame.origin.y,40, 40)];
@@ -246,13 +231,11 @@
     [self.reButton addTarget:self action:@selector(recodClick) forControlEvents:UIControlEventTouchUpInside];
     [self.backView addSubview:self.reButton];
     
-
     [self.backView addSubview:self.playerView];
     
     if (self.isSave) {
         [self sendSaveData];
     }
-    
     
     if (self.isEditVoice) {//如果是编辑心情
         self.topicName = self.voiceM.topic_name;
@@ -305,6 +288,8 @@
         }else{
             self.status = 1;
         }
+        self.zjChoiceView.hidden = NO;
+        self.zjChoiceView.closeBtn.hidden = YES;
     }
     
     [self setTopicWith];
@@ -312,6 +297,8 @@
     if (self.locaPath) {
         [self recoderSureWithPath:self.locaPath time:self.timeLen musiceId:self.musicId];
     }
+    
+    
 }
 
 - (void)sendSaveData{
@@ -477,16 +464,16 @@
 
 - (void)setOpen:(NSInteger)buttonIndex{
     if (buttonIndex == 1) {
-        self.toolsView.shareButton.frame = CGRectMake(DR_SCREEN_WIDTH-20-66,10, 66, 25);
-        [self.toolsView.shareButton setTitle:[NoticeTools getLocalStrWith:@"n.open"] forState:UIControlStateNormal];
+        self.toolsView.shareButton.frame = CGRectMake(DR_SCREEN_WIDTH-20-66,11, 66, 24);
+        [self.toolsView.shareButton setTitle:[NSString stringWithFormat:@"%@ >",[NoticeTools getLocalStrWith:@"n.open"]] forState:UIControlStateNormal];
         self.status = 1;
     }else if (buttonIndex == 2){
-        self.toolsView.shareButton.frame = CGRectMake(DR_SCREEN_WIDTH-20-90,10, 90, 25);
-        [self.toolsView.shareButton setTitle:[NoticeTools getLocalStrWith:@"n.tpkjian"] forState:UIControlStateNormal];
+        self.toolsView.shareButton.frame = CGRectMake(DR_SCREEN_WIDTH-20-90,11, 90, 24);
+        [self.toolsView.shareButton setTitle:[NSString stringWithFormat:@"%@ >",[NoticeTools getLocalStrWith:@"n.tpkjian"]] forState:UIControlStateNormal];
         self.status = 2;
     }else if (buttonIndex == 3){
-        self.toolsView.shareButton.frame = CGRectMake(DR_SCREEN_WIDTH-20-102,10, 102, 25);
-        [self.toolsView.shareButton setTitle:[NoticeTools getLocalStrWith:@"n.onlyself"] forState:UIControlStateNormal];
+        self.toolsView.shareButton.frame = CGRectMake(DR_SCREEN_WIDTH-20-102,11, 102, 24);
+        [self.toolsView.shareButton setTitle:[NSString stringWithFormat:@"%@ >",[NoticeTools getLocalStrWith:@"n.onlyself"]] forState:UIControlStateNormal];
         self.status = 3;
     }
 }
@@ -554,7 +541,7 @@
                     weakSelf.imageViewS.hidden = YES;
                     [weakSelf refreshUI];
                 }
-                [weakSelf.toolsView.photoBtn setBackgroundImage:UIImageNamed(weakSelf.moveArr.count==3? @"Image_textchoiceimgn":@"Image_textchoiceimg") forState:UIControlStateNormal];
+                [weakSelf.toolsView.imgButton setImage:UIImageNamed(weakSelf.moveArr.count==3? @"senimgv_imgn":@"senimgv_img") forState:UIControlStateNormal];
             }
             
         };
@@ -566,6 +553,7 @@
     if (!_topicView) {
         _topicView = [[NoticeTextTopicView alloc] initWithFrame:CGRectMake(0,(CGRectGetMaxY(self.playerView.frame)+10), DR_SCREEN_WIDTH-40, 20)];
         [self.backView addSubview:_topicView];
+        _topicView.backgroundColor = self.view.backgroundColor;
         _topicView.hidden = YES;
         [_topicView.closeBtn addTarget:self action:@selector(closeTopicClick) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -576,6 +564,7 @@
     if (!_bgmChoiceView) {
         _bgmChoiceView = [[NoticeBgmHasChoiceShowView alloc] initWithFrame:CGRectMake(0, (self.topicView.hidden?CGRectGetMaxY(self.playerView.frame):CGRectGetMaxY(self.topicView.frame))+10, DR_SCREEN_WIDTH-40, 20)];
         [self.backView addSubview:_bgmChoiceView];
+        _bgmChoiceView.backgroundColor = self.view.backgroundColor;
         _bgmChoiceView.isReedit = self.isEditVoice;
         _bgmChoiceView.hidden = YES;
         [_bgmChoiceView.closeBtn addTarget:self action:@selector(closeBgmClick) forControlEvents:UIControlEventTouchUpInside];
@@ -583,6 +572,45 @@
     return _bgmChoiceView;
 }
 
+- (NoticeBgmHasChoiceShowView *)zjChoiceView{
+    if (!_zjChoiceView) {
+        _zjChoiceView = [[NoticeBgmHasChoiceShowView alloc] initWithFrame:CGRectMake(0, DR_SCREEN_HEIGHT-BOTTOM_HEIGHT-50-16-20, DR_SCREEN_WIDTH-40, 20)];
+        [self.view addSubview:_zjChoiceView];
+        _zjChoiceView.isaddSend = YES;
+        _zjChoiceView.nameView.backgroundColor = self.view.backgroundColor;
+        _zjChoiceView.nameL.textColor = [UIColor colorWithHexString:@"#25262E"];
+        _zjChoiceView.backgroundColor = self.view.backgroundColor;
+        _zjChoiceView.closeBtn.hidden = YES;
+        _zjChoiceView.title = @"加入专辑";
+        _zjChoiceView.markImageView.image = UIImageNamed(@"Image_voiczjnoin");
+        [_zjChoiceView.closeBtn addTarget:self action:@selector(closezjClick) forControlEvents:UIControlEventTouchUpInside];
+        _zjChoiceView.nameView.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addToZJ)];
+        [_zjChoiceView.nameView addGestureRecognizer:tap];
+    }
+    return _zjChoiceView;
+}
+
+- (void)addToZJ{
+    __weak typeof(self) weakSelf = self;
+    NoticeZjListView* _listView = [[NoticeZjListView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT)];
+    _listView.isSendVoiceAdd = YES;
+    _listView.addSuccessBlock = ^(NoticeZjModel * _Nonnull model) {
+        weakSelf.albumId = model.albumId;
+        weakSelf.zjChoiceView.isaddSend = YES;
+        weakSelf.zjChoiceView.title = model.album_name;
+        weakSelf.zjChoiceView.closeBtn.hidden = NO;
+        weakSelf.zjChoiceView.markImageView.image = UIImageNamed(@"Image_voiczjnoiny");
+    };
+    [_listView show];
+}
+
+- (void)closezjClick{
+    self.zjChoiceView.title = @"加入专辑";
+    self.zjChoiceView.closeBtn.hidden = YES;
+    self.zjChoiceView.markImageView.image = UIImageNamed(@"Image_voiczjnoin");
+    self.albumId = nil;
+}
 
 - (void)closeBgmClick{
     self.locaPath = self.resourcePath;
@@ -596,10 +624,10 @@
 //刷新UI位置
 - (void)refreshUI{
 
-    self.backView.frame = CGRectMake(20, NAVIGATION_BAR_HEIGHT+10, DR_SCREEN_WIDTH-40, 70 +(self.imageViewS.hidden?0:(DR_SCREEN_WIDTH-70+15)) + (self.topicView.hidden?0:30)+ (self.bgmChoiceView.hidden?0:30));
+    self.backView.frame = CGRectMake(0, NAVIGATION_BAR_HEIGHT+10, DR_SCREEN_WIDTH, 70 +(self.imageViewS.hidden?0:(DR_SCREEN_WIDTH-70+15)) + (self.topicView.hidden?0:30)+ (self.bgmChoiceView.hidden?0:30));
     
     if (self.backView.frame.size.height > (self.toolsView.frame.origin.y-10-15-NAVIGATION_BAR_HEIGHT)) {
-        self.backView.frame = CGRectMake(20, NAVIGATION_BAR_HEIGHT+10, DR_SCREEN_WIDTH-40,self.toolsView.frame.origin.y-10-15-NAVIGATION_BAR_HEIGHT);
+        self.backView.frame = CGRectMake(20, NAVIGATION_BAR_HEIGHT+10, DR_SCREEN_WIDTH,self.toolsView.frame.origin.y-10-15-NAVIGATION_BAR_HEIGHT);
         self.backView.contentSize = CGSizeMake(0, 70 +(self.imageViewS.hidden?0:DR_SCREEN_WIDTH-70+15) + (self.topicView.hidden?0:30));
     }
     
@@ -607,7 +635,7 @@
     self.reButton.frame = CGRectMake(CGRectGetMaxX(self.playerView.frame)+5,self.playerView.frame.origin.y,70, 40);
     self.topicView.frame = CGRectMake(0,(CGRectGetMaxY(self.playerView.frame)+10), DR_SCREEN_WIDTH-40, 20);
     self.bgmChoiceView.frame = CGRectMake(0, (self.topicView.hidden?CGRectGetMaxY(self.playerView.frame):CGRectGetMaxY(self.topicView.frame))+10, DR_SCREEN_WIDTH-40, 20);
-    [self.toolsView.photoBtn setBackgroundImage:UIImageNamed(self.moveArr.count==3? @"Image_textchoiceimgn":@"Image_textchoiceimg") forState:UIControlStateNormal];
+    [self.toolsView.imgButton setImage:UIImageNamed(self.moveArr.count==3? @"senimgv_imgn":@"senimgv_img") forState:UIControlStateNormal];
 }
 
 - (void)recoderSureWithPath:(NSString *)locaPath time:(NSString *)timeLength musiceId:(nonnull NSString *)musicId{
@@ -621,7 +649,6 @@
     _sendBtn.backgroundColor = [UIColor colorWithHexString:@"#0099E6"];
 
 }
-
 
 - (void)setTopicWith{
     if (self.topicName) {
@@ -1023,8 +1050,8 @@
                 }
             }
             
-            if (self.zjId) {
-                [parm setObject:self.zjId forKey:@"albumId"];
+            if (self.albumId) {
+                [parm setObject:self.albumId forKey:@"albumId"];
             }
             
             if (self.bgmId) {
@@ -1100,7 +1127,9 @@
     }];
 }
 
+
 - (void)getWhiteCard:(NSString *)cardId{
+    
     if (!cardId) {
         return;
     }
@@ -1208,19 +1237,19 @@
 - (void)setNav{
 
     self.view.backgroundColor = [UIColor colorWithHexString:@"#F7F8FC"];
-    
+        
     UILabel *titleL = [[UILabel alloc] initWithFrame:CGRectMake(60,STATUS_BAR_HEIGHT, DR_SCREEN_WIDTH-120, NAVIGATION_BAR_HEIGHT-STATUS_BAR_HEIGHT)];
     titleL.font = XGTwentyBoldFontSize;
     titleL.textColor = [UIColor colorWithHexString:@"#25262E"];
-    titleL.text = self.isEditVoice?[NoticeTools getLocalStrWith:@"sendTextt.reSend"]:[NoticeTools getLocalStrWith:@"py.send"];
+    titleL.text = self.isEditVoice?[NoticeTools getLocalStrWith:@"sendTextt.reSend"]:@"";
     titleL.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:titleL];
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(20, DR_SCREEN_HEIGHT-40-BOTTOM_HEIGHT-10, DR_SCREEN_WIDTH-40, 40);
+    btn.frame = CGRectMake(DR_SCREEN_WIDTH-15-66, STATUS_BAR_HEIGHT+(NAVIGATION_BAR_HEIGHT-STATUS_BAR_HEIGHT-28)/2, 66,28);
     [btn setTitle:[NoticeTools getLocalStrWith:@"py.send"] forState:UIControlStateNormal];
-    btn.titleLabel.font = XGEightBoldFontSize;
-    btn.layer.cornerRadius = 40/2;
+    btn.titleLabel.font = TWOTEXTFONTSIZE;
+    btn.layer.cornerRadius = 14;
     btn.layer.masksToBounds = YES;
     [btn addTarget:self action:@selector(sendClick) forControlEvents:UIControlEventTouchUpInside];
     _sendBtn = btn;
@@ -1228,40 +1257,20 @@
     [_sendBtn setTitleColor:[[UIColor colorWithHexString:@"#FFFFFF"] colorWithAlphaComponent:0.5] forState:UIControlStateNormal];
     _sendBtn.backgroundColor = [UIColor colorWithHexString:@"#25262E"];
     
-    UIButton *webBtn = [[UIButton alloc] initWithFrame:CGRectMake(DR_SCREEN_WIDTH-50, STATUS_BAR_HEIGHT,50, NAVIGATION_BAR_HEIGHT-STATUS_BAR_HEIGHT)];
+    UIButton *webBtn = [[UIButton alloc] initWithFrame:CGRectMake(DR_SCREEN_WIDTH-40, DR_SCREEN_HEIGHT-BOTTOM_HEIGHT-50-20-14,20, 20)];
     [webBtn setImage:UIImageNamed(@"ywh_black") forState:UIControlStateNormal];
     [webBtn addTarget:self action:@selector(webClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:webBtn];
     
-    if (self.isLead) {
-        UIButton *closBtn = [[UIButton alloc] initWithFrame:CGRectMake(20, STATUS_BAR_HEIGHT+(NAVIGATION_BAR_HEIGHT-STATUS_BAR_HEIGHT-28)/2, 52, 28)];
-        [closBtn setBackgroundImage:UIImageNamed(@"Image_leaclose") forState:UIControlStateNormal];
-        [closBtn addTarget:self action:@selector(closeClick) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:closBtn];
-    }else{
-
-        UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(3, STATUS_BAR_HEIGHT,50, NAVIGATION_BAR_HEIGHT-STATUS_BAR_HEIGHT)];
-        [backBtn setImage:UIImageNamed(@"Image_blackBack") forState:UIControlStateNormal];
-        [backBtn addTarget:self action:@selector(backToPageAction) forControlEvents:UIControlEventTouchUpInside];
-        if (self.isEditVoice) {
-            [_sendBtn setTitleColor:[[UIColor colorWithHexString:@"#FFFFFF"] colorWithAlphaComponent:1] forState:UIControlStateNormal];
-            _sendBtn.backgroundColor = [UIColor colorWithHexString:@"#0099E6"];
-        }
-        [self.view addSubview:backBtn];
+    UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(3, STATUS_BAR_HEIGHT,50, NAVIGATION_BAR_HEIGHT-STATUS_BAR_HEIGHT)];
+    [backBtn setImage:UIImageNamed(@"Image_blackBack") forState:UIControlStateNormal];
+    [backBtn addTarget:self action:@selector(backToPageAction) forControlEvents:UIControlEventTouchUpInside];
+    if (self.isEditVoice) {
+        [_sendBtn setTitleColor:[[UIColor colorWithHexString:@"#FFFFFF"] colorWithAlphaComponent:1] forState:UIControlStateNormal];
+        _sendBtn.backgroundColor = [UIColor colorWithHexString:@"#0099E6"];
     }
+    [self.view addSubview:backBtn];
     
-}
-
-- (void)closeClick{
-    __weak typeof(self) weakSelf = self;
-     XLAlertView *alerView = [[XLAlertView alloc] initWithTitle:nil message:@"确定放弃任务吗" sureBtn:[NoticeTools getLocalStrWith:@"sure.comgir"] cancleBtn:[NoticeTools getLocalStrWith:@"main.cancel"] right:YES];
-    alerView.resultIndex = ^(NSInteger index) {
-        if (index == 1) {
-            [weakSelf.navigationController popToRootViewControllerAnimated:NO];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTICESTARTRECODERLEADE" object:nil userInfo:@{@"type":@"100"}];
-        }
-    };
-    [alerView showXLAlertView];
 }
 
 - (void)webClick{

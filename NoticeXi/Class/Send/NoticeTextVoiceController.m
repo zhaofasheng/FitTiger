@@ -27,13 +27,15 @@
 #import "NoticeTextTopicView.h"
 #define Locapaths  @"locapath"
 #define ImageDatas  @"ImageDatas"
-
+#import "NoticeXi-Swift.h"
+#import "NoticeSysMeassageTostView.h"
+#import "NoticeBgmHasChoiceShowView.h"
 @interface NoticeTextVoiceController ()<UITextFieldDelegate,UITextViewDelegate,TZImagePickerControllerDelegate,UITableViewDelegate>
-
+@property (nonatomic, strong) NoticeBgmHasChoiceShowView *zjChoiceView;
 @property (nonatomic, strong) UILabel *sendBtn;
 @property (nonatomic, strong) UITextView *textView;
 @property (nonatomic, assign) CGFloat textHeight;
-@property (nonatomic, strong) NoticeKeyBordTopView *toolsView;
+@property (nonatomic, strong) NoticeSendVoiceTools *toolsView;
 @property (nonatomic, strong) NSMutableArray *moveArr;
 @property (nonatomic, strong) NSMutableArray *phassetArr;
 @property (nonatomic, strong) NSString *imageJsonString;
@@ -72,6 +74,7 @@
 @property (nonatomic, strong) NoticeSendStatusView *statusView;
 @property (nonatomic, assign) BOOL hasChangeImg;
 @property (nonatomic, assign) NSInteger oldImgNum;
+@property (nonatomic, strong) NSString *albumId;
 @end
 
 @implementation NoticeTextVoiceController
@@ -108,7 +111,6 @@
     UILabel *titleL = [[UILabel alloc] initWithFrame:CGRectMake(60,STATUS_BAR_HEIGHT, DR_SCREEN_WIDTH-120, NAVIGATION_BAR_HEIGHT-STATUS_BAR_HEIGHT)];
     titleL.font = XGTwentyBoldFontSize;
     titleL.textColor = [UIColor colorWithHexString:@"#25262E"];
-    titleL.text = [NoticeTools getLocalStrWith:@"sendTextt.text"];
     titleL.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:titleL];
     
@@ -116,13 +118,11 @@
         titleL.text = [NoticeTools getLocalStrWith:@"sendTextt.reSend"];
     }
     
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(20,NAVIGATION_BAR_HEIGHT, DR_SCREEN_WIDTH-40,DR_SCREEN_HEIGHT-NAVIGATION_BAR_HEIGHT-50-BOTTOM_HEIGHT-50)];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,NAVIGATION_BAR_HEIGHT, DR_SCREEN_WIDTH,DR_SCREEN_HEIGHT-NAVIGATION_BAR_HEIGHT-50-BOTTOM_HEIGHT-50)];
     [self.view addSubview:self.tableView];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.layer.cornerRadius = 10;
     self.tableView.delegate = self;
-    self.tableView.layer.masksToBounds = YES;
-    self.tableView.backgroundColor = [UIColor colorWithHexString:@"#FFFFFF"];
+    self.tableView.backgroundColor = self.view.backgroundColor;
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.showsHorizontalScrollIndicator = NO;
     
@@ -136,12 +136,12 @@
     _plaL.font = FOURTHTEENTEXTFONTSIZE;
     _plaL.textColor = [UIColor colorWithHexString:@"#A1A7B3"];
     
-    _textView = [[UITextView alloc] initWithFrame:CGRectMake(15,5, DR_SCREEN_WIDTH-30-40,35)];
+    _textView = [[UITextView alloc] initWithFrame:CGRectMake(15,5, DR_SCREEN_WIDTH-30,35)];
     _textView.font = SIXTEENTEXTFONTSIZE;
     _textView.clearsOnInsertion = YES;
     _textView.scrollEnabled = NO;
     _textView.bounces = NO;
-    _textView.backgroundColor = [UIColor colorWithHexString:@"#FFFFFF"];
+    _textView.backgroundColor = self.view.backgroundColor;
     _textView.delegate = self;
     _textView.textColor = [UIColor colorWithHexString:@"#25262E"];
     _textView.tintColor = [UIColor colorWithHexString:@"#0099E6"];
@@ -154,37 +154,33 @@
 
     
     self.statysType = 0;
-    self.toolsView = [[NoticeKeyBordTopView alloc] initWithFrame:CGRectMake(0,CGRectGetMaxY(self.tableView.frame)+20, DR_SCREEN_WIDTH, 45)];
+    self.toolsView = [[NoticeSendVoiceTools alloc] initWithFrame:CGRectMake(0,DR_SCREEN_HEIGHT-BOTTOM_HEIGHT-50, DR_SCREEN_WIDTH, 50)];
+    self.toolsView.backgroundColor = self.view.backgroundColor;
     [self.view addSubview:self.toolsView];
-    [self.toolsView.topicBtn addTarget:self action:@selector(insertClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.toolsView.photoBtn addTarget:self action:@selector(openPhotoClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.toolsView.topicButton addTarget:self action:@selector(insertClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.toolsView.imgButton addTarget:self action:@selector(openPhotoClick) forControlEvents:UIControlEventTouchUpInside];
     [self.toolsView.shareButton addTarget:self action:@selector(needSHareClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.toolsView.bgmButton setTitle:@"状态" forState:UIControlStateNormal];
+    [self.toolsView.bgmButton setImage:UIImageNamed(@"toool_status") forState:UIControlStateNormal];
     if (!self.isReEdit && !self.isSave) {
-        [self.toolsView.statusBtn addTarget:self action:@selector(choiceClick) forControlEvents:UIControlEventTouchUpInside];
+        [self.toolsView.bgmButton addTarget:self action:@selector(choiceClick) forControlEvents:UIControlEventTouchUpInside];
+        self.zjChoiceView.hidden = NO;
+        self.zjChoiceView.closeBtn.hidden = YES;
     }
-    for (int i = 0; i < 3; i++) {
-        UILabel *btnL = [[UILabel alloc] initWithFrame:CGRectMake(10+60*i, CGRectGetMaxY(self.tableView.frame)+20+45+8, 60, 17)];
-        btnL.font = TWOTEXTFONTSIZE;
-        btnL.textAlignment = NSTextAlignmentCenter;
-        btnL.textColor = [UIColor colorWithHexString:@"#5C5F66"];
-        [self.view addSubview:btnL];
-        if (i==0) {
-            btnL.text = [NoticeTools getLocalStrWith:@"group.imgs"];
-        }else if (i == 1){
-            btnL.text = [NoticeTools getLocalStrWith:@"search.topic"];
-           
-        }else if (i == 2){
-            btnL.text = [NoticeTools getLocalStrWith:@"sendTextt.status"];
-            if (self.isReEdit) {
-                btnL.textColor = [UIColor colorWithHexString:@"#A1A7B3"];
-            }
-        }
+    
+    UIButton *webBtn = [[UIButton alloc] initWithFrame:CGRectMake(DR_SCREEN_WIDTH-40, DR_SCREEN_HEIGHT-BOTTOM_HEIGHT-50-20-14,20, 20)];
+    [webBtn setImage:UIImageNamed(@"ywh_black") forState:UIControlStateNormal];
+    [webBtn addTarget:self action:@selector(webClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:webBtn];
+    
+    if (self.isReEdit) {
+        [self.toolsView.bgmButton setTitleColor:[UIColor colorWithHexString:@"#A1A7B3"] forState:UIControlStateNormal];
     }
     
     if (self.isReEdit) {
         
         [self setVoiceOpen:self.voiceM.voiceIdentity.intValue-1];
-        [self.toolsView.statusBtn setBackgroundImage:UIImageNamed(@"toool_statusn") forState:UIControlStateNormal];
+        [self.toolsView.bgmButton setImage:UIImageNamed(@"toool_statusn") forState:UIControlStateNormal];
         if (self.voiceM.title) {
             self.text = [self.voiceM.textContent stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%@\n",self.voiceM.title] withString:@""];
         }else{
@@ -281,11 +277,21 @@
     
 }
 
+- (void)webClick{
+    NoticeSysMeassageTostView *tostV = [[NoticeSysMeassageTostView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT)];
+    NoticeMessage *messM = [[NoticeMessage alloc] init];
+    messM.type = @"19";
+    messM.title = [NoticeTools getLocalStrWith:@"em.sx"];
+    messM.content = [NoticeTools getLocalStrWith:@"em.content"];
+    tostV.message = messM;
+    [tostV showActiveView];
+}
+
 - (void)comeFromSave{
     //缓存进来的
     if (self.isSave) {
         [self setVoiceOpen:self.saveModel.voiceIdentity.intValue-1];
-        [self.toolsView.statusBtn setBackgroundImage:UIImageNamed(@"toool_statusn") forState:UIControlStateNormal];
+        [self.toolsView.bgmButton setBackgroundImage:UIImageNamed(@"toool_statusn") forState:UIControlStateNormal];
         self.text = self.saveModel.textContent;
         
         self.textView.text = self.text;
@@ -435,6 +441,46 @@
                       animated:YES completion:nil];
 }
 
+- (NoticeBgmHasChoiceShowView *)zjChoiceView{
+    if (!_zjChoiceView) {
+        _zjChoiceView = [[NoticeBgmHasChoiceShowView alloc] initWithFrame:CGRectMake(0, DR_SCREEN_HEIGHT-BOTTOM_HEIGHT-50-16-20, DR_SCREEN_WIDTH-40, 20)];
+        [self.view addSubview:_zjChoiceView];
+        _zjChoiceView.isaddSend = YES;
+        _zjChoiceView.nameView.backgroundColor = self.view.backgroundColor;
+        _zjChoiceView.nameL.textColor = [UIColor colorWithHexString:@"#25262E"];
+        _zjChoiceView.backgroundColor = self.view.backgroundColor;
+        _zjChoiceView.closeBtn.hidden = YES;
+        _zjChoiceView.title = @"加入专辑";
+        _zjChoiceView.markImageView.image = UIImageNamed(@"Image_voiczjnoin");
+        [_zjChoiceView.closeBtn addTarget:self action:@selector(closezjClick) forControlEvents:UIControlEventTouchUpInside];
+        _zjChoiceView.nameView.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addToZJ)];
+        [_zjChoiceView.nameView addGestureRecognizer:tap];
+    }
+    return _zjChoiceView;
+}
+
+- (void)addToZJ{
+    __weak typeof(self) weakSelf = self;
+    NoticeZjListView* _listView = [[NoticeZjListView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT)];
+    _listView.isSendVoiceAdd = YES;
+    _listView.addSuccessBlock = ^(NoticeZjModel * _Nonnull model) {
+        weakSelf.albumId = model.albumId;
+        weakSelf.zjChoiceView.isaddSend = YES;
+        weakSelf.zjChoiceView.title = model.album_name;
+        weakSelf.zjChoiceView.closeBtn.hidden = NO;
+        weakSelf.zjChoiceView.markImageView.image = UIImageNamed(@"Image_voiczjnoiny");
+    };
+    [_listView show];
+}
+
+- (void)closezjClick{
+    self.zjChoiceView.title = @"加入专辑";
+    self.zjChoiceView.closeBtn.hidden = YES;
+    self.zjChoiceView.markImageView.image = UIImageNamed(@"Image_voiczjnoin");
+    self.albumId = nil;
+}
+
 - (void)choiceClick{
 
     NoticeSendTextStatusController *ctl = [[NoticeSendTextStatusController alloc] init];
@@ -457,12 +503,12 @@
     self.isFromActivity = NO;
  
     NoticeTopicViewController *ctl = [[NoticeTopicViewController alloc] init];
-    self.toolsView.frame = CGRectMake(0, DR_SCREEN_HEIGHT, DR_SCREEN_HEIGHT, 45);
+    self.toolsView.frame = CGRectMake(0, DR_SCREEN_HEIGHT, DR_SCREEN_HEIGHT, 50);
      __weak typeof(self) weakSelf = self;
     ctl.topicBlock = ^(NoticeTopicModel * _Nonnull topic) {
         weakSelf.hasChangeSave = YES;
         weakSelf.topicM = topic;
-        weakSelf.toolsView.frame = CGRectMake(0, DR_SCREEN_HEIGHT, DR_SCREEN_HEIGHT, 45);
+        weakSelf.toolsView.frame = CGRectMake(0, DR_SCREEN_HEIGHT, DR_SCREEN_HEIGHT, 50);
         if (!topic.topic_id) {
             NSMutableDictionary *parm = [NSMutableDictionary new];
             [parm setObject:topic.topic_name forKey:@"topicName"];
@@ -500,7 +546,7 @@
 - (NoticeSendStatusView *)statusView{
     if (!_statusView) {
         _statusView = [[NoticeSendStatusView alloc] initWithFrame:CGRectMake(0, NAVIGATION_BAR_HEIGHT, DR_SCREEN_WIDTH, 20)];
-        _statusView.backgroundColor = [UIColor colorWithHexString:@""];
+        _statusView.backgroundColor = self.view.backgroundColor;
         _statusView.userInteractionEnabled = YES;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(changeTap)];
         [_statusView addGestureRecognizer:tap];
@@ -531,7 +577,7 @@
                     weakSelf.imageViewS.hidden = YES;
                     [weakSelf keyboardHide];
                 }
-                [weakSelf.toolsView.photoBtn setBackgroundImage:UIImageNamed(weakSelf.moveArr.count==3? @"Image_textchoiceimgn":@"Image_textchoiceimg") forState:UIControlStateNormal];
+                [weakSelf.toolsView.imgButton setImage:UIImageNamed(weakSelf.moveArr.count==3? @"senimgv_imgn":@"senimgv_img") forState:UIControlStateNormal];
             }
             
         };
@@ -543,6 +589,7 @@
     if (!_topicView) {
         _topicView = [[NoticeTextTopicView alloc] initWithFrame:CGRectMake(0,_statusView.hidden?(CGRectGetMaxY(_statusView.frame)+10):(CGRectGetMaxY(self.textView.frame)+10), DR_SCREEN_WIDTH, 20)];
         [self.tableView addSubview:_topicView];
+        _topicView.backgroundColor = self.view.backgroundColor;
         _topicView.hidden = YES;
         [_topicView.closeBtn addTarget:self action:@selector(closeTopicClick) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -579,12 +626,12 @@
     NSDictionary *userInfo = notification.userInfo;
     CGRect keyboardF = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     if (!self.isRecodering) {
-        self.toolsView.frame = CGRectMake(0, DR_SCREEN_HEIGHT-keyboardF.size.height-self.toolsView.frame.size.height, DR_SCREEN_HEIGHT, 45);
+        self.toolsView.frame = CGRectMake(0, DR_SCREEN_HEIGHT-keyboardF.size.height-self.toolsView.frame.size.height-10, DR_SCREEN_HEIGHT, 50);
       
     }
     self.keyBordHeight = keyboardF.size.height;
     _plaL.frame = CGRectMake(19, 15, DR_SCREEN_WIDTH-19-5, 14);
-    self.imageViewS.frame = CGRectMake(15, -self.imageViewS.frame.size.height-50, self.imageViewS.frame.size.width, self.imageViewS.frame.size.width);
+    self.imageViewS.frame = CGRectMake(15, -self.imageViewS.frame.size.height-50-10, self.imageViewS.frame.size.width, self.imageViewS.frame.size.width);
     self.tableView.contentSize = CGSizeMake(0, self.tableView.frame.size.height);
     [self setTextViewHeight:self.textView text:@""];
 }
@@ -595,13 +642,13 @@
     }
     self.imageViewS.frame = CGRectMake(15, 15, self.tableView.frame.size.width-30, self.tableView.frame.size.width-30);
     _plaL.frame = CGRectMake(19, 15+(self.imageViewS.hidden?0: CGRectGetMaxY(self.imageViewS.frame)), DR_SCREEN_WIDTH-19-5, 14);
-    self.textView.frame = CGRectMake(15,5 +(_imageViewS.hidden?0:CGRectGetMaxY(_imageViewS.frame)), DR_SCREEN_WIDTH-30-40,(self.textHeight>35?self.textHeight:35));
-    self.toolsView.frame = CGRectMake(0,CGRectGetMaxY(self.tableView.frame)+20, DR_SCREEN_WIDTH, 45);
-    self.tableView.contentSize = CGSizeMake(0, self.textView.frame.size.height+(self.statusView.hidden?0:40)+(self.topicView.hidden?0:40)+(self.imageViewS.hidden?0:DR_SCREEN_WIDTH-70+15));
+    self.textView.frame = CGRectMake(15,5 +(_imageViewS.hidden?0:CGRectGetMaxY(_imageViewS.frame)), DR_SCREEN_WIDTH-30,(self.textHeight>35?self.textHeight:35));
+    self.toolsView.frame = CGRectMake(0,DR_SCREEN_HEIGHT-BOTTOM_HEIGHT-50, DR_SCREEN_WIDTH, 50);
+    self.tableView.contentSize = CGSizeMake(0, self.textView.frame.size.height+(self.statusView.hidden?0:40)+(self.topicView.hidden?0:40)+(self.imageViewS.hidden?0:DR_SCREEN_WIDTH-30+15));
     self.statusView.frame = CGRectMake(0, CGRectGetMaxY(self.textView.frame)+10, self.statusView.frame.size.width, 20);
     self.topicView.frame = CGRectMake(0,!_statusView.hidden?(CGRectGetMaxY(_statusView.frame)+10):(CGRectGetMaxY(self.textView.frame)+10), DR_SCREEN_WIDTH, 20);
     
-    [self.toolsView.photoBtn setBackgroundImage:UIImageNamed(self.moveArr.count==3? @"Image_textchoiceimgn":@"Image_textchoiceimg") forState:UIControlStateNormal];
+    [self.toolsView.imgButton setImage:UIImageNamed(self.moveArr.count==3? @"senimgv_imgn":@"senimgv_img") forState:UIControlStateNormal];
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
@@ -632,11 +679,11 @@
     CGFloat canLookHeight = self.tableView.frame.size.height-50-self.keyBordHeight-20+100+BOTTOM_HEIGHT;//文本输入可视区域
     
     if (curSelectHeight >= canLookHeight) {//如果光标位置的高度超过了可视高度
-        self.textView.frame = CGRectMake(15,self.tableView.frame.size.height-curSelectHeight-canLookHeight, DR_SCREEN_WIDTH-30-40,self.textHeight);
+        self.textView.frame = CGRectMake(15,self.tableView.frame.size.height-curSelectHeight-canLookHeight, DR_SCREEN_WIDTH-30,self.textHeight);
         self.tableView.contentSize = CGSizeMake(0, self.tableView.frame.size.height);
     }else{
         self.tableView.contentSize = CGSizeMake(0, self.tableView.frame.size.height);
-        self.textView.frame = CGRectMake(15,5, DR_SCREEN_WIDTH-30-40,(self.textHeight>35?self.textHeight:35));
+        self.textView.frame = CGRectMake(15,5, DR_SCREEN_WIDTH-30,(self.textHeight>35?self.textHeight:35));
     }
     self.statusView.frame = CGRectMake(0, CGRectGetMaxY(self.textView.frame)+10, self.statusView.frame.size.width, 20);
     self.topicView.frame = CGRectMake(0,!_statusView.hidden?(CGRectGetMaxY(_statusView.frame)+10):(CGRectGetMaxY(self.textView.frame)+10), DR_SCREEN_WIDTH, 20);
@@ -658,7 +705,7 @@
 
 - (float)heightForTextView:(UITextView *)textView WithText:(NSString *) strText{
 
-    return [self getSpaceLabelHeight:strText withFont:SIXTEENTEXTFONTSIZE withWidth:DR_SCREEN_WIDTH-70]+20;
+    return [self getSpaceLabelHeight:strText withFont:SIXTEENTEXTFONTSIZE withWidth:DR_SCREEN_WIDTH-30]+20;
 
 }
 
@@ -1051,6 +1098,11 @@
             }
         }
     }
+    
+    if (self.albumId) {
+        [parm setObject:self.albumId forKey:@"albumId"];
+    }
+    
 
     if (self.topicM) {
         if (self.topicM.topic_id) {
