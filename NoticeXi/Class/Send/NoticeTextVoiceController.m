@@ -102,7 +102,6 @@
     _sendBtn = btn;
     [self.view addSubview:btn];
     
-
     UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(3, STATUS_BAR_HEIGHT,50, NAVIGATION_BAR_HEIGHT-STATUS_BAR_HEIGHT)];
     [backBtn setImage:UIImageNamed(@"Image_blackBack") forState:UIControlStateNormal];
     [backBtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
@@ -142,6 +141,7 @@
     _textView.scrollEnabled = NO;
     _textView.bounces = NO;
     _textView.backgroundColor = self.view.backgroundColor;
+    
     _textView.delegate = self;
     _textView.textColor = [UIColor colorWithHexString:@"#25262E"];
     _textView.tintColor = [UIColor colorWithHexString:@"#0099E6"];
@@ -152,7 +152,6 @@
     
     self.topicM = nil;
 
-    
     self.statysType = 0;
     self.toolsView = [[NoticeSendVoiceTools alloc] initWithFrame:CGRectMake(0,DR_SCREEN_HEIGHT-BOTTOM_HEIGHT-50, DR_SCREEN_WIDTH, 50)];
     self.toolsView.backgroundColor = self.view.backgroundColor;

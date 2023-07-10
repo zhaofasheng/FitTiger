@@ -66,6 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSArray *intersect_tags;
 @property (nonatomic, strong) NoticeVoiceListSubModel *subUserModel;//user
 @property (nonatomic, strong) NSDictionary *user;
+@property (nonatomic, strong) NSString *creatTime1;
 @property (nonatomic, strong) NSString *creatTime;
 @property (nonatomic, assign) BOOL isPasue;
 @property (nonatomic, strong) NSString *textListTime;

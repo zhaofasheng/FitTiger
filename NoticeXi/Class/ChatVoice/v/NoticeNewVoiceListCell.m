@@ -19,6 +19,7 @@
 #import "NoticeMyBookController.h"
 #import "NoticeMySongController.h"
 #import "NoticeMyMovieComController.h"
+#import "UIView+CLSetRect.h"
 #import "NoticeBingGanListView.h"
 //获取全局并发队列和主队列的宏定义
 #define globalQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)
@@ -42,9 +43,57 @@
         self.tableView.showsHorizontalScrollIndicator = NO;
         [self.contentView addSubview:self.tableView];
         
-        self.headerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,0, DR_SCREEN_WIDTH, 114+22+27)];
+        self.headerView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0, DR_SCREEN_WIDTH, 472+12)];
         self.headerView.backgroundColor = [[UIColor colorWithHexString:@"#FFFFFF"] colorWithAlphaComponent:1];
         self.tableView.tableHeaderView = self.headerView;
+        self.headerView.userInteractionEnabled = YES;
+        
+        UIImageView *backImageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 12, DR_SCREEN_WIDTH-40, 472)];
+        backImageView.image = UIImageNamed(@"playvoice_backsimg");
+        [backImageView setAllCorner:5];
+        backImageView.userInteractionEnabled = YES;
+        [self.headerView addSubview:backImageView];
+        self.cdplayView = backImageView;
+        
+        self.voicePlayBackImageView = [[UIImageView alloc] initWithFrame:CGRectMake((backImageView.frame.size.width-216)/2, 74,216, 216)];
+        self.voicePlayBackImageView.image = UIImageNamed(@"voice_cdplayimg");
+        [backImageView addSubview:self.voicePlayBackImageView];
+        self.voicePlayBackImageView.userInteractionEnabled = YES;
+        
+        //话题
+        _topiceLabel = [[UILabel alloc] initWithFrame:CGRectMake(20,336, self.cdplayView.frame.size.width-40, 20)];
+        _topiceLabel.font = FIFTHTEENTEXTFONTSIZE;
+        _topiceLabel.textColor = [UIColor colorWithHexString:@"#456DA0"];
+        _topiceLabel.userInteractionEnabled = YES;
+        UITapGestureRecognizer *taptop = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(topicTextClick)];
+        [_topiceLabel addGestureRecognizer:taptop];
+        [self.cdplayView addSubview:_topiceLabel];
+        
+        self.playButton = [[UIButton alloc] initWithFrame:CGRectMake(self.cdplayView.frame.size.width-64, 384, 44, 44)];
+        [self.playButton addTarget:self action:@selector(playNoReplay) forControlEvents:UIControlEventTouchUpInside];
+        [self.playButton setBackgroundImage:UIImageNamed(@"playvcd_img") forState:UIControlStateNormal];
+        [self.cdplayView addSubview:self.playButton];
+
+        
+        _slider = [[UISlider alloc] initWithFrame:CGRectMake(20,402, DR_SCREEN_WIDTH-40-150, 13)];
+        _slider.minimumTrackTintColor = [UIColor colorWithHexString:@"#25262E"];
+        _slider.maximumTrackTintColor = [[UIColor colorWithHexString:@"#25262E"] colorWithAlphaComponent:0.1];
+        [_slider setThumbImage:UIImageNamed(@"Image_trak_sgjs") forState:UIControlStateNormal];
+        [_slider addTarget:self action:@selector(handleSlide:) forControlEvents:UIControlEventValueChanged];
+        [self.cdplayView addSubview:_slider];
+        
+        _minTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20,CGRectGetMaxY(_slider.frame)+9, GET_STRWIDTH(@"000:00", 10, 14), 14)];
+        _minTimeLabel.text = @"00:00";
+        _minTimeLabel.font = [UIFont systemFontOfSize:10];
+        _minTimeLabel.textColor = [UIColor colorWithHexString:@"#25262E"];
+        [self.cdplayView addSubview:_minTimeLabel];
+        
+        _maxTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_slider.frame)-GET_STRWIDTH(@"00:000", 10, 10), CGRectGetMaxY(_slider.frame)+9, GET_STRWIDTH(@"00:000", 10, 10), 10)];
+        _maxTimeLabel.text = @"00:00";
+        _maxTimeLabel.font = [UIFont systemFontOfSize:10];
+        _maxTimeLabel.textAlignment = NSTextAlignmentRight;
+        _maxTimeLabel.textColor = [UIColor colorWithHexString:@"#5C5F66"];
+        [self.cdplayView addSubview:_maxTimeLabel];
         
         _mbView = [[UIView alloc] initWithFrame:CGRectMake(50,(STATUS_BAR_HEIGHT+NAVIGATION_BAR_HEIGHT-39)/2, 39, 39)];
         _mbView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.2];
@@ -74,61 +123,6 @@
         _nickNameL.font = XGEightBoldFontSize;
         _nickNameL.textColor = [UIColor colorWithHexString:@"#FFFFFF"];
         [self.contentView addSubview:_nickNameL];
-
-        //话题
-
-        _topicView = [[UIView alloc] initWithFrame:CGRectMake(15, self.buttonView.frame.origin.y-40, 0, 20)];
-        _topicView.backgroundColor = [[UIColor colorWithHexString:@"#456DA0"] colorWithAlphaComponent:0.1];
-        _topicView.layer.cornerRadius = 10;
-        _topicView.layer.masksToBounds = YES;
-        _topicView.userInteractionEnabled = YES;
-        [self.headerView addSubview:_topicView];
-        
-        UILabel *yuanL = [[UILabel alloc] initWithFrame:CGRectMake(4, 4, 12, 12)];
-        yuanL.layer.cornerRadius = 6;
-        yuanL.layer.masksToBounds = YES;
-        yuanL.backgroundColor = [UIColor colorWithHexString:@"#456DA0"];
-        yuanL.text = @"#";
-        yuanL.textColor = [UIColor colorWithHexString:@"#FFFFFF"];
-        yuanL.textAlignment = NSTextAlignmentCenter;
-        yuanL.font = [UIFont systemFontOfSize:7];
-        [_topicView addSubview:yuanL];
-        
-        _topiceLabel = [[UILabel alloc] initWithFrame:CGRectMake(20,0, GET_STRWIDTH(@"#神奇难受和快乐的的的的的#", 12, 50), 20)];
-        _topiceLabel.font = [UIFont systemFontOfSize:11];
-        _topiceLabel.textColor = [UIColor colorWithHexString:@"#456DA0"];
-        _topiceLabel.userInteractionEnabled = YES;
-        UITapGestureRecognizer *taptop = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(topicTextClick)];
-        [_topicView addGestureRecognizer:taptop];
-        [self.topicView addSubview:_topiceLabel];
-                
-        _playerView = [[NoiticePlayerView alloc] initWithFrame:CGRectMake(15,self.headerView.frame.size.height-40-49, 150, 40)];
-        self.playerView.delegate = self;
-        self.playerView.isThird = YES;
-        [self.playerView.playButton setImage:UIImageNamed(@"Image_newplay") forState:UIControlStateNormal];
-        [self.headerView addSubview:_playerView];
-        self.playerView.leftView.hidden = YES;
-        self.playerView.rightView.hidden = YES;
-        
-        _playView = [[UIView alloc] initWithFrame:CGRectMake(-15, -3,_playerView.frame.size.height+15+5, _playerView.frame.size.height+6)];
-        _playView.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playNoReplay)];
-        [_playView addGestureRecognizer:tap];
-        [self.playerView addSubview:_playView];
-        
-        _rePlayView = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_playerView.frame), _playerView.frame.origin.y,_playerView.frame.size.height, _playerView.frame.size.height)];
-        [_rePlayView addTarget:self action:@selector(playReplay) forControlEvents:UIControlEventTouchUpInside];
-        [_rePlayView setImage:UIImageNamed(@"Imag_reply_img") forState:UIControlStateNormal];
-        _rePlayView.hidden = YES;
-        [self.headerView addSubview:_rePlayView];
-        
-        self.dragView = [[UIView alloc] initWithFrame:CGRectMake(_playerView.frame.size.height, 0, _playerView.frame.size.width-_playerView.frame.size.height, _playerView.frame.size.height)];
-        self.dragView.userInteractionEnabled = YES;
-        self.dragView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.0];
-        [self.playerView addSubview:self.dragView];
-        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressGestureRecognized:)];
-        longPress.minimumPressDuration = 0.17;
-        [self.dragView addGestureRecognizer:longPress];
         
         self.buttonView = [[UIView alloc] initWithFrame:CGRectMake(0, DR_SCREEN_HEIGHT-65-BOTTOM_HEIGHT, DR_SCREEN_WIDTH, 65+BOTTOM_HEIGHT+20)];
         self.buttonView.backgroundColor = [UIColor colorWithHexString:@"#FFFFFF"];
@@ -236,27 +230,54 @@
     return self;
 }
 
-
+- (UIImageView *)voiceimageView{
+    if(!_voiceimageView){
+        _voiceimageView = [[UIImageView alloc] initWithFrame:CGRectMake(30, 76, 212, 212)];
+        _voiceimageView.userInteractionEnabled = YES;
+        [self.cdplayView addSubview:_voiceimageView];
+        self.numBtn = [[FSCustomButton alloc] initWithFrame:CGRectMake(155, 212-28, 57, 28)];
+        self.numBtn.backgroundColor = [UIColor colorWithHexString:@"#000000"];
+        self.numBtn.titleLabel.font = FOURTHTEENTEXTFONTSIZE;
+        [self.numBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.numBtn setImage:UIImageNamed(@"imgnums_marimg") forState:UIControlStateNormal];
+        self.numBtn.buttonImagePosition = FSCustomButtonImagePositionLeft;
+        [self.numBtn addTarget:self action:@selector(lookMoreImg) forControlEvents:UIControlEventTouchUpInside];
+        [_voiceimageView addSubview:self.numBtn];
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(lookMoreImg)];
+        [_voiceimageView addGestureRecognizer:tap];
+    }
+    return _voiceimageView;
+}
 
 - (UILabel *)redNumL{
     if (!_redNumL) {
 
-        self.redNumL = [[UILabel alloc] initWithFrame:CGRectMake(15, self.headerView.frame.size.height-12-17, 150, 12)];
-        self.redNumL.font = TWOTEXTFONTSIZE;
-        self.redNumL.textColor = [[UIColor colorWithHexString:@"#8A8F99"] colorWithAlphaComponent:0.6];
-        [self.headerView addSubview:self.redNumL];
+        self.redNumL = [[UILabel alloc] initWithFrame:CGRectMake(0, 32, self.cdplayView.frame.size.width, 20)];
+        self.redNumL.font = [UIFont fontWithName:@"zihunxinquhei" size:18];
+        self.redNumL.textAlignment = NSTextAlignmentCenter;
+        self.redNumL.textColor = [[UIColor colorWithHexString:@"#25262E"] colorWithAlphaComponent:1];
+        [self.cdplayView addSubview:self.redNumL];
     }
     return _redNumL;
 }
 
 - (NoticeBgmHasChoiceShowView *)bgmChoiceView{
     if (!_bgmChoiceView) {
-        _bgmChoiceView = [[NoticeBgmHasChoiceShowView alloc] initWithFrame:CGRectMake(15, (self.topicView.hidden?CGRectGetMaxY(self.topicView.frame):(self.buttonView.frame.origin.y-25)), DR_SCREEN_WIDTH-30-40, 20)];
-        [self.headerView addSubview:_bgmChoiceView];
+        _bgmChoiceView = [[NoticeBgmHasChoiceShowView alloc] initWithFrame:CGRectMake(20, 365, DR_SCREEN_WIDTH-40-40, 20)];
+        [self.cdplayView addSubview:_bgmChoiceView];
         _bgmChoiceView.isShow = YES;
         _bgmChoiceView.closeBtn.hidden = YES;
+        _bgmChoiceView.nameView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0];
+        _bgmChoiceView.nameL.textColor = [UIColor colorWithHexString:@"#5C5F66"];
+        _bgmChoiceView.markImageView.image = UIImageNamed(@"dark_bgmimg");
         _bgmChoiceView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0];
         _bgmChoiceView.hidden = YES;
+        
+        _bgmChoiceView.layer.shadowColor = [UIColor blackColor].CGColor;
+        _bgmChoiceView.layer.shadowOpacity = 0.8f;
+        _bgmChoiceView.layer.shadowRadius = 4.f;
+        _bgmChoiceView.layer.shadowOffset = CGSizeMake(4,4);
     }
     return _bgmChoiceView;
 }
@@ -276,6 +297,25 @@
     }
     return _inputView;
 }
+
+- (void)lookMoreImg{
+    NSMutableArray *photos = [[NSMutableArray alloc] init];
+    for (NSString *str in self.voiceM.img_list) {
+        NSArray *array = [str componentsSeparatedByString:@"?"];
+        YYPhotoGroupItem *item = [YYPhotoGroupItem new];
+        
+        item.thumbView         = self.voiceimageView;
+        item.largeImageURL     = [NSURL URLWithString:array[0]];
+        [photos addObject:item];
+    }
+
+    YYPhotoGroupView *view = [[YYPhotoGroupView alloc] initWithGroupItems:photos];
+    UIView *toView         = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+    [view presentFromImageView:self.voiceimageView
+                   toContainer:toView
+                      animated:YES completion:nil];
+}
+
 //点击留言
 - (void)editTap{
 
@@ -380,26 +420,16 @@
     [listView showTost];
 }
 
-- (NoticeVoiceImageView *)imageViewS{
-    if (!_imageViewS) {
-        _imageViewS = [[NoticeVoiceImageView alloc] initWithFrame:CGRectMake(0, 15, DR_SCREEN_WIDTH,DR_SCREEN_WIDTH)];
-        _imageViewS.layer.cornerRadius = 10;
-        _imageViewS.layer.masksToBounds = YES;
-        
-        [self.headerView addSubview:_imageViewS];
-    }
-    return _imageViewS;
-}
 
 - (void)setVoiceM:(NoticeVoiceListModel *)voiceM{
     _voiceM = voiceM;
 
     //话题
     if (voiceM.topic_name && voiceM.topic_name.length) {
-        self.topiceLabel.text = [voiceM.topicName stringByReplacingOccurrencesOfString:@"#" withString:@""];
-        self.topicView.hidden = NO;
+        self.topiceLabel.text = voiceM.topicName;
+        self.topiceLabel.hidden = NO;
     }else{
-        self.topicView.hidden = YES;
+        self.topiceLabel.hidden = YES;
     }
         
    // [self showName];
@@ -440,52 +470,18 @@
     }
 
     self.iconMarkView.image = UIImageNamed(_voiceM.subUserModel.levelImgIconName);
-    if (voiceM.img_list.count) {
-        self.headerView.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_WIDTH+115+29-(self.topicView.hidden?39:0)+voiceM.bgmHeight);
-    }else{
-        self.headerView.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, 105+29-(self.topicView.hidden?39:0)+voiceM.bgmHeight);
-    }
+    self.redNumL.text = voiceM.creatTime1;
 
     voiceM.isDownloading = YES;
 
-    self.playerView.timeLen = voiceM.nowTime.integerValue?voiceM.nowTime: voiceM.voice_len;
-    self.playerView.voiceUrl = voiceM.voice_url;
-    self.playerView.slieView.progress = voiceM.nowPro >0 ?voiceM.nowPro:0;
-    
-    //位置
-    if (voiceM.voice_len.integerValue < 5) {
-        self.playerView.frame = CGRectMake(15,voiceM.img_list.count?(CGRectGetMaxY(self.imageViewS.frame)+15):15, 130, 40);
-    }else if (voiceM.voice_len.integerValue >= 5 && voiceM.voice_len.integerValue <= 105){
-        self.playerView.frame = CGRectMake(15, voiceM.img_list.count?(CGRectGetMaxY(self.imageViewS.frame)+15):15, 130+voiceM.voice_len.integerValue, 40);
-    }else if (voiceM.voice_len.integerValue >= 120){
-        self.playerView.frame = CGRectMake(15,voiceM.img_list.count?(CGRectGetMaxY(self.imageViewS.frame)+15):15, 130+120, 40);
-    }
-    else{
-        self.playerView.frame = CGRectMake(15,voiceM.img_list.count?(CGRectGetMaxY(self.imageViewS.frame)+15):15, 130+voiceM.voice_len.integerValue, 40);
-    }
 
-    self.dragView.frame =  CGRectMake(_playerView.frame.size.height, 0, _playerView.frame.size.width-_playerView.frame.size.height, _playerView.frame.size.height);
-    [self.playerView refreWithFrame];
-
-    
-    _rePlayView.hidden = voiceM.isPlaying? NO:YES;
-    _rePlayView.frame = CGRectMake(CGRectGetMaxX(self.playerView.frame),self.playerView.frame.origin.y, self.playerView.frame.size.height, self.playerView.frame.size.height);
-    
-    self.topicView.frame = CGRectMake(15, _headerView.frame.size.height-49-29+10-(voiceM.bgm_name?30:0),GET_STRWIDTH(self.topiceLabel.text, 12, 20)+30, 20);
-    self.topiceLabel.frame = CGRectMake(20,0, GET_STRWIDTH(voiceM.topicName, 12, 20), 20);
-    
     if (voiceM.bgm_name) {
         self.bgmChoiceView.hidden = NO;
         self.bgmChoiceView.title = voiceM.bgm_name;
-        self.bgmChoiceView.frame = CGRectMake(15, (!self.topicView.hidden?(CGRectGetMaxY(self.topicView.frame)+5):(CGRectGetMaxY(self.playerView.frame)+10)), DR_SCREEN_WIDTH-30-40, 20);
     }else{
         _bgmChoiceView.hidden = YES;
     }
-    
-    if (_voiceM.img_list) {
-        self.imageViewS.imgArr = _voiceM.img_list;
-    }
-    self.imageViewS.hidden = _voiceM.img_list.count?NO:YES;
+
     //对话或者悄悄话数量
     if ([_voiceM.subUserModel.userId isEqualToString:[[NoticeSaveModel getUserInfo] user_id]]){
         if (_voiceM.chat_num.integerValue) {
@@ -541,9 +537,42 @@
         self.isDown = YES;
         [self requestData];
     }
-    self.redNumL.frame = CGRectMake(15, self.headerView.frame.size.height-12-17, 150, 12);
-    self.redNumL.text = voiceM.creatTime;
+
+    self.slider.value = voiceM.nowPro > 0?voiceM.nowPro: 0;
+    self.slider.maximumValue = self.voiceM.voice_len.intValue;
+    self.slider.minimumValue = 0;
+    self.minTimeLabel.text = voiceM.nowPro > 0? [self getMMSSFromSS:self.voiceM.voice_len.intValue-voiceM.nowTime.intValue]: @"00:00";
+    self.maxTimeLabel.text = voiceM.nowPro > 0? [self getMMSSFromSS:voiceM.nowTime.intValue]:[self getMMSSFromSS:self.voiceM.voice_len.intValue];
     
+    if(voiceM.img_list.count){
+        self.voiceimageView.hidden = NO;
+        self.voicePlayBackImageView.frame = CGRectMake(self.cdplayView.frame.size.width-216-12, 74,216, 216);
+        [self.voiceimageView setImageWithURL:[NSURL URLWithString:voiceM.img_list[0]] placeholder:GETUIImageNamed(@"img_empty") options:YYWebImageOptionShowNetworkActivity progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+        } transform:nil completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
+       
+        }];
+        [self.numBtn setTitle:[NSString stringWithFormat:@"%ld张",voiceM.img_list.count] forState:UIControlStateNormal];
+    }else{
+        _voiceimageView.hidden = YES;
+        self.voicePlayBackImageView.frame = CGRectMake((self.cdplayView.frame.size.width-216)/2, 74,216, 216);
+    }
+}
+
+-(NSString *)getMMSSFromSS:(NSInteger)totalTime{
+    
+    NSInteger seconds = totalTime;
+    
+    //format of minute
+    NSString *str_minute = [NSString stringWithFormat:@"%02ld",(seconds%3600)/60];
+    //format of second
+    NSString *str_second = [NSString stringWithFormat:@"%02ld",seconds%60];
+    //format of time
+    NSString *format_time = [NSString stringWithFormat:@"%@:%@",str_minute,str_second];
+    
+    if (seconds <0) {
+        return format_time = @"00:00";
+    }
+    return format_time;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -867,67 +896,17 @@
     }
 }
 
-//点击重新播放
-- (void)playReplay{
-    if (self.delegate && [self.delegate respondsToSelector:@selector(startRePlayer:)]) {
-        [self.delegate startRePlayer:self.index];
-    }
-}
-
-- (void)longPressGestureRecognized:(id)sender{
-
-    UILongPressGestureRecognizer *longPress = (UILongPressGestureRecognizer *)sender;
-    UIGestureRecognizerState longPressState = longPress.state;
-    //手指在tableView中的位置
-    CGPoint p = [longPress locationInView:self.playerView];
-    if (!_voiceM.isPlaying) {
-        if (longPressState == UIGestureRecognizerStateEnded) {
-            [self playNoReplay];
-        }
+//滑动进度条
+- (void)handleSlide:(UISlider *)slider{
+    if(!_voiceM.isPlaying){
+        [self playNoReplay];
         return;
     }
-    switch (longPressState) {
-        case UIGestureRecognizerStateBegan:{  //手势开始，对被选中cell截图，隐藏原cell
-            DRLog(@"开始%.f",p.x);
-            if (self.delegate && [self.delegate respondsToSelector:@selector(beginDrag:)]) {
-                [self.delegate beginDrag:self.tag];
-            }
-            [self dragWithPoint:p];
-            break;
-        }
-        case UIGestureRecognizerStateChanged:{
-     
-            [self dragWithPoint:p];
-            break;
-        }
-        default: {
-     
-            if (self.delegate && [self.delegate respondsToSelector:@selector(endDrag: progross:)]) {
-                [self.delegate endDrag:self.tag progross:p.x/self.playerView.frame.size.width];
-            }
-            if (self.delegate && [self.delegate respondsToSelector:@selector(endDrag:)]) {
-                [self.delegate endDrag:self.tag];
-            }
-            break;
-        }
+    if (self.delegate && [self.delegate respondsToSelector:@selector(endDrag: progross:)]) {
+        [self.delegate endDrag:self.tag progross:slider.value];
     }
 }
 
-- (void)dragWithPoint:(CGPoint)p{
-    self.playerView.slieView.progress = p.x/self.playerView.frame.size.width;
-    if (_voiceM.moveSpeed > 0) {
-        //每像素代表多少秒，等同于时间
-        CGFloat beishuNum = _voiceM.voice_len.intValue/self.playerView.frame.size.width;
-        [self.playerView refreshMoveFrame:beishuNum*_voiceM.moveSpeed*p.x];
-    }
-    
-    if (self.delegate && [self.delegate respondsToSelector:@selector(dragingFloat: index:)]) {
-        if ((_voiceM.voice_len.floatValue/self.playerView.frame.size.width)*p.x < _voiceM.voice_len.length/5) {
-            return;
-        }
-        [self.delegate dragingFloat:(_voiceM.voice_len.floatValue/self.playerView.frame.size.width)*p.x index:self.tag];
-    }
-}
 
 - (void)awakeFromNib {
     [super awakeFromNib];

@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NoticeVoiceListModel *voiceM;
 @property (nonatomic, strong) UIView *infoView;
 @property (nonatomic, strong) UIImageView *iconImageView;
+@property (nonatomic, strong) UIImageView *voiceShowImageView;
+@property (nonatomic, strong) UIImageView *voicePlayBackImageView;
 @property (nonatomic, strong) UILabel *nickNameL;
 @property (nonatomic, strong) UIImageView *dataButton;
 @property (nonatomic, strong) NoticeVoicePinbi *pinbTools;
@@ -41,6 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIImageView *playImageV;
 @property (nonatomic, strong) UILabel *contentL;
 @property (nonatomic, strong) NSShadow *shadow;
+@property (nonatomic, strong) UIImageView *bkFmimageView;
+@property (nonatomic, strong) UIVisualEffectView *visualView;
 @property (nonatomic, copy) void(^refreshHeight)(NSInteger refreshIndex);
 @end
 

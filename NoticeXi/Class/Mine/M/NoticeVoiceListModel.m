@@ -256,7 +256,7 @@
     _created_at = [NoticeTools updateTimeForRow:created_at];
     
     self.defaultImg = [NSString stringWithFormat:@"beijing%d.jpg",arc4random() % 40+1];
-    
+    self.creatTime1 = [NoticeTools timeDataAppointFormatterWithTime:created_at.integerValue appointStr:@"yyyy.MM.dd HH:mm:ss"];
     self.creatTime = [NoticeTools updateTimeForRowVoice:created_at];
     
     NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];

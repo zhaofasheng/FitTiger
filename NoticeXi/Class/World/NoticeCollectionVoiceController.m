@@ -148,7 +148,7 @@
                         model.textPbheight+=8;
                     }
                     
-                    if (model.img_list.count) {
+                    if (model.img_list.count && model.content_type.intValue != 1) {
                         if (!model.scale.floatValue) {
                             model.scale = @"1";
                         }
@@ -236,8 +236,29 @@
     if (self.dataArr.count-1 >= indexPath.row) {
         merchentCell.voiceM = self.dataArr.count? self.dataArr[indexPath.row] : nil;
         merchentCell.playImageV.image =UIImageNamed(!merchentCell.voiceM.isPlaying ? @"img_voicebowen" : @"img_voicebowenplay");
+        if(merchentCell.voiceM.isPlaying){
+            [self startAnimation:merchentCell.voicePlayBackImageView];
+        }else{
+            [self stopAnimtion:merchentCell.voicePlayBackImageView];
+        }
     }
     return merchentCell;
+}
+
+- (void)startAnimation:(UIImageView*)rotaImg{
+    
+    CABasicAnimation* rotationAnimation;
+    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0];
+    rotationAnimation.duration = 10;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = 100;
+
+    [rotaImg.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+}
+
+- (void)stopAnimtion:(UIImageView*)rotaImg{
+    [rotaImg.layer removeAllAnimations];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -305,7 +326,7 @@
                     model.textPbheight+=8;
                 }
                 
-                if (model.img_list.count) {
+                if (model.img_list.count && model.content_type.intValue != 1) {
                     if (!model.scale.floatValue) {
                         model.scale = @"1";
                     }
@@ -403,7 +424,7 @@
                     model.textPbheight+=8;
                 }
                 
-                if (model.img_list.count) {
+                if (model.img_list.count && model.content_type.intValue != 1) {
                     if (!model.scale.floatValue) {
                         model.scale = @"1";
                     }
@@ -414,6 +435,7 @@
                     if (model.scale.floatValue < 0.5) {//如果高度是宽度的一半，那么最小去一半数值
                         model.scale = @"0.5";
                     }
+                    
                     model.height = weakSelf.layout.itemWidth*model.scale.floatValue+32+model.textPbheight;
                 }else{
                     model.height = weakSelf.layout.itemWidth+model.textPbheight+32;

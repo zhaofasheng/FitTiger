@@ -51,13 +51,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIButton *sendBGBtn;
 @property (nonatomic, strong) UIButton *careButton;
 @property (nonatomic, strong) UILabel *topiceLabel;
-@property (nonatomic, strong) UIView *topicView;
 @property (nonatomic, strong) NoticeBgmHasChoiceShowView *bgmChoiceView;
 
 @property (nonatomic, assign) NSInteger index;
 @property (nonatomic, strong) UILabel *numL;
 @property (nonatomic, strong) UILabel *bgL;
-
+@property (nonatomic, strong) UIButton *playButton;
 @property (nonatomic, strong) UILabel *likeStatusL;
 @property (nonatomic, assign) BOOL noPushToUserCenter;
 @property (nonatomic, assign) BOOL needMoreBtn;
@@ -68,19 +67,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,copy) void (^replyClickBlock)(BOOL isReply);
 @property (nonatomic, assign) BOOL isSendLy;//是否是留言
 @property (nonatomic, strong) UIView *buttonView;
-@property (nonatomic, strong) UIScrollView *headerView;
+@property (nonatomic, strong) UIImageView *headerView;
 @property (nonatomic, strong) UILabel *typeL;
 @property (nonatomic, strong) NoticeVoicePinbi *pinbTools;
 @property (nonatomic, strong) UIButton *otherMoreBtn;
 @property (nonatomic, assign) BOOL isDisappear;
-
-@property (nonatomic, strong) UIButton *rePlayView;
-@property (nonatomic, strong) UIView *playView;
-@property (nonatomic, strong) UIView *dragView;
-@property (nonatomic, strong) NoiticePlayerView *playerView;
+@property (nonatomic, strong) UIImageView *cdplayView;
+@property (nonatomic, strong) UIImageView *voicePlayBackImageView;
 @property (nonatomic, strong) UILabel *comL;
 @property (nonatomic, strong) UIButton *comButton;
-@property (nonatomic, strong) NoticeVoiceImageView *imageViewS;
 @property (nonatomic, strong) NoticeBBSComentInputView *inputView;
 @property (nonatomic, strong) UIImageView *numImageView;
 @property (nonatomic, strong) UILabel *redNumL;
@@ -92,6 +87,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableArray *dataArr;
 @property (nonatomic, strong) UIView *sectionView;
 @property (nonatomic, strong) UILabel *lyNumL;
+
+@property (nonatomic,strong) UISlider * slider;
+@property (nonatomic, strong) UILabel *minTimeLabel;
+@property (nonatomic, strong) UILabel *maxTimeLabel;
+
+@property (nonatomic, strong) UIImageView *voiceimageView;
+@property (nonatomic, strong) FSCustomButton *numBtn;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -561,44 +561,45 @@
         [weakSelf hsRecoderView];
     };
     
-    [cell.playerView.playButton setImage:UIImageNamed(!model.isPlaying ? @"Image_newplay" : @"newbtnplay") forState:UIControlStateNormal];
+    [cell.playButton setBackgroundImage:UIImageNamed(!model.isPlaying ? @"playvcd_img" : @"stopvcd_img") forState:UIControlStateNormal];
+    if(model.isPlaying){
+        [self startAnimation:cell.voicePlayBackImageView];
+    }else{
+        [self stopAnimtion:cell.voicePlayBackImageView];
+    }
     return cell;
 }
 
+- (void)startAnimation:(UIImageView*)rotaImg{
+    
+    CABasicAnimation* rotationAnimation;
+    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0];
+    rotationAnimation.duration = 10;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = 100;
 
-- (void)beginDrag:(NSInteger)tag{
-    self.tableView.scrollEnabled = NO;
-    AppDelegate *appdel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appdel.floatView.audioPlayer pause:YES];
+    [rotaImg.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+}
+
+- (void)stopAnimtion:(UIImageView*)rotaImg{
+    [rotaImg.layer removeAllAnimations];
 }
 
 - (void)endDrag:(NSInteger)tag progross:(CGFloat)pro{
-    self.progross = pro;
-    self.tableView.scrollEnabled = YES;
-    __weak typeof(self) weakSelf = self;
+
+    self.tableView.scrollEnabled = NO;
+
     AppDelegate *appdel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appdel.floatView.audioPlayer pause:NO];
-    [appdel.floatView.audioPlayer.player seekToTime:CMTimeMake(self.draFlot, 1) completionHandler:^(BOOL finished) {
+    [appdel.floatView.audioPlayer pause:YES];
+    [appdel.floatView.audioPlayer.player seekToTime:CMTimeMake(pro, 1) completionHandler:^(BOOL finished) {
         if (finished) {
-            weakSelf.progross = 0;
+            [appdel.floatView.audioPlayer pause:NO];
         }
     }];
 }
 
-- (void)dragingFloat:(CGFloat)dratNum index:(NSInteger)tag{
-    self.draFlot = dratNum;
-}
-
 #pragma Mark - 音频播放模块
-- (void)startRePlayer:(NSInteger)tag{//重新播放
-    AppDelegate *appdel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appdel.floatView.audioPlayer stopPlaying];
-    self.isReplay = YES;
-    [appdel.floatView.audioPlayer pause:YES];
-    self.oldSelectIndex = 1000000;//设置个很大 数值以免冲突
-    [self startPlayAndStop:tag];
-}
-
 
 - (void)clickStopOrPlayAssest:(BOOL)pause playing:(BOOL)playing{
 
@@ -687,13 +688,18 @@
     appdel.floatView.playingBlock = ^(CGFloat currentTime) {
         NoticeNewVoiceListCell *cell = [weakSelf.tableView cellForRowAtIndexPath:indexPath];
         if (weakSelf.canReoadData) {
-            cell.playerView.timeLen = [NSString stringWithFormat:@"%.f",model.voice_len.integerValue-currentTime];
-            cell.playerView.slieView.progress = weakSelf.progross > 0?weakSelf.progross: currentTime/model.voice_len.floatValue;
+            cell.slider.value = currentTime;
+            if (currentTime >model.voice_len.integerValue) {
+                cell.maxTimeLabel.text = [weakSelf getMMSSFromSS:model.voice_len.integerValue];
+                cell.minTimeLabel.text = [weakSelf getMMSSFromSS:0];
+            }else{
+                cell.maxTimeLabel.text = [weakSelf getMMSSFromSS:model.voice_len.integerValue-currentTime];
+                cell.minTimeLabel.text = [weakSelf getMMSSFromSS:currentTime];
+            }
             model.nowTime = [NSString stringWithFormat:@"%.f",model.voice_len.integerValue-currentTime];
-            model.nowPro = currentTime/model.voice_len.floatValue;
+            model.nowPro = currentTime;
         }else{
-            cell.playerView.timeLen = model.voice_len;
-            cell.playerView.slieView.progress = 0;
+            
             model.nowPro = 0;
             model.nowTime = model.voice_len;
             weakSelf.isReplay = YES;
@@ -701,6 +707,23 @@
             weakSelf.oldSelectIndex = 1000000;//设置个很大 数值以免冲突
         }
     };
+}
+
+-(NSString *)getMMSSFromSS:(NSInteger)totalTime{
+    
+    NSInteger seconds = totalTime;
+    
+    //format of minute
+    NSString *str_minute = [NSString stringWithFormat:@"%02ld",(seconds%3600)/60];
+    //format of second
+    NSString *str_second = [NSString stringWithFormat:@"%02ld",seconds%60];
+    //format of time
+    NSString *format_time = [NSString stringWithFormat:@"%@:%@",str_minute,str_second];
+    
+    if (seconds <0) {
+        return format_time = @"00:00";
+    }
+    return format_time;
 }
 
 - (void)request{

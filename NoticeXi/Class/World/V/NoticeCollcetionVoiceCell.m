@@ -17,14 +17,54 @@
         self.contentView.layer.cornerRadius = 8;
         self.contentView.layer.masksToBounds = YES;
         
+        self.bkFmimageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width,self.frame.size.height)];
+        self.bkFmimageView.contentMode = UIViewContentModeScaleAspectFill;
+        self.bkFmimageView.clipsToBounds = YES;
+        self.bkFmimageView.userInteractionEnabled = YES;
+        [self.contentView addSubview:self.bkFmimageView];
+        self.bkFmimageView.hidden = YES;
+        
+        UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        UIVisualEffectView *visualView = [[UIVisualEffectView alloc]initWithEffect:blurEffect];
+        visualView.frame = self.bkFmimageView.bounds;
+        [self.bkFmimageView addSubview:visualView];
+        self.visualView = visualView;
+        
         self.showImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.width-32)];
         self.showImageView.contentMode = UIViewContentModeScaleAspectFill;
         self.showImageView.clipsToBounds = YES;
         [self.contentView addSubview:self.showImageView];
         
+        self.voicePlayBackImageView = [[UIImageView alloc] initWithFrame:CGRectMake(19, 15, self.frame.size.width-38, self.frame.size.width-38)];
+        self.voicePlayBackImageView.image = UIImageNamed(@"voice_cdimg");
+        [self.contentView addSubview:self.voicePlayBackImageView];
+        self.voicePlayBackImageView.userInteractionEnabled = YES;
+        self.voiceShowImageView.hidden = YES;
+        
+        self.voiceShowImageView = [[UIImageView alloc] initWithFrame:CGRectMake(29, 29, self.voicePlayBackImageView.frame.size.width-58, self.voicePlayBackImageView.frame.size.width-58)];
+        self.voiceShowImageView.userInteractionEnabled = YES;
+        self.voiceShowImageView.layer.masksToBounds = YES;
+        [self.voicePlayBackImageView addSubview:self.voiceShowImageView];
+        self.voiceShowImageView.hidden = YES;
+        
+        self.voiceLenL = [[NoticeTextSpaceLabel alloc] initWithFrame:CGRectMake(8, CGRectGetMaxY(self.voicePlayBackImageView.frame), 72, 16)];
+        self.voiceLenL.font = ELEVENTEXTFONTSIZE;
+        self.voiceLenL.textColor = [UIColor colorWithHexString:@"#FFFFFF"];
+        [self.contentView addSubview:self.voiceLenL];
+        
+        UIImageView *voiceBoImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+        voiceBoImg.image = UIImageNamed(@"img_voicebowen");
+        [self.voicePlayBackImageView addSubview:voiceBoImg];
+        self.playImageV = voiceBoImg;
+        voiceBoImg.userInteractionEnabled = YES;
+
+        
+        self.voiceLenL.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playNoReplay)];
+        [self.playImageV addGestureRecognizer:tap];
         
         self.infoView = [[UIButton alloc] initWithFrame:CGRectMake(0, self.frame.size.height-32, self.frame.size.width, 32)];
-        self.infoView.backgroundColor = self.contentView.backgroundColor;
+      
         [self.contentView addSubview:self.infoView];
         
         self.iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5,6, 20, 20)];
@@ -36,29 +76,8 @@
         self.nickNameL.font = ELEVENTEXTFONTSIZE;
         self.nickNameL.textColor = [UIColor colorWithHexString:@"#8A8F99"];
         [self.infoView addSubview:self.nickNameL];
-        
-  
-        
-        self.voiceLenL = [[NoticeTextSpaceLabel alloc] initWithFrame:CGRectMake(8, self.showImageView.frame.size.height-24-8, 72, 24)];
-        self.voiceLenL.layer.cornerRadius = 12;
-        self.voiceLenL.layer.masksToBounds = YES;
-        self.voiceLenL.backgroundColor = [[UIColor colorWithHexString:@"#000000"] colorWithAlphaComponent:0.3];
-        self.voiceLenL.font = ELEVENTEXTFONTSIZE;
-        self.voiceLenL.textColor = [UIColor colorWithHexString:@"#FFFFFF"];
-        self.voiceLenL.textAlignment = NSTextAlignmentRight;
-        [self.showImageView addSubview:self.voiceLenL];
-        
-        UIImageView *voiceBoImg = [[UIImageView alloc] initWithFrame:CGRectMake(6, 4, 16, 16)];
-        voiceBoImg.image = UIImageNamed(@"img_voicebowen");
-        [self.voiceLenL addSubview:voiceBoImg];
-        self.playImageV = voiceBoImg;
-        voiceBoImg.userInteractionEnabled = YES;
-        
+
         self.showImageView.userInteractionEnabled = YES;
-        
-        self.voiceLenL.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playNoReplay)];
-        [self.voiceLenL addGestureRecognizer:tap];
         
         self.markL = [[UILabel alloc] init];
         self.markL.font = [UIFont systemFontOfSize:10];
@@ -149,35 +168,72 @@
                                    options:SDWebImageRefreshCached];
     self.nickNameL.text = voiceM.subUserModel.nick_name;
     
-    
+    self.voiceShowImageView.hidden = YES;
     if (voiceM.img_list.count){
-
-        if ([voiceM.img_list[0] containsString:@".gif"] || [voiceM.img_list[0] containsString:@".GIF"]) {//如果是动图，才有yy加载，否则用sd加载
-            [self.showImageView setImageWithURL:[NSURL URLWithString:voiceM.img_list[0]] placeholder:UIImageNamed(@"Image_pubumoren") options:YYWebImageOptionShowNetworkActivity progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-            } transform:nil completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
-           
-            }];
+        self.voiceShowImageView.hidden = NO;
+        if(voiceM.content_type.intValue != 1){
+            if ([voiceM.img_list[0] containsString:@".gif"] || [voiceM.img_list[0] containsString:@".GIF"]) {//如果是动图，才有yy加载，否则用sd加载
+                [self.showImageView setImageWithURL:[NSURL URLWithString:voiceM.img_list[0]] placeholder:UIImageNamed(@"Image_pubumoren") options:YYWebImageOptionShowNetworkActivity progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                } transform:nil completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
+               
+                }];
+            }else{
+                [self.showImageView sd_setImageWithURL:[NSURL URLWithString:voiceM.img_list[0]] placeholderImage:UIImageNamed(@"Image_pubumoren") completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                 
+                }];
+            }
         }else{
-            [self.showImageView sd_setImageWithURL:[NSURL URLWithString:voiceM.img_list[0]] placeholderImage:UIImageNamed(@"Image_pubumoren") completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            [self.bkFmimageView sd_setImageWithURL:[NSURL URLWithString:voiceM.img_list[0]] placeholderImage:UIImageNamed(@"Image_voicmoren") completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
              
             }];
+            if ([voiceM.img_list[0] containsString:@".gif"] || [voiceM.img_list[0] containsString:@".GIF"]) {//如果是动图，才有yy加载，否则用sd加载
+                [self.voiceShowImageView setImageWithURL:[NSURL URLWithString:voiceM.img_list[0]] placeholder:UIImageNamed(@"Image_pubumoren") options:YYWebImageOptionShowNetworkActivity progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                } transform:nil completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
+               
+                }];
+            }else{
+                [self.voiceShowImageView sd_setImageWithURL:[NSURL URLWithString:voiceM.img_list[0]] placeholderImage:UIImageNamed(@"Image_pubumoren") completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                 
+                }];
+            }
         }
+
         
     }else{
-        [self.showImageView sd_setImageWithURL:[NSURL URLWithString:voiceM.default_img]
-                              placeholderImage:[UIImage imageNamed:@"Image_jynohe"]
-                                       options:SDWebImageRefreshCached];
+        if(voiceM.content_type.intValue == 1){
+            self.bkFmimageView.image = UIImageNamed(@"Image_voicmoren");
+        }else{
+            [self.showImageView sd_setImageWithURL:[NSURL URLWithString:voiceM.default_img]
+                                  placeholderImage:[UIImage imageNamed:@"Image_jynohe"]
+                                           options:SDWebImageRefreshCached];
+        }
     }
+    
+
     self.dataButton.image = UIImageNamed(_voiceM.is_collected.intValue?@"Image_songbgs": @"Ima_sendbgnws");
     self.showImageView.frame = CGRectMake(0, 0, self.frame.size.width, voiceM.height-32-voiceM.textPbheight);
     self.infoView.frame = CGRectMake(0, self.frame.size.height-32, self.frame.size.width, 32);
     self.nickNameL.frame = CGRectMake(28, 0, self.infoView.frame.size.width-28-52, 32);
     
     if (voiceM.content_type.intValue == 1) {
+        self.showImageView.hidden = YES;
+        self.voicePlayBackImageView.hidden = NO;
         self.voiceLenL.hidden = NO;
-        self.voiceLenL.frame = CGRectMake(8, self.showImageView.frame.size.height-24-8, 72, 24);
         self.voiceLenL.text = [NSString stringWithFormat:@"%@s    ",voiceM.nowTime.integerValue?voiceM.nowTime:voiceM.voice_len];
+        
+        self.voicePlayBackImageView.frame = CGRectMake(19, 15, self.frame.size.width-38, self.frame.size.width-38);
+        self.voiceShowImageView.frame = CGRectMake(29, 29, self.voicePlayBackImageView.frame.size.width-58, self.voicePlayBackImageView.frame.size.width-58);
+        self.voiceShowImageView.layer.cornerRadius = self.voiceShowImageView.frame.size.width/2;
+        self.playImageV.frame = CGRectMake((self.voicePlayBackImageView.frame.size.width-24)/2, (self.voicePlayBackImageView.frame.size.width-24)/2, 24, 24);
+        self.voiceLenL.frame = CGRectMake(8, CGRectGetMaxY(self.voicePlayBackImageView.frame), 72, 16);
+        self.bkFmimageView.hidden = NO;
+        self.bkFmimageView.frame = self.bounds;
+        self.visualView.frame = self.bounds;
+    
     }else{
+        self.bkFmimageView.hidden = YES;
+        self.voicePlayBackImageView.hidden = YES;
+        self.showImageView.hidden = NO;
         self.voiceLenL.hidden = YES;
     }
     

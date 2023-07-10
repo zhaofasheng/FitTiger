@@ -624,11 +624,11 @@
 //刷新UI位置
 - (void)refreshUI{
 
-    self.backView.frame = CGRectMake(0, NAVIGATION_BAR_HEIGHT+10, DR_SCREEN_WIDTH, 70 +(self.imageViewS.hidden?0:(DR_SCREEN_WIDTH-70+15)) + (self.topicView.hidden?0:30)+ (self.bgmChoiceView.hidden?0:30));
+    self.backView.frame = CGRectMake(0, NAVIGATION_BAR_HEIGHT+10, DR_SCREEN_WIDTH, 70 +(self.imageViewS.hidden?0:(DR_SCREEN_WIDTH-40+15)) + (self.topicView.hidden?0:30)+ (self.bgmChoiceView.hidden?0:30));
     
     if (self.backView.frame.size.height > (self.toolsView.frame.origin.y-10-15-NAVIGATION_BAR_HEIGHT)) {
         self.backView.frame = CGRectMake(20, NAVIGATION_BAR_HEIGHT+10, DR_SCREEN_WIDTH,self.toolsView.frame.origin.y-10-15-NAVIGATION_BAR_HEIGHT);
-        self.backView.contentSize = CGSizeMake(0, 70 +(self.imageViewS.hidden?0:DR_SCREEN_WIDTH-70+15) + (self.topicView.hidden?0:30));
+        self.backView.contentSize = CGSizeMake(0, 70 +(self.imageViewS.hidden?0:DR_SCREEN_WIDTH-40+15) + (self.topicView.hidden?0:30));
     }
     
     self.playerView.frame = CGRectMake(15,15 + (self.imageViewS.hidden?0:CGRectGetMaxY(self.imageViewS.frame)),145, 40);
