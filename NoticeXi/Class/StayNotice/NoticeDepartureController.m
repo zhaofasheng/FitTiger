@@ -93,11 +93,12 @@
     if (message.bokeModel) {
      
         NoticeVoiceComDetailView *comView = [[NoticeVoiceComDetailView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT)];
-
-        comView.comModel = message.comBokeModel;
-        comView.bokeModel = message.bokeModel;
+        
         comView.comId = message.message_type.intValue==19011?message.podcast_parent_comment_id: message.comBokeModel.subId;
+        comView.bokeModel = message.bokeModel;
         comView.titleL.text = [NoticeTools getLocalStrWith:@"cao.liiuyan"];
+        comView.comModel = message.comBokeModel;
+
         comView.voiceId = @"0";
         comView.fromBokeMsg = YES;
         [comView show];
@@ -110,10 +111,11 @@
             NoticeDanMuModel *bokeM = [NoticeDanMuModel mj_objectWithKeyValues:dict[@"data"]];
             //__weak typeof(self) weakSelf = self;
             NoticeVoiceComDetailView *comView = [[NoticeVoiceComDetailView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT)];
-            message.bokeModel = bokeM;
-            comView.comModel = message.comBokeModel;
-            comView.bokeModel = bokeM;
             comView.comId = message.message_type.intValue==19011?message.podcast_parent_comment_id: message.comBokeModel.subId;
+            message.bokeModel = bokeM;
+            comView.bokeModel = bokeM;
+            comView.comModel = message.comBokeModel;
+            
             if ([NoticeTools getLocalType] == 1) {
                 comView.titleL.text = [NSString stringWithFormat:@"Comment with%@",message.fromUser.nick_name];
             }else if ([NoticeTools getLocalType] == 2){

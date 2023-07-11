@@ -1129,6 +1129,7 @@
     inputView.num = 3000;
     inputView.delegate = self;
     inputView.isReply = YES;
+    inputView.saveKey = [NSString stringWithFormat:@"chatto%@%@",[NoticeTools getuserId],self.toUserId];
     inputView.titleL.text = [NSString stringWithFormat:@"致 %@",self.navigationItem.title];
     UIWindow *rootWindow = [UIApplication sharedApplication].keyWindow;
     [rootWindow addSubview:inputView];

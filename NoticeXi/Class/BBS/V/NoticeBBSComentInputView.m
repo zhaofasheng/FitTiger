@@ -111,8 +111,8 @@
 
     UIWindow *rootWindow = [UIApplication sharedApplication].keyWindow;
     if (commentId || self.subCommentM || self.isHelp) {
+    
         self.replyToView = [[NoticeReplyToView alloc] initWithFrame:CGRectMake(0, self.frame.origin.y-30, DR_SCREEN_WIDTH, 30)];
-  
         if (self.isHelp) {
             self.replyToView.backgroundColor = [UIColor colorWithHexString:@"#F7F8FC"];
             self.replyToView.replyLabel.textColor = [UIColor colorWithHexString:@"#8A8F99"];
@@ -300,6 +300,9 @@
        
         return;
     }
+    if(self.saveKey){
+        [NoticeComTools removeWithKey:self.saveKey];
+    }
     NSInteger num = self.limitNum?self.limitNum:500;
     if (self.contentView.text.length > num) {
         self.contentView.text = [self.contentView.text substringToIndex:num];
@@ -321,7 +324,6 @@
         self.hidden = YES;
     }
 }
-
 
 -(void)keyboardWillChangeFrame:(NSNotification *)notification{
     
@@ -388,6 +390,10 @@
     if ((self.commentId || self.subCommentM || self.needClear || self.isVoiceComment) && !self.isHelp) {
         [self clearView];
     }
+    
+    if(self.needReplyL){
+        [self clearView];
+    }
  
     self.backView.hidden = YES;
     self.frame = CGRectMake(0, DR_SCREEN_HEIGHT-self.frame.size.height-BOTTOM_HEIGHT, DR_SCREEN_WIDTH, self.frame.size.height);
@@ -412,6 +418,30 @@
     if (commentM.caogaoText) {
         _plaL.text = @"";
         self.contentView.text = commentM.caogaoText;
+    }
+}
+
+
+- (void)setSaveKey:(NSString *)saveKey{
+    _saveKey = saveKey;
+    if(saveKey){
+     
+        NSString *saveContent = [NoticeComTools getInputWithKey:saveKey];
+        if(saveContent && saveContent.length){
+            self.contentView.text = saveContent;
+      
+          //  [self textViewDidChangeSelection:self.contentView];
+        }
+    }
+}
+
+- (void)textViewDidChange:(UITextView *)textView{
+    //获取高亮部分
+    UITextPosition * position = [textView positionFromPosition:textView.markedTextRange.start offset:0];
+    if(!position){
+        if(self.saveKey){
+            [NoticeComTools saveInput:textView.text saveKey:self.saveKey];
+        }
     }
 }
 
@@ -468,7 +498,7 @@
         return;
     }
     [UIView animateWithDuration:0.1 animations:^{
-        self.frame = CGRectMake(0, DR_SCREEN_HEIGHT-(14+height)-self->kebordHeight, DR_SCREEN_WIDTH,14+height);
+        self.frame = CGRectMake(0, DR_SCREEN_HEIGHT-(14+height)-self->kebordHeight-(self->kebordHeight>0?0:50), DR_SCREEN_WIDTH,14+height);
         self->effectView.frame = CGRectMake(0,0, DR_SCREEN_WIDTH, self.frame.size.height+BOTTOM_HEIGHT);
         if (self.commentId) {
             self.replyToView.frame = CGRectMake(0, self.frame.origin.y-30, DR_SCREEN_WIDTH, 30);

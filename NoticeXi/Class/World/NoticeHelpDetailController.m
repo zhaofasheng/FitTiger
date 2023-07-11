@@ -60,7 +60,7 @@
     self.inputView.backgroundColor = [UIColor colorWithHexString:@"#F7F8FC"];
     self.inputView.plaL.textColor = [UIColor colorWithHexString:@"#A1A7B3"];
     self.inputView.plaStr = [NoticeTools getLocalType] >0 ? @"Share your idea" : @"说说你的想法…";
-    
+    self.inputView.saveKey = [NSString stringWithFormat:@"helpcom%@%@",[NoticeTools getuserId],self.helpModel.tieId];
     self.isHot = YES;
     self.dataArr = [[NSMutableArray alloc] init];
     
@@ -71,7 +71,7 @@
     self.inputView.imgBlock = ^(NSMutableArray * _Nonnull imagArr, NSString * _Nonnull commentId) {
     
         [weakSelf sendImageFor:imagArr[0] commentId:commentId];
-    };
+    };//
     self.isDown = YES;
     self.pageNo = 1;
     if (self.comModel && !self.isJubaoCom) {
@@ -81,7 +81,7 @@
         self.tableView.tableFooterView = self.buttonFootView;
         [self.dataArr addObject:self.comModel];
         [self.tableView reloadData];
-        self.inputView.isHelpCom = YES;
+        //self.inputView.isHelpCom = YES;
         self.inputView.hidden = YES;
         if (self.isFromPush) {
             [self requestHelpDetail:self.comModel.invitation_id];
@@ -492,6 +492,7 @@
         weakSelf.inputView.replyToView.replyLabel.text = [NSString stringWithFormat:@"%@:%@",[NoticeTools getLocalStrWith:@"help.reply"],model.content_type.intValue>1? [NoticeTools getLocalStrWith:@"group.imgs"]: model.content];
         weakSelf.inputView.commentId = model.commentId;
         weakSelf.inputView.hidden = NO;
+        
         [weakSelf.inputView.contentView becomeFirstResponder];
     };
     cell.deleteSuccess = ^(NSString * _Nonnull tieId) {

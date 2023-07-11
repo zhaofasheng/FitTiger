@@ -75,38 +75,54 @@
     if (helpModel.img_list.count == 1) {
         self.imageView1.hidden = NO;
         [self.imageView1 sd_setImageWithURL:[NSURL URLWithString:helpModel.img_list[0]] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-            self.imageView1.frame = CGRectMake(20, CGRectGetMaxY(self.contentL.frame)+10, DR_SCREEN_WIDTH-40, (DR_SCREEN_WIDTH-40) * (image.size.height/image.size.width));
-            self.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, 84+helpModel.allTextHeight+20+self.imageView1.frame.size.height);
+            if(image){
+                self.imageView1.frame = CGRectMake(20, CGRectGetMaxY(self.contentL.frame)+10, DR_SCREEN_WIDTH-40, (DR_SCREEN_WIDTH-40) * (image.size.height/image.size.width));
+                self.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, 84+helpModel.allTextHeight+20+self.imageView1.frame.size.height);
+            }
+            
         }];
     }else if (helpModel.img_list.count == 2){
         self.imageView1.hidden = NO;
         self.imageView2.hidden = NO;
         [self.imageView1 sd_setImageWithURL:[NSURL URLWithString:helpModel.img_list[0]] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-            self.imageView1.frame = CGRectMake(20, CGRectGetMaxY(self.contentL.frame)+10, DR_SCREEN_WIDTH-40, (DR_SCREEN_WIDTH-40) * (image.size.height/image.size.width));
-            self.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, 84+helpModel.allTextHeight+20+self.imageView1.frame.size.height);
-            
-            [self.imageView2 sd_setImageWithURL:[NSURL URLWithString:helpModel.img_list[1]] completed:^(UIImage * _Nullable image1, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-                self.imageView2.frame = CGRectMake(20, CGRectGetMaxY(self.imageView1.frame)+10, DR_SCREEN_WIDTH-40, (DR_SCREEN_WIDTH-40) * (image1.size.height/image1.size.width));
-                self.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, 84+helpModel.allTextHeight+30+self.imageView2.frame.size.height+self.imageView1.frame.size.height);
-            }];
+            if(image){
+                self.imageView1.frame = CGRectMake(20, CGRectGetMaxY(self.contentL.frame)+10, DR_SCREEN_WIDTH-40, (DR_SCREEN_WIDTH-40) * (image.size.height/image.size.width));
+                self.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, 84+helpModel.allTextHeight+20+self.imageView1.frame.size.height);
+                
+                [self.imageView2 sd_setImageWithURL:[NSURL URLWithString:helpModel.img_list[1]] completed:^(UIImage * _Nullable image1, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                    if(image1){
+                        self.imageView2.frame = CGRectMake(20, CGRectGetMaxY(self.imageView1.frame)+10, DR_SCREEN_WIDTH-40, (DR_SCREEN_WIDTH-40) * (image1.size.height/image1.size.width));
+                        self.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, 84+helpModel.allTextHeight+30+self.imageView2.frame.size.height+self.imageView1.frame.size.height);
+                    }
+                }];
+            }
         }];
     }else if (helpModel.img_list.count == 3){
         self.imageView1.hidden = NO;
         self.imageView2.hidden = NO;
         self.imageView3.hidden = NO;
         [self.imageView1 sd_setImageWithURL:[NSURL URLWithString:helpModel.img_list[0]] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-            self.imageView1.frame = CGRectMake(20, CGRectGetMaxY(self.contentL.frame)+10, DR_SCREEN_WIDTH-40, (DR_SCREEN_WIDTH-40) * (image.size.height/image.size.width));
-            self.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, 84+helpModel.allTextHeight+20+self.imageView1.frame.size.height);
-            
-            [self.imageView2 sd_setImageWithURL:[NSURL URLWithString:helpModel.img_list[1]] completed:^(UIImage * _Nullable image1, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-                self.imageView2.frame = CGRectMake(20, CGRectGetMaxY(self.imageView1.frame)+10, DR_SCREEN_WIDTH-40, (DR_SCREEN_WIDTH-40) * (image1.size.height/image1.size.width));
-                self.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, 84+helpModel.allTextHeight+30+self.imageView2.frame.size.height+self.imageView1.frame.size.height);
+            if(image){
+                self.imageView1.frame = CGRectMake(20, CGRectGetMaxY(self.contentL.frame)+10, DR_SCREEN_WIDTH-40, (DR_SCREEN_WIDTH-40) * (image.size.height/image.size.width));
+                self.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, 84+helpModel.allTextHeight+20+self.imageView1.frame.size.height);
                 
-                [self.imageView3 sd_setImageWithURL:[NSURL URLWithString:helpModel.img_list[2]] completed:^(UIImage * _Nullable image2, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-                    self.imageView3.frame = CGRectMake(20, CGRectGetMaxY(self.imageView2.frame)+10, DR_SCREEN_WIDTH-40, (DR_SCREEN_WIDTH-40) * (image2.size.height/image2.size.width));
-                    self.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, 84+helpModel.allTextHeight+40+self.imageView2.frame.size.height+self.imageView1.frame.size.height+self.imageView3.frame.size.height);
+                [self.imageView2 sd_setImageWithURL:[NSURL URLWithString:helpModel.img_list[1]] completed:^(UIImage * _Nullable image1, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                    self.imageView2.frame = CGRectMake(20, CGRectGetMaxY(self.imageView1.frame)+10, DR_SCREEN_WIDTH-40, (DR_SCREEN_WIDTH-40) * (image1.size.height/image1.size.width));
+                    if(image1){
+                        self.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, 84+helpModel.allTextHeight+30+self.imageView2.frame.size.height+self.imageView1.frame.size.height);
+                    
+                        [self.imageView3 sd_setImageWithURL:[NSURL URLWithString:helpModel.img_list[2]] completed:^(UIImage * _Nullable image2, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                            if(image2){
+                                self.imageView3.frame = CGRectMake(20, CGRectGetMaxY(self.imageView2.frame)+10, DR_SCREEN_WIDTH-40, (DR_SCREEN_WIDTH-40) * (image2.size.height/image2.size.width));
+                                self.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, 84+helpModel.allTextHeight+40+self.imageView2.frame.size.height+self.imageView1.frame.size.height+self.imageView3.frame.size.height);
+                            }
+             
+                        }];
+                    }
+               
                 }];
-            }];
+            }
+
         }];
     }
 }

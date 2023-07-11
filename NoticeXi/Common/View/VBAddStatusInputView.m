@@ -43,10 +43,16 @@
         self.cancelButton = cancelBtn;
         [cancelBtn setImage:UIImageNamed(@"Image_blackclose") forState:UIControlStateNormal];
         
-        UIButton *sendBtn = [[UIButton alloc] initWithFrame:CGRectMake(DR_SCREEN_WIDTH-50,0,50,50)];
+        UIButton *sendBtn = [[UIButton alloc] initWithFrame:CGRectMake(DR_SCREEN_WIDTH-55,0,50,50)];
         [sendBtn addTarget:self action:@selector(sendClick) forControlEvents:UIControlEventTouchUpInside];
         [self.backView addSubview:sendBtn];
         self.sendButton = sendBtn;
+        
+        self.statusL = [[UILabel alloc] initWithFrame:CGRectMake(55, 0, DR_SCREEN_WIDTH-115, 50)];
+        self.statusL.font = TWOTEXTFONTSIZE;
+        self.statusL.textColor = [UIColor colorWithHexString:@"#8A8F99"];
+        [self.backView addSubview:self.statusL];
+        self.statusL.hidden = YES;
         
         self.contentBackView = [[UIView alloc] initWithFrame:CGRectMake(20, 90, DR_SCREEN_WIDTH-40, self.backView.frame.size.height-100)];
         self.contentBackView.backgroundColor = [[UIColor colorWithHexString:@"#F7F8FC"] colorWithAlphaComponent:1];
@@ -87,16 +93,25 @@
     return self;
 }
 
+- (void)setSaveKey:(NSString *)saveKey{
+    _saveKey = saveKey;
+    if(saveKey){
+        self.statusL.hidden = NO;
+        NSString *saveContent = [NoticeComTools getInputWithKey:saveKey];
+        if(saveContent && saveContent.length){
+            self.contentView.text = saveContent;
+            [self textViewDidChangeSelection:self.contentView];
+        }
+    }
+}
+
 - (void)setIsReply:(BOOL)isReply{
     _isReply = isReply;
     if (isReply) {
         [self.cancelButton setImage:UIImageNamed(@"Image_blackclose") forState:UIControlStateNormal];
         [self.sendButton setImage:UIImageNamed(self.contentView.text.length? @"Image_sendtextbtn":@"Image_sendtextbtntext") forState:UIControlStateNormal];
     }else{
-        [self.cancelButton setTitle:[NoticeTools getLocalStrWith:@"main.cancel"] forState:UIControlStateNormal];
-        self.cancelButton.titleLabel.font = FOURTHTEENTEXTFONTSIZE;
-        [self.cancelButton setTitleColor:[UIColor colorWithHexString:@"#333333"] forState:UIControlStateNormal];
-        
+
         [self.sendButton setTitle:[NoticeTools getLocalStrWith:@"groupfm.finish"] forState:UIControlStateNormal];
         self.sendButton.titleLabel.font = FOURTHTEENTEXTFONTSIZE;
         [self.sendButton setTitleColor:[UIColor colorWithHexString:@"#A1A7B3"] forState:UIControlStateNormal];
@@ -129,6 +144,21 @@
     [self removeFromSuperview];
 }
 
+- (void)textViewDidChange:(UITextView *)textView{
+    //获取高亮部分
+    UITextPosition * position = [textView positionFromPosition:textView.markedTextRange.start offset:0];
+    if(position){
+        if (self.saveKey) {
+            self.statusL.text = @"内容保存中...";
+        }
+    }else{
+        if(self.saveKey){
+            [NoticeComTools saveInput:textView.text saveKey:self.saveKey];
+        }
+        self.statusL.text = @"内容已保存";
+    }
+}
+
 - (void)textViewDidChangeSelection:(UITextView *)textView{
     if (textView.text.length) {
         _plaL.text = @"";
@@ -152,9 +182,9 @@
     if (height <= 22) {
         height = 20;
     }
- 
+   
     [UIView animateWithDuration:0.1 animations:^{
-        self.contentView.frame = CGRectMake(15,5, DR_SCREEN_WIDTH-40-30, height-5);
+        self.contentView.frame = CGRectMake(15,5, DR_SCREEN_WIDTH-40-30, height);
 
     } completion:nil];
 }
@@ -176,6 +206,10 @@
     }
     [self.contentView resignFirstResponder];
     [self removeFromSuperview];
+    if(self.saveKey){
+        [NoticeComTools removeWithKey:self.saveKey];
+    }
+    
     if (self.contentView.text.length && self.contentView.text.length < self.num) {
         if (self.delegate && [self.delegate respondsToSelector:@selector(sendTextDelegate:)]) {
             [self.delegate sendTextDelegate:self.contentView.text];

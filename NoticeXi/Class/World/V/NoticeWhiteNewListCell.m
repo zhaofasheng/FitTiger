@@ -676,6 +676,7 @@
 }
 //点击留言
 - (void)tapCom{
+    self.inputView.saveKey = [NSString stringWithFormat:@"voicecom%@%@",[NoticeTools getuserId],self.voiceM.voice_id];
     [self.inputView.contentView becomeFirstResponder];
     [self.inputView showJustComment:nil];
 }
@@ -952,6 +953,7 @@
     inputView.num = 3000;
     inputView.delegate = self;
     inputView.isReply = YES;
+    inputView.saveKey = [NSString stringWithFormat:@"qqchat%@%@%@",[NoticeTools getuserId],self.voiceM.voice_id,self.voiceM.subUserModel.userId];
     inputView.titleL.text = [NSString stringWithFormat:@"致 %@",self.voiceM.subUserModel.nick_name];
     UIWindow *rootWindow = [UIApplication sharedApplication].keyWindow;
     [rootWindow addSubview:inputView];

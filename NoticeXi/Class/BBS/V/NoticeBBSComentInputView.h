@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIButton *sendButton;
 @property (nonatomic, strong) NoticeReplyToView *replyToView;
 @property (nonatomic, strong) NSString *replyTo;
-
+@property (nonatomic, strong) NSString *saveKey;
 @property (nonatomic, strong) NSString *toUserId;
 @property (nonatomic, strong) NoticeBBSComent *commentM;
 @property (nonatomic, strong) NoticeSubComentModel *subCommentM;
@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isHelp;
 @property (nonatomic, assign) BOOL ispy;
 @property (nonatomic, assign) BOOL isHelpCom;
-
+@property (nonatomic, assign) BOOL needReplyL;
 @property (nonatomic, assign) BOOL ismanager;
 @property (nonatomic, assign) BOOL isVoiceComment;
 @property (nonatomic, assign) NSInteger limitNum;

@@ -111,6 +111,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)saveHasShowLeader;
 + (NSString *)getShowLeader;
 
++ (void)saveInput:(NSString *)content saveKey:(NSString *)saveKey;
++ (NSString *)getInputWithKey:(NSString *)saveKey;
++ (void)removeWithKey:(NSString *)saveKey;
 @end
 
 NS_ASSUME_NONNULL_END

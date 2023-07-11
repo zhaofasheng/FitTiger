@@ -126,7 +126,7 @@
             weakSelf.deletePyBlock(pyModel);
         }
     };
-    [nav.topViewController.navigationController pushViewController:ctl animated:YES];
+    [nav.topViewController.navigationController pushViewController:ctl animated:NO];
 }
 
 - (void)tapAciton:(UITapGestureRecognizer *)tap{

@@ -317,7 +317,7 @@
 }
 //点击留言
 - (void)editTap{
-
+    self.inputView.saveKey = [NSString stringWithFormat:@"voicecom%@%@",[NoticeTools getuserId],self.voiceM.voice_id];
     [self.inputView.contentView becomeFirstResponder];
     [self.inputView showJustComment:nil];
 }

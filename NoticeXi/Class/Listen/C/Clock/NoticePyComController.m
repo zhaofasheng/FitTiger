@@ -16,6 +16,7 @@
 @property (nonatomic, strong) NSString *lastId;
 @property (nonatomic, strong) NSMutableArray *comArr;
 @property (nonatomic, strong) NoticeBBSComentInputView *inputView;
+@property (nonatomic, strong) NoticeBBSComentInputView *replyView;
 @property (nonatomic, strong) UIView *titleHeadView;
 @property (nonatomic, strong) NoticeClockPyModel *oldModel;
 @property (nonatomic, strong) UIButton *deleteBtn;
@@ -32,6 +33,8 @@
     [super viewWillDisappear:animated];
     [self.inputView.contentView resignFirstResponder];
     [self.inputView clearView];
+    [self.replyView.contentView resignFirstResponder];
+    [self.replyView clearView];
     AppDelegate *appdel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appdel.floatView.hidden = [NoticeTools isHidePlayThisDeveiceThirdVC]?YES: NO;
     [self.audioPlayer stopPlaying];
@@ -81,14 +84,15 @@
         if (!self.pyMOdel.comArr.count && !self.pyId && !self.noBecomFirst  && !self.pyMOdel.comment_num.intValue ) {
             [self.inputView.contentView becomeFirstResponder];
         }
-
+        
         if (self.pyMOdel) {
             if (self.pyMOdel.is_anonymous.boolValue) {
                 [self.inputView.contentView resignFirstResponder];
                 self.inputView.hidden = YES;
             }
         }
-        
+        self.inputView.saveKey = [NSString stringWithFormat:@"pycom%@%@",[NoticeTools getuserId],self.pyMOdel.dubbing_id.intValue?self.pyMOdel.dubbing_id:self.pyMOdel.pyId];
+        self.inputView.frame = CGRectMake(0, DR_SCREEN_HEIGHT-self.inputView.frame.size.height-BOTTOM_HEIGHT, DR_SCREEN_WIDTH, self.inputView.frame.size.height);
         UIView *bottomV = [[UIView alloc] initWithFrame:CGRectMake(0, DR_SCREEN_HEIGHT- BOTTOM_HEIGHT, DR_SCREEN_WIDTH, BOTTOM_HEIGHT)];
         bottomV.backgroundColor = [UIColor colorWithHexString:@"#FFFFFF"];
         [self.view addSubview:bottomV];
@@ -214,6 +218,12 @@
     } fail:^(NSError * _Nullable error) {
         [self hideHUD];
     }];
+}
+
+- (void)setPyMOdel:(NoticeClockPyModel *)pyMOdel{
+    _pyMOdel = pyMOdel;
+    self.inputView.saveKey = [NSString stringWithFormat:@"pycom%@%@",[NoticeTools getuserId],pyMOdel.dubbing_id.intValue?pyMOdel.dubbing_id:pyMOdel.pyId];
+    
 }
 
 - (void)createRefesh{
@@ -396,17 +406,24 @@
         if (comM.reply) {
             return;
         }
-        NoticeBBSComentInputView *replyView = [[NoticeBBSComentInputView alloc] initWithFrame:CGRectMake(0,DR_SCREEN_HEIGHT-BOTTOM_HEIGHT-50, DR_SCREEN_WIDTH, 50)];
-        replyView.commentId = comM.commentId;
-        replyView.limitNum = 50;
-        replyView.ispy = YES;
-        replyView.delegate = self;
-        replyView.plaStr = [NoticeTools getTextWithSim:[NoticeTools getLocalStrWith:@"py.whatyousay"] fantText:@"妳想說點啥"];
-        [replyView showJustComment:comM.commentId];
-        [replyView.contentView becomeFirstResponder];
-        replyView.replyToView.replyLabel.text = [NSString stringWithFormat:@"回复 %@:%@",comM.userInfo.nick_name,comM.comment_content];
+
+        
+        self.replyView = [[NoticeBBSComentInputView alloc] initWithFrame:CGRectMake(0,DR_SCREEN_HEIGHT-BOTTOM_HEIGHT-50, DR_SCREEN_WIDTH, 50)];
+        _replyView.isHelp = YES;
+        _replyView.needReplyL = YES;
+        _replyView.limitNum = 50;
+        _replyView.ispy = YES;
+        _replyView.delegate = self;
+        _replyView.plaStr = [NoticeTools getTextWithSim:[NoticeTools getLocalStrWith:@"py.whatyousay"] fantText:@"妳想說點啥"];
+        self.replyView.saveKey = [NSString stringWithFormat:@"pycomreply%@%@%@",[NoticeTools getuserId],self.pyMOdel.dubbing_id.intValue?self.pyMOdel.dubbing_id:self.pyMOdel.pyId,comM.commentId];
+        
+        self.replyView.commentId = comM.commentId;
+        [self.replyView showJustComment:comM.commentId];
+        [self.replyView.contentView becomeFirstResponder];
+        self.replyView.replyToView.replyLabel.text = [NSString stringWithFormat:@"回复 %@:%@",comM.userInfo.nick_name,comM.comment_content];
     }
 }
+
 
 - (void)beginDrag:(NSInteger)tag{
     self.tableView.scrollEnabled = NO;

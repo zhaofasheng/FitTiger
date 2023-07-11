@@ -74,11 +74,11 @@
         model.currentComM.is_allow_reply = @"0";
         comView.titleL.text = [NoticeTools getLocalStrWith:@"ly.lydetail"];
     }
-
-    comView.comModel = comM;
-    comView.voiceM = model.voiceM;
+    
     comView.comId = model.message_type.intValue == 17100? model.currentComM.subId:model.parrentComM.subId;
     comView.voiceId = model.voice_id;
+    comView.voiceM = model.voiceM;
+    comView.comModel = comM;
     [comView show];
 }
 

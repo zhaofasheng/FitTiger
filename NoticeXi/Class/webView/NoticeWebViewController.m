@@ -406,6 +406,7 @@
     inputView.num = 1000;
     inputView.delegate = self;
     inputView.isReply = NO;
+    inputView.saveKey = [NSString stringWithFormat:@"html%@-%@",[NoticeTools getuserId],self.web.html_id];
     inputView.titleL.text = [NoticeTools getLocalStrWith:@"yl.saytozuozhe"];
     inputView.plaStr = [NoticeTools getLocalStrWith:@"yl.inpzuo"];
     UIWindow *rootWindow = [UIApplication sharedApplication].keyWindow;

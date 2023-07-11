@@ -59,6 +59,5 @@
 #import "NoticeWebViewController.h"
 #import "NoticeHelpDetailController.h"
 #import "NoticeSendBoKeController.h"
-#import "NoticeVoiceComDetailView.h"
 #import "NoticeTeamChatController.h"
 #import "FSCustomButton.h"

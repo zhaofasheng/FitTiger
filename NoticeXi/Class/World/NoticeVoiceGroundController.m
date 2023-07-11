@@ -281,6 +281,7 @@
     inputView.delegate = self;
     inputView.isReply = YES;
     inputView.titleL.text = [NSString stringWithFormat:@"致 %@",self.hsVoiceM.subUserModel.nick_name];
+    inputView.saveKey = [NSString stringWithFormat:@"qqchat%@%@%@",[NoticeTools getuserId],self.hsVoiceM.voice_id,self.hsVoiceM.subUserModel.userId];;
     UIWindow *rootWindow = [UIApplication sharedApplication].keyWindow;
     [rootWindow addSubview:inputView];
     [inputView.contentView becomeFirstResponder];

@@ -685,6 +685,7 @@
 }
 //点击留言
 - (void)tapCom{
+    self.inputView.saveKey = [NSString stringWithFormat:@"voicecom%@%@",[NoticeTools getuserId],self.voiceM.voice_id];
     [self.inputView.contentView becomeFirstResponder];
     [self.inputView showJustComment:nil];
 }
@@ -960,6 +961,7 @@
     VBAddStatusInputView *inputView = [[VBAddStatusInputView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT)];
     inputView.num = 3000;
     inputView.delegate = self;
+    inputView.saveKey = [NSString stringWithFormat:@"qqchat%@%@%@",[NoticeTools getuserId],self.voiceM.voice_id,self.voiceM.subUserModel.userId];;
     inputView.isReply = YES;
     inputView.titleL.text = [NSString stringWithFormat:@"致 %@",self.voiceM.subUserModel.nick_name];
     UIWindow *rootWindow = [UIApplication sharedApplication].keyWindow;

@@ -358,6 +358,7 @@
     VBAddStatusInputView *inputView = [[VBAddStatusInputView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT)];
     inputView.num = 3000;
     inputView.delegate = self;
+    inputView.saveKey = [NSString stringWithFormat:@"qqchat%@%@%@",[NoticeTools getuserId],self.voiceM.voice_id,[NSString stringWithFormat:@"%@%@",socketADD,[self.chat.subUserModel.userId isEqualToString:[[NoticeSaveModel getUserInfo] user_id]] ? self.voiceM.subUserModel.userId : self.chat.subUserModel.userId]];
     inputView.isReply = YES;
     inputView.titleL.text = [NSString stringWithFormat:@"致 %@",[self.chat.subUserModel.userId isEqualToString:[[NoticeSaveModel getUserInfo] user_id]] ? self.voiceM.subUserModel.nick_name : self.chat.subUserModel.nick_name];
     UIWindow *rootWindow = [UIApplication sharedApplication].keyWindow;

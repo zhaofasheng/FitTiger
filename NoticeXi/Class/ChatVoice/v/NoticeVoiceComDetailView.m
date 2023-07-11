@@ -80,7 +80,12 @@
         self.inputView.contentView.backgroundColor = [UIColor colorWithHexString:@"#F7F8FC"];
         self.inputView.contentView.textColor = [UIColor colorWithHexString:@"#25262E"];
         self.inputView.plaL.textColor = [UIColor colorWithHexString:@"#A1A7B3"];
-    
+        if(self.bokeModel){
+            self.inputView.saveKey = [NSString stringWithFormat:@"bokereplyLy%@%@-%@",[NoticeTools getuserId],self.bokeModel.bokeId,self.comId];
+        }else if (self.voiceM){
+            self.inputView.saveKey = [NSString stringWithFormat:@"voicereplyLy%@%@-%@",[NoticeTools getuserId],self.voiceM.voice_id,self.comId];
+        }
+        
     }
 }
 
@@ -88,6 +93,7 @@
     _bokeModel = bokeModel;
     if (bokeModel) {
         self.inputView.plaStr = [NoticeTools chinese:@"回复留言" english:@"Reply" japan:@"返事"];
+        self.inputView.saveKey = [NSString stringWithFormat:@"bokereplyLy%@%@-%@",[NoticeTools getuserId],bokeModel.bokeId,self.comId];
     }
 }
 

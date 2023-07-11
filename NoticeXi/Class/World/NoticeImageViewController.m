@@ -97,7 +97,10 @@
     self.inputView.contentView.backgroundColor = [UIColor colorWithHexString:@"#FFFFFF"];
     self.inputView.contentView.textColor = [UIColor colorWithHexString:@"#25262E"];
     self.inputView.plaL.textColor = [UIColor colorWithHexString:@"#A1A7B3"];
-  
+    if(self.bannerM){
+        self.inputView.saveKey = [NSString stringWithFormat:@"readday%@%@",[NoticeTools getuserId],self.bannerM.bannerId];
+    }
+    
     AppDelegate *appdel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     if (self.isLead) {
         appdel.noPop = YES;
@@ -213,6 +216,9 @@
         self.likeNumL.hidden = YES;
         [self.likeButton setBackgroundImage:UIImageNamed(@"Image_readlike") forState:UIControlStateNormal];
     }
+    self.inputView.saveKey = [NSString stringWithFormat:@"readday%@%@",[NoticeTools getuserId],bannerM.bannerId];
+    
+    
 }
 
 - (void)likeClick{

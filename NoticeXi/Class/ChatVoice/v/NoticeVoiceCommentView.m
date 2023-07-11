@@ -129,7 +129,8 @@
 - (void)sendWithComment:(NSString *)comment commentId:(NSString *)commentId{
     [self sendCommentWithText:comment voiceId:self.bokeModel?self.bokeModel.bokeId: self.voiceM.voice_id subId:commentId];
 }
-    
+
+
 - (void)requestData{
    
     NSString *url = nil;
@@ -194,6 +195,7 @@
 - (void)setVoiceM:(NoticeVoiceListModel *)voiceM{
     _voiceM = voiceM;
     if (voiceM) {
+        self.inputView.saveKey = [NSString stringWithFormat:@"voicecom%@%@",[NoticeTools getuserId],voiceM.voice_id];
         self.inputView.plaStr = [NoticeTools getLocalStrWith:@"ly.openis"];
     }
     if (self.isVoiceDetail) {
@@ -213,6 +215,7 @@
     _bokeModel = bokeModel;
     if (bokeModel) {
         self.inputView.plaStr = [NoticeTools chinese:@"就是你了，留下言嘛…" english:@"Leave a comment" japan:@"コメント"];
+        self.inputView.saveKey = [NSString stringWithFormat:@"bokeLy%@%@",[NoticeTools getuserId],bokeModel.bokeId];
     }
     if (!self.noRequest) {
         self.isDown = YES;

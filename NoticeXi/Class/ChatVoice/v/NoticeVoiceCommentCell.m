@@ -346,10 +346,10 @@
     }
     __weak typeof(self) weakSelf = self;
     NoticeVoiceComDetailView *comView = [[NoticeVoiceComDetailView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT)];
-    comView.comModel = self.comModel;
-    comView.voiceM = self.voiceM;
-    comView.bokeModel = self.bokeModel;
     comView.comId = self.comModel.subId;
+    comView.bokeModel = self.bokeModel;
+    comView.voiceM = self.voiceM;
+    comView.comModel = self.comModel;
     comView.voiceId = self.comModel.voice_id;
     if (self.comModel.is_allow_reply.boolValue) {
         NSString *userId = self.bokeModel?self.bokeModel.user_id:self.voiceM.subUserModel.userId;
@@ -392,11 +392,12 @@
 
 - (void)replyClick{
     NoticeVoiceComDetailView *comView = [[NoticeVoiceComDetailView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT)];
-    comView.bokeModel = self.bokeModel;
-    comView.comModel = self.comModel;
-    comView.voiceM = self.voiceM;
     comView.comId = self.comModel.subId;
     comView.voiceId = self.comModel.voice_id;
+    comView.bokeModel = self.bokeModel;
+    comView.voiceM = self.voiceM;
+
+    comView.comModel = self.comModel;
     if (self.comModel.is_allow_reply.boolValue) {
         if ([NoticeTools getLocalType] == 1) {
             comView.titleL.text = [NSString stringWithFormat:@"Comment with%@",self.comModel.fromUser.nick_name];

@@ -163,6 +163,7 @@
     VBAddStatusInputView *inputView = [[VBAddStatusInputView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT)];
     inputView.num = 3000;
     inputView.delegate = self;
+    inputView.saveKey = [NSString stringWithFormat:@"qqchat%@%@%@",[NoticeTools getuserId],self.hsVoiceM.voice_id,self.hsVoiceM.subUserModel.userId];
     inputView.titleL.text = [NSString stringWithFormat:@"致 %@",self.hsVoiceM.subUserModel.nick_name];
     inputView.isReply = YES;
     UIWindow *rootWindow = [UIApplication sharedApplication].keyWindow;

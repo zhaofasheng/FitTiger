@@ -520,6 +520,22 @@
     return  [[cache objectForKey:[NSString stringWithFormat:@"banner%@",banner]] integerValue];
 }
 
++ (void)saveInput:(NSString *)content saveKey:(NSString *)saveKey{
+    NSUserDefaults * cache = [NSUserDefaults standardUserDefaults];
+    [cache setObject:content forKey:saveKey];
+    [cache synchronize];
+}
+
++ (NSString *)getInputWithKey:(NSString *)saveKey{
+    NSUserDefaults * cache = [NSUserDefaults standardUserDefaults];
+    return  [cache objectForKey:saveKey];
+}
+
++ (void)removeWithKey:(NSString *)saveKey{
+    NSUserDefaults * cache = [NSUserDefaults standardUserDefaults];
+    [cache removeObjectForKey:saveKey];
+    [cache synchronize];
+}
 
 + (void)saveCurrentFindTime{
     if ([NoticeTools getBeiJingTimeWithFormort:@"yyyy-MM-dd"]) {

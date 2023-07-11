@@ -18,22 +18,22 @@
 //#define socketHeader @"ws"
 
 //测试环境
-//#define BASE_URL @"http://stagapi.byebyetext.com/api/app/"
-//#define bucketNameVoice @"sx-stag"//sx-local本地   sx-stag测试   sx-pros生产
-//#define yunxinDeleteId @"sx_stag_0"//私聊列表要删除的sessionId
-//#define socketIP @"47.92.213.243"
-//#define socketPort @":9502"
-//#define socketADD @"sx_stag_"
-//#define socketHeader @"ws"
+#define BASE_URL @"http://stagapi.byebyetext.com/api/app/"
+#define bucketNameVoice @"sx-stag"//sx-local本地   sx-stag测试   sx-pros生产
+#define yunxinDeleteId @"sx_stag_0"//私聊列表要删除的sessionId
+#define socketIP @"47.92.213.243"
+#define socketPort @":9502"
+#define socketADD @"sx_stag_"
+#define socketHeader @"ws"
 
 //正式环境 
-#define BASE_URL @"https://sx.byebyetext.com/api/app/"
-#define bucketNameVoice @"sx-pro"//sx-local本地   sx-stag测试   sx-pro生产
-#define yunxinDeleteId @"sx_pro_0"//私聊列表要删除的sessionId
-#define socketIP @"sx.byebyetext.com/websocket"
-#define socketPort @""
-#define socketADD @"sx_pro_"
-#define socketHeader @"wss"
+//#define BASE_URL @"https://sx.byebyetext.com/api/app/"
+//#define bucketNameVoice @"sx-pro"//sx-local本地   sx-stag测试   sx-pro生产
+//#define yunxinDeleteId @"sx_pro_0"//私聊列表要删除的sessionId
+//#define socketIP @"sx.byebyetext.com/websocket"
+//#define socketPort @""
+//#define socketADD @"sx_pro_"
+//#define socketHeader @"wss"
 
 #define kTimeOutInterval 30 // 请求超时的时间
 

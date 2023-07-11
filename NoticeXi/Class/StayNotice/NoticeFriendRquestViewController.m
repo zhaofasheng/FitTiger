@@ -226,12 +226,12 @@
             if (message.type.intValue >= 19012) {
                 comView.noInputView = YES;
             }
-            comView.comModel = message.comBokeModel;
-            comView.bokeModel = bokeM;
             comView.comId = message.comBokeModel.subId;
             comView.titleL.text = [NoticeTools getLocalStrWith:@"cao.liiuyan"];
             comView.voiceId = @"0";
             comView.fromBokeMsg = YES;
+            comView.bokeModel = bokeM;
+            comView.comModel = message.comBokeModel;
             [comView show];
         }
     } fail:^(NSError * _Nullable error) {
