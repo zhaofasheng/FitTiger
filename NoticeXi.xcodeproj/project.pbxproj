@@ -1256,6 +1256,7 @@
 		A44AAA352178861500D1833B /* NoticeXiTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A44AAA342178861500D1833B /* NoticeXiTests.m */; };
 		A44AAA402178861500D1833B /* NoticeXiUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = A44AAA3F2178861500D1833B /* NoticeXiUITests.m */; };
 		A451DBFE23853C2500D9048F /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A451DBFD23853C2500D9048F /* MediaPlayer.framework */; };
+		A457329A2A5E46FB0029C4CB /* NoticeUserBokeListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A45732992A5E46FB0029C4CB /* NoticeUserBokeListController.swift */; };
 		A45957C62A4001860017A852 /* NoticeSuperMangerClickPersongController.m in Sources */ = {isa = PBXBuildFile; fileRef = A45957C52A4001860017A852 /* NoticeSuperMangerClickPersongController.m */; };
 		A45F696D2A26EB6F004A325D /* NoticeBodyController.m in Sources */ = {isa = PBXBuildFile; fileRef = A45F696C2A26EB6F004A325D /* NoticeBodyController.m */; };
 		A45F69702A26ECD7004A325D /* NoticeTeamsController.m in Sources */ = {isa = PBXBuildFile; fileRef = A45F696F2A26ECD7004A325D /* NoticeTeamsController.m */; };
@@ -3640,6 +3641,7 @@
 		A44AAA3F2178861500D1833B /* NoticeXiUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NoticeXiUITests.m; sourceTree = "<group>"; };
 		A44AAA412178861500D1833B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A451DBFD23853C2500D9048F /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		A45732992A5E46FB0029C4CB /* NoticeUserBokeListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeUserBokeListController.swift; sourceTree = "<group>"; };
 		A45957C42A4001860017A852 /* NoticeSuperMangerClickPersongController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NoticeSuperMangerClickPersongController.h; sourceTree = "<group>"; };
 		A45957C52A4001860017A852 /* NoticeSuperMangerClickPersongController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NoticeSuperMangerClickPersongController.m; sourceTree = "<group>"; };
 		A45F696B2A26EB6F004A325D /* NoticeBodyController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NoticeBodyController.h; sourceTree = "<group>"; };
@@ -5225,6 +5227,9 @@
 				A416440C29C9826700446CE7 /* NoticeMyBokeController.m */,
 				A416440829C9826700446CE7 /* NoticeSendBoKeController.h */,
 				A416441029C9826700446CE7 /* NoticeSendBoKeController.m */,
+				A416444929C9826800446CE7 /* NoticeListenViewController.h */,
+				A416444D29C9826800446CE7 /* NoticeListenViewController.m */,
+				A45732992A5E46FB0029C4CB /* NoticeUserBokeListController.swift */,
 				A416441729C9826700446CE7 /* V */,
 			);
 			path = DanMu;
@@ -5318,8 +5323,6 @@
 			children = (
 				A416446829C9826800446CE7 /* C */,
 				A416444F29C9826800446CE7 /* m */,
-				A416444929C9826800446CE7 /* NoticeListenViewController.h */,
-				A416444D29C9826800446CE7 /* NoticeListenViewController.m */,
 				A416444A29C9826800446CE7 /* NoticeMoreVoiceController.h */,
 				A416444E29C9826800446CE7 /* NoticeMoreVoiceController.m */,
 				A416444C29C9826800446CE7 /* NoticeMyCareController.h */,
@@ -8759,6 +8762,7 @@
 				A4164CD029C9827100446CE7 /* NoticeHelpCommentCell.m in Sources */,
 				A4164D0229C9827200446CE7 /* NoticeNewChatVoiceView.m in Sources */,
 				A4164E7129C9827400446CE7 /* NoticeShopMyWallectController.m in Sources */,
+				A457329A2A5E46FB0029C4CB /* NoticeUserBokeListController.swift in Sources */,
 				A4164E8E29C9827400446CE7 /* NoticeQiaojjieTools.m in Sources */,
 				A4164E2B29C9827300446CE7 /* NoticeBingGanCollCell.m in Sources */,
 				A4164D5229C9827200446CE7 /* NoticeMoveMemberModel.m in Sources */,
@@ -9530,10 +9534,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
 				CODE_SIGN_ENTITLEMENTS = NoticeXi/NoticeXi.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 216;
+				CURRENT_PROJECT_VERSION = 218;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = NO;
 				DEPLOYMENT_POSTPROCESSING = YES;
@@ -9566,7 +9570,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.6.2;
+				MARKETING_VERSION = 5.6.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gmdoc.xi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -9589,11 +9593,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
 				CODE_SIGN_ENTITLEMENTS = NoticeXi/NoticeXi.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 216;
+				CURRENT_PROJECT_VERSION = 218;
 				DEFINES_MODULE = NO;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = XD7545Y7QW;
@@ -9625,7 +9629,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.6.2;
+				MARKETING_VERSION = 5.6.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gmdoc.xi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

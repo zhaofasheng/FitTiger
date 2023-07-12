@@ -30,7 +30,7 @@
 #import "NoticeUserCenterVoiceController.h"
 #import "NoticeSeasonViewController.h"
 #import "NoticeUserCenterDubbingAndTcController.h"
-
+#import "NoticeXi-Swift.h"
 //获取全局并发队列和主队列的宏定义
 #define globalQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)
 #define mainQueue dispatch_get_main_queue()
@@ -64,6 +64,7 @@
 @property (nonatomic, strong) UIView *fgView;
 @property (nonatomic, strong) UIView *pingbV;
 @property (nonatomic, strong) UILabel *pingbL;
+@property (nonatomic, strong) NoticeUserBokeListController *bokeVC;
 @property (nonatomic, strong) NoticeSeasonViewController *seasonVC;
 @end
 
@@ -101,7 +102,7 @@
     
     self.view.backgroundColor = [UIColor colorWithHexString:@"#14151A"];
         
-    self.titles = @[[NoticeTools getLocalStrWith:@"yl.xinqing"],[NoticeTools getLocalStrWith:@"minee.xqzj"],[NoticeTools getLocalStrWith:@"main.py"]];
+    self.titles = @[[NoticeTools getLocalStrWith:@"yl.xinqing"],[NoticeTools getLocalStrWith:@"main.bk"],[NoticeTools getLocalStrWith:@"minee.xqzj"],[NoticeTools getLocalStrWith:@"main.py"]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newOrder) name:@"HASNEWORDERCHANTORDER" object:nil];
     
@@ -297,10 +298,22 @@
     if (index == 0) {
         return self.voiceVC;
     }else if (index == 1) {
+        return self.bokeVC;
+    }
+    else if (index == 2) {
         return self.seasonVC;
     }else{
         return self.pyVC;
     }
+}
+
+- (NoticeUserBokeListController *)bokeVC{
+    if(!_bokeVC){
+        _bokeVC = [[NoticeUserBokeListController alloc] init];
+        _bokeVC.userid = self.isOther? self.userId:[NoticeTools getuserId];
+        _bokeVC.isOhter = self.isOther;
+    }
+    return _bokeVC;
 }
 
 - (NoticeUserCenterDubbingAndTcController *)pyVC{

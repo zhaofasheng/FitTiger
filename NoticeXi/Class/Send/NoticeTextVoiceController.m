@@ -167,6 +167,7 @@
         self.zjChoiceView.closeBtn.hidden = YES;
     }
     
+    
     UIButton *webBtn = [[UIButton alloc] initWithFrame:CGRectMake(DR_SCREEN_WIDTH-40, DR_SCREEN_HEIGHT-BOTTOM_HEIGHT-50-20-14,20, 20)];
     [webBtn setImage:UIImageNamed(@"ywh_black") forState:UIControlStateNormal];
     [webBtn addTarget:self action:@selector(webClick) forControlEvents:UIControlEventTouchUpInside];

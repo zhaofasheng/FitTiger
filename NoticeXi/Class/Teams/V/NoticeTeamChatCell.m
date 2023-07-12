@@ -93,8 +93,21 @@
         [self.contentView addSubview:self.failButton];
         [self.failButton addTarget:self action:@selector(failClick) forControlEvents:UIControlEventTouchUpInside];
         self.failButton.hidden = YES;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editNameNotice:) name:@"CHANGETEAMMASSNICKNAMENotification" object:nil];
     }
     return self;
+}
+
+
+- (void)editNameNotice:(NSNotification*)notification{
+    NSDictionary *Dictionary = [notification userInfo];
+    NSString *userId = Dictionary[@"userId"];
+    NSString *name = Dictionary[@"nickName"];
+    if([self.chatModel.from_user_id isEqualToString:userId]){
+        self.chatModel.fromUserM.mass_nick_name = name;
+        self.nickNameL.text = name;
+    }
 }
 
 - (void)failClick{
@@ -329,6 +342,10 @@
     self.chatModel.hasDowned = YES;
     CGFloat imageWidth = CGImageGetWidth(image.CGImage);
     CGFloat imageHeight = CGImageGetHeight(image.CGImage);
+    if(!image){
+        imageWidth = 100;
+        imageHeight = 100;
+    }
     CGFloat beishu = imageHeight/imageWidth;
 
     if (beishu < 0.86){
@@ -528,11 +545,22 @@
     if(self.clickHeaderBlock){
         self.clickHeaderBlock(YES);
     }
-    
+    if (!self.photoArr.count) {
+        return;
+    }
+    NSMutableArray *newArr = [NSMutableArray arrayWithArray:self.photoArr];
+    NSInteger index = 0;
+    for (YYPhotoGroupItem *item in self.photoArr) {//找到当前点击图片在图片数组里面的位置,然后替换位置
+        if ([item.smallUrlString isEqualToString:self.chatModel.resource_url]) {
+            break;
+        }
+        index++;
+    }
     YYPhotoGroupItem *item = [YYPhotoGroupItem new];
     item.thumbView         = self.sendImageView;
     item.largeImageURL     = [NSURL URLWithString:self.chatModel.resource_url];
-    YYPhotoGroupView *photoView = [[YYPhotoGroupView alloc] initWithGroupItems:@[item]];
+    [newArr replaceObjectAtIndex:index withObject:item];
+    YYPhotoGroupView *photoView = [[YYPhotoGroupView alloc] initWithGroupItems:newArr];
     UIView *toView         = [UIApplication sharedApplication].keyWindow.rootViewController.view;
     [photoView presentFromImageView:_sendImageView toContainer:toView animated:YES completion:nil];
 }

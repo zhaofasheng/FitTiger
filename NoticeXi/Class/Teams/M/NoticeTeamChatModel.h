@@ -72,6 +72,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *isSaveCace;
 @property (nonatomic, strong) NSString *saveId;//缓存保存id
 
+//修改社团昵称的返回socket
+@property (nonatomic, strong) NSString *nick_name;
+
 @end
 
 NS_ASSUME_NONNULL_END

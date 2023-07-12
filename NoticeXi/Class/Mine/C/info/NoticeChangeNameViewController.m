@@ -58,7 +58,6 @@
     self.nameField.font =FIFTHTEENTEXTFONTSIZE;
     self.nameField.textColor = [UIColor colorWithHexString:@"#25262E"];
 
-    [self.nameField becomeFirstResponder];
     [backV addSubview:self.nameField];
     
     //光标右移

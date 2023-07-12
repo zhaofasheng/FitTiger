@@ -330,14 +330,6 @@
         
     }
     
-    YYPhotoGroupItem *item = [YYPhotoGroupItem new];
-    if (!self.isLocaImage) {
-        NSArray *array = [_imgArr[tapView.tag] componentsSeparatedByString:@"?"];
-        item.largeImageURL     = [NSURL URLWithString:array[0]];
-    }
-    
-    item.thumbView         = tapView;
-    
     YYPhotoGroupView *view = [[YYPhotoGroupView alloc] initWithGroupItems:_photosItemArr];
     UIView *toView         = [UIApplication sharedApplication].keyWindow.rootViewController.view;
     [view presentFromImageView:tapView

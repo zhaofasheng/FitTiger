@@ -35,6 +35,8 @@
 @property (nonatomic, strong) UIImageView *imageView1;
 @property (nonatomic, strong) UIImageView *imageView2;
 @property (nonatomic, strong) UIImageView *imageView3;
+@property (nonatomic, strong) NSMutableAttributedString *attStr1;
+@property (nonatomic, strong) NSMutableAttributedString *attStr2;
 @end
 
 @implementation NoticreSendHelpController
@@ -409,6 +411,7 @@
 
 - (void)textFieldDidChange:(id) sender {
     UITextField *_field = (UITextField *)sender;
+    self.attStr2 = nil;
     if (_field.text.length > 15) {
         self.numL.attributedText = [DDHAttributedMode setColorString:[NSString stringWithFormat:@"%lu/15",(unsigned long)_field.text.length] setColor:[UIColor redColor] setLengthString:[NSString stringWithFormat:@"%lu",_field.text.length] beginSize:0];
     }else{
@@ -497,6 +500,7 @@
 }
 
 - (void)textViewDidChangeSelection:(UITextView *)textView{
+    self.attStr1 = nil;
     if (textView.text.length && self.nameField.text.length) {
         _plaL.text = @"";
         _sendBtn.textColor = [UIColor colorWithHexString:@"#FFFFFF"];
@@ -672,6 +676,16 @@
         }else{
             _sendBtn.userInteractionEnabled = YES;
             
+            NoticeOneToOne *msgModel = [NoticeOneToOne mj_objectWithKeyValues:dict];
+  
+            if (msgModel.chatM.keyword.count) {
+                for (NSString *str in msgModel.chatM.keyword) {
+                    [self setRedColor:str sourceString:self.textView.text textView:self.textView att:self.attStr1];
+                    [self setRedColor2:str sourceString:self.nameField.text textView:self.nameField att:self.attStr2];
+                }
+                return;
+            }
+            
             if (self.isSave) {
                 if (self.deleteSaveModelBlock) {
                     self.deleteSaveModelBlock(self.index,NO);
@@ -698,6 +712,51 @@
     
     }];
 }
+
+- (void)setRedColor2:(NSString *)redString sourceString:(NSString *)sourchString textView:(UITextField*)textView att:(NSMutableAttributedString *)att{
+    if (!att) {
+        att =  [[NSMutableAttributedString alloc]initWithString:sourchString];
+        self.attStr2 = att;
+    }
+    NSMutableAttributedString *nameString =  att;
+    for (int i = 0; i < sourchString.length; i++) {
+        if ((sourchString.length - i) < redString.length) {  //防止遍历剩下的字符少于搜索条件的字符而崩溃
+            
+        }else {
+            NSString *str = [sourchString substringWithRange:NSMakeRange(i, redString.length)];
+            if ([redString isEqualToString:str]) {
+                [nameString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(i, redString.length)];
+                
+                i = i + (int)(redString.length) - 1;
+            }
+        }
+    }
+    [nameString addAttribute:NSFontAttributeName value:XGEightBoldFontSize range:NSMakeRange(0, textView.text.length)];
+    textView.attributedText = nameString;
+}
+
+- (void)setRedColor:(NSString *)redString sourceString:(NSString *)sourchString textView:(UITextView*)textView att:(NSMutableAttributedString *)att{
+    if (!att) {
+        att =  [[NSMutableAttributedString alloc]initWithString:sourchString];
+        self.attStr1 = att;
+    }
+    NSMutableAttributedString *nameString =  att;
+    for (int i = 0; i < sourchString.length; i++) {
+        if ((sourchString.length - i) < redString.length) {  //防止遍历剩下的字符少于搜索条件的字符而崩溃
+            
+        }else {
+            NSString *str = [sourchString substringWithRange:NSMakeRange(i, redString.length)];
+            if ([redString isEqualToString:str]) {
+                [nameString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(i, redString.length)];
+                
+                i = i + (int)(redString.length) - 1;
+            }
+        }
+    }
+    [nameString addAttribute:NSFontAttributeName value:SIXTEENTEXTFONTSIZE range:NSMakeRange(0, textView.text.length)];
+    textView.attributedText = nameString;
+}
+
 
 
 - (void)caaceSave{//缓存发送失败的心情

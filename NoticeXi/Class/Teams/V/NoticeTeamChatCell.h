@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^locationUseBlock)(NoticeTeamChatModel *locationgMsg);
 @property (nonatomic, strong) NSString *identity;
 @property (nonatomic, strong) NoticeUseTextView *replyMsgView;
-
+@property (nonatomic, strong) NSMutableArray *photoArr;
 @end
 
 NS_ASSUME_NONNULL_END

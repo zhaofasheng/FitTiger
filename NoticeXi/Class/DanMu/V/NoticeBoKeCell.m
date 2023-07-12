@@ -8,6 +8,7 @@
 
 #import "NoticeBoKeCell.h"
 #import "NoticeMoreClickView.h"
+#import "NoticeChangeIntroduceViewController.h"
 @implementation NoticeBoKeCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
@@ -86,12 +87,13 @@
 
 - (void)moreClick{
     LCActionSheet *sheet = [[LCActionSheet alloc] initWithTitle:nil cancelButtonTitle:[NoticeTools getLocalStrWith:@"main.cancel"] clicked:^(LCActionSheet * _Nonnull actionSheet, NSInteger buttonIndex) {
-    } otherButtonTitleArray:@[[NoticeTools getLocalStrWith:@"py.share"],[NoticeTools getLocalStrWith:@"py.dele"]]];
+    } otherButtonTitleArray:@[[NoticeTools getLocalStrWith:@"py.share"],@"修改播客简介",[NoticeTools getLocalStrWith:@"py.dele"]]];
     sheet.delegate = self;
     [sheet show];
 }
 
 - (void)actionSheet:(LCActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    __weak typeof(self) weakSelf = self;
     if (buttonIndex == 1) {
         NoticeMoreClickView *moreView = [[NoticeMoreClickView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT)];
         moreView.isShare = YES;
@@ -99,7 +101,19 @@
         moreView.title = self.model.podcast_title;
         [moreView showTost];
     }else if (buttonIndex == 2){
-        __weak typeof(self) weakSelf = self;
+        NoticeChangeIntroduceViewController *ctl = [[NoticeChangeIntroduceViewController alloc] init];
+        ctl.isBoKeIntro = YES;
+        ctl.bokeId = self.model.podcast_no;
+        ctl.induce = self.model.podcast_intro;
+        ctl.changeBokeIntroBlock = ^(NSString * _Nonnull intro, NSString * _Nonnull bokeId) {
+            if([weakSelf.model.podcast_no isEqualToString:bokeId]){
+                weakSelf.model.podcast_intro = intro;
+            }
+        };
+        [[NoticeTools getTopViewController].navigationController pushViewController:ctl animated:YES];
+    }
+    else if (buttonIndex == 3){
+        
         XLAlertView *alerView = [[XLAlertView alloc] initWithTitle:[NoticeTools chinese:@"确定删除此播客吗？" english:@"Delete this podcast?" japan:@"このポッドキャストを削除しますか?"] message:nil sureBtn:[NoticeTools getLocalStrWith:@"py.dele"] cancleBtn:[NoticeTools getLocalStrWith:@"groupManager.rethink"] right:YES];
         alerView.resultIndex = ^(NSInteger index) {
             if (index == 1) {

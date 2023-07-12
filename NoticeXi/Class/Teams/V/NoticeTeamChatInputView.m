@@ -399,6 +399,9 @@
         }
         
     }
+    if(self.saveKey){
+        [NoticeComTools removeWithKey:self.saveKey];
+    }
     self.contentView.text = @"";
     [self textViewDidChangeSelection:self.contentView];
     if(self.replyMsgModel){
@@ -494,11 +497,28 @@
     [self.atPersonView showATView];
 }
 
+- (void)setSaveKey:(NSString *)saveKey{
+    _saveKey = saveKey;
+    if(saveKey){
+     
+        NSString *saveContent = [NoticeComTools getInputWithKey:saveKey];
+        if(saveContent && saveContent.length){
+            self.contentView.text = saveContent;
+        }
+    }
+}
+
 //发送文案的时候，最终是从这里获取当前选中的人员
 - (void)textViewDidChange:(UITextView *)textView {
     self.currentSelectedPersonItems = [NSMutableArray arrayWithArray:[self.contentView.attributedText getCurrentAtPersonItems]];
-    DRLog(@"当前艾特的人%@",self.currentSelectedPersonItems);
-    
+
+    //获取高亮部分
+    UITextPosition * position = [textView positionFromPosition:textView.markedTextRange.start offset:0];
+    if(!position){
+        if(self.saveKey){
+            [NoticeComTools saveInput:textView.text saveKey:self.saveKey];
+        }
+    }
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text

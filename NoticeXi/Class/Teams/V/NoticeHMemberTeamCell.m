@@ -29,9 +29,19 @@
         _nickNameL.textAlignment = NSTextAlignmentCenter;
   
         self.contentView.backgroundColor = [UIColor whiteColor];
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editNameNotice:) name:@"CHANGETEAMMASSNICKNAMENotification" object:nil];
     }
     return self;
+}
+
+- (void)editNameNotice:(NSNotification*)notification{
+    NSDictionary *Dictionary = [notification userInfo];
+    NSString *userId = Dictionary[@"userId"];
+    NSString *name = Dictionary[@"nickName"];
+    if([self.person.userId isEqualToString:userId]){
+        self.person.name = name;
+        self.nickNameL.text = name;
+    }
 }
 
 - (void)setPerson:(YYPersonItem *)person{

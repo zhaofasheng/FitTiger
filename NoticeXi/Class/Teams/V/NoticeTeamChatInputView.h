@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NoticeTeamChatInputView : UIView<UITextViewDelegate,NoticeRecordDelegate,TZImagePickerControllerDelegate,UIImagePickerControllerDelegate>
 @property (nonatomic, strong)UIImagePickerController *imagePickerController;
 @property (nonatomic, strong) NoticeTeamTextView *contentView;
+@property (nonatomic, strong) NSString *saveKey;
 @property (nonatomic, strong) UILabel *plaL;
 @property (nonatomic, strong) NSString *plaStr;
 @property (nonatomic, copy) void (^imgBlock)(NSMutableArray *  _Nonnull imagArr);

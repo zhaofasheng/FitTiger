@@ -37,6 +37,7 @@
 @property (nonatomic, strong) UILabel *messageL;
 @property (nonatomic, strong) UIView *footView;
 @property (nonatomic, strong) UIButton *deleteButton;
+@property (nonatomic, strong) NSMutableArray *photoArr;
 @end
 
 @implementation NoticeTeamChatController
@@ -142,7 +143,8 @@
     bottomV.backgroundColor = self.teamChatInputView.backgroundColor;
     [self.view addSubview:bottomV];
     
-    
+
+    self.teamChatInputView.saveKey = [NSString stringWithFormat:@"teamChat%@%@",[NoticeTools getuserId],self.teamModel.teamId];
     
     AppDelegate *appdel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appdel.socketManager.groupDelegate = self;
@@ -274,6 +276,13 @@
     [self requestWith:url isLocation:NO isUnReadNum:NO chatId:nil];
 }
 
+- (NSMutableArray *)photoArr{
+    if(!_photoArr){
+        _photoArr = [[NSMutableArray alloc] init];
+    }
+    return _photoArr;
+}
+
 - (void)requestWith:(NSString *)url isLocation:(BOOL)isLocation isUnReadNum:(BOOL)isUnReadNum chatId:(NSString *)chatId{
     
     [[DRNetWorking shareInstance] requestNoNeedLoginWithPath:url Accept:@"application/vnd.shengxi.v5.5.2+json" isPost:NO parmaer:nil page:0 success:^(NSDictionary *dict, BOOL success) {
@@ -304,7 +313,14 @@
                 }
                 
                 if (!alerady) {
+                    if(model.content_type.intValue == 2){
+                        YYPhotoGroupItem *item = [YYPhotoGroupItem new];
+                        item.smallUrlString = model.resource_url;
+                        item.largeImageURL     = [NSURL URLWithString:model.resource_url];
+                        [self.photoArr insertObject:item atIndex:0];
+                    }
                     [self.nolmorLdataArr addObject:model];
+         
                     [newArr addObject:model];
                 }
             }
@@ -533,15 +549,33 @@
     if(![chat.mass_id isEqualToString:self.teamModel.teamId]){//不是这个社团的，不接收
         return;
     }
+    if([message.action isEqualToString:@"memberUpdateNickname"]){//修改昵称
+        if(chat.nick_name && chat.to_user_id){
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"CHANGETEAMMASSNICKNAMENotification" object:self userInfo:@{@"userId":chat.to_user_id,@"nickName":chat.nick_name}];
+        }
+        
+        return;
+    }
     if ([message.action isEqualToString:@"revoke"] || [message.action isEqualToString:@"delete"]) {//撤回消息
         if(self.chatM){
             return;
         }
+  
         for (NoticeTeamChatModel *locaChat in self.localdataArr) {
             if([locaChat.logId isEqualToString:chat.chat_log_id]){
                 locaChat.status = [message.action isEqualToString:@"revoke"]? @"4":@"3";
                 locaChat.del_user = chat.del_user;
                 [locaChat refreshCallChatHeight];
+                
+                if(locaChat.content_type.intValue == 2){
+                    for (YYPhotoGroupItem*item in self.photoArr) {
+                        if ([locaChat.resource_url isEqualToString:item.smallUrlString]) {//删除图片
+                            [self.photoArr removeObject:item];
+                            break;
+                        }
+                    }
+                }
+        
             }
             if(locaChat.userMsg){
                 if([locaChat.userMsg.logId isEqualToString:chat.chat_log_id]){
@@ -555,6 +589,15 @@
                 locaChat.status = [message.action isEqualToString:@"revoke"]? @"4":@"3";
                 locaChat.del_user = chat.del_user;
                 [locaChat refreshCallChatHeight];
+                
+                if(locaChat.content_type.intValue == 2){
+                    for (YYPhotoGroupItem*item in self.photoArr) {
+                        if ([locaChat.resource_url isEqualToString:item.smallUrlString]) {//删除图片
+                            [self.photoArr removeObject:item];
+                            break;
+                        }
+                    }
+                }
             }
             if(locaChat.userMsg){
                 if([locaChat.userMsg.logId isEqualToString:chat.chat_log_id]){
@@ -637,6 +680,12 @@
     }
     
     if (!alerady) {
+        if(chat.content_type.intValue == 2){
+            YYPhotoGroupItem *item2 = [YYPhotoGroupItem new];
+            item2.smallUrlString = chat.resource_url;
+            item2.largeImageURL     = [NSURL URLWithString:chat.resource_url];
+            [self.photoArr addObject:item2];
+        }
         [self.localdataArr addObject:chat];
         [self.tableView reloadData];
     }
@@ -822,6 +871,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     NoticeTeamChatCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    cell.photoArr = self.photoArr;
     cell.isjoin = self.teamModel.is_join;
     cell.index = indexPath.row;
     cell.section = indexPath.section;

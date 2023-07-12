@@ -60,7 +60,7 @@
     _groupModel = groupModel;
     [self.groupImageView sd_setImageWithURL:[NSURL URLWithString:groupModel.img_url]];
     self.groupNameL.text = groupModel.title;
-    
+    self.msgL.frame = CGRectMake(32, 0, self.backView.frame.size.width-80-50, 36);
     self.iconImageView.hidden = groupModel.lastMsgModel.contentType?NO:YES;
     self.msgL.hidden = groupModel.lastMsgModel.contentType?NO:YES;
     [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:groupModel.lastMsgModel.fromUserM.avatar_url] placeholderImage:[UIImage imageNamed:@"Image_jynohe"]];
@@ -90,10 +90,19 @@
             self.numL.textColor = [UIColor colorWithHexString:@"#EE4B4E"];
             self.peopleNumView.image = UIImageNamed(@"Image_failimg");
         }
+        
+        NSString *saveContent = [NoticeComTools getInputWithKey: [NSString stringWithFormat:@"teamChat%@%@",[NoticeTools getuserId],groupModel.teamId]];
+        if(saveContent && saveContent.length){
+            self.iconImageView.hidden = YES;
+            self.msgL.hidden = NO;
+            self.msgL.frame = CGRectMake(8, 0, self.backView.frame.size.width-80-50+24, 36);
+            self.msgL.attributedText = [DDHAttributedMode setColorString:[NSString stringWithFormat:@"[草稿]%@",saveContent] setColor:[UIColor colorWithHexString:@"#EE4B4E"] setLengthString:@"[草稿]" beginSize:0];
+        }
     }
     
     self.numL.frame = CGRectMake(self.backView.frame.size.width-GET_STRWIDTH(self.numL.text, 13, 18)-15, 21, GET_STRWIDTH(self.numL.text, 13, 18), 18);
     self.peopleNumView.frame = CGRectMake(self.numL.frame.origin.x-17, 21, 16, 16);
+
 }
 
 - (void)awakeFromNib {

@@ -14,6 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *induce;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, assign) BOOL isFromReg;
+@property (nonatomic, assign) BOOL isBoKeIntro;
+@property (nonatomic, strong) NSString *bokeId;
+@property (nonatomic, copy) void(^changeBokeIntroBlock)(NSString *intro,NSString *bokeId);
 @end
 
 NS_ASSUME_NONNULL_END

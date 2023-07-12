@@ -61,3 +61,7 @@
 #import "NoticeSendBoKeController.h"
 #import "NoticeTeamChatController.h"
 #import "FSCustomButton.h"
+#import "HQCollectionViewFlowLayout.h"
+#import "NoticeBokeMainCell.h"
+#import "NoticeDanMuController.h"
+#import "JXPagerView.h"

@@ -16,7 +16,7 @@
 #import "NoticeBoKeListView.h"
 #import "NoticeBBSComentInputView.h"
 #import "NoticeJuBaoBoKeTosatView.h"
-
+#import "NoticeChangeIntroduceViewController.h"
 @interface NoticeDanMuController ()<FDanmakuViewProtocol,NoticeDanMuDelegate,LCActionSheetDelegate,NoticeBBSComentInputDelegate>
 @property(nonatomic,strong)FDanmakuView *danmakuView;
 @property (nonatomic, strong) UILabel *titleL;
@@ -339,8 +339,9 @@
         [sheet show];
         return;
     }
+    NSArray *arr = [self.bokeModel.user_id isEqualToString:[NoticeTools getuserId]]?@[@"修改播客简介",[NoticeTools getLocalStrWith:@"py.dele"]]:@[[NoticeTools getLocalStrWith:@"chat.jubao"]];
     LCActionSheet *sheet = [[LCActionSheet alloc] initWithTitle:nil cancelButtonTitle:[NoticeTools getLocalStrWith:@"main.cancel"] clicked:^(LCActionSheet * _Nonnull actionSheet, NSInteger buttonIndex) {
-    } otherButtonTitleArray:@[[self.bokeModel.user_id isEqualToString:[NoticeTools getuserId]]? [NoticeTools getLocalStrWith:@"py.dele"]:[NoticeTools getLocalStrWith:@"chat.jubao"]]];
+    } otherButtonTitleArray:arr];
     sheet.delegate = self;
     [sheet show];
 }
@@ -365,8 +366,9 @@
 }
 
 - (void)actionSheet:(LCActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    __weak typeof(self) weakSelf = self;
     if (buttonIndex == 1) {
-        __weak typeof(self) weakSelf = self;
+        
         if ([NoticeTools isManager]) {
             if (!self.inputV) {
                 NoticeBBSComentInputView *inputView = [[NoticeBBSComentInputView alloc] initWithFrame:CGRectMake(0,DR_SCREEN_HEIGHT-BOTTOM_HEIGHT-50, DR_SCREEN_WIDTH, 50)];
@@ -394,22 +396,7 @@
         }
         
         if ([self.bokeModel.user_id isEqualToString:[NoticeTools getuserId]]) {
-            XLAlertView *alerView = [[XLAlertView alloc] initWithTitle:[NoticeTools chinese:@"确定删除此播客吗？" english:@"Delete this podcast?" japan:@"このポッドキャストを削除しますか?"] message:nil sureBtn:[NoticeTools getLocalStrWith:@"py.dele"] cancleBtn:[NoticeTools getLocalStrWith:@"groupManager.rethink"] right:YES];
-            alerView.resultIndex = ^(NSInteger index) {
-                if (index == 1) {
-                    [[NoticeTools getTopViewController] showHUD];
-                    [[DRNetWorking shareInstance] requestWithDeletePath:[NSString stringWithFormat:@"podcast/%@",weakSelf.bokeModel.podcast_no] Accept:@"application/vnd.shengxi.v5.4.4+json" parmaer:nil page:0 success:^(NSDictionary * _Nullable dict, BOOL success) {
-                        [[NoticeTools getTopViewController] hideHUD];
-                        if (success) {
-                            [[NSNotificationCenter defaultCenter]postNotificationName:@"DeleteBoKeNotification" object:self userInfo:@{@"danmuNumber":self.bokeModel.podcast_no}];
-                            [weakSelf backClick];
-                        }
-                    } fail:^(NSError * _Nullable error) {
-                        [[NoticeTools getTopViewController] hideHUD];
-                    }];
-                }
-            };
-            [alerView showXLAlertView];
+            [self changeIntro];
         }else{
             NoticeJuBaoBoKeTosatView *jubaoV = [[NoticeJuBaoBoKeTosatView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT)];
             [jubaoV showView];
@@ -448,7 +435,38 @@
             }];
             return;
         }
+        if ([self.bokeModel.user_id isEqualToString:[NoticeTools getuserId]]){
+            XLAlertView *alerView = [[XLAlertView alloc] initWithTitle:[NoticeTools chinese:@"确定删除此播客吗？" english:@"Delete this podcast?" japan:@"このポッドキャストを削除しますか?"] message:nil sureBtn:[NoticeTools getLocalStrWith:@"py.dele"] cancleBtn:[NoticeTools getLocalStrWith:@"groupManager.rethink"] right:YES];
+            alerView.resultIndex = ^(NSInteger index) {
+                if (index == 1) {
+                    [[NoticeTools getTopViewController] showHUD];
+                    [[DRNetWorking shareInstance] requestWithDeletePath:[NSString stringWithFormat:@"podcast/%@",weakSelf.bokeModel.podcast_no] Accept:@"application/vnd.shengxi.v5.4.4+json" parmaer:nil page:0 success:^(NSDictionary * _Nullable dict, BOOL success) {
+                        [[NoticeTools getTopViewController] hideHUD];
+                        if (success) {
+                            [[NSNotificationCenter defaultCenter]postNotificationName:@"DeleteBoKeNotification" object:self userInfo:@{@"danmuNumber":self.bokeModel.podcast_no}];
+                            [weakSelf backClick];
+                        }
+                    } fail:^(NSError * _Nullable error) {
+                        [[NoticeTools getTopViewController] hideHUD];
+                    }];
+                }
+            };
+            [alerView showXLAlertView];
+        }
     }
+}
+
+- (void)changeIntro{
+    NoticeChangeIntroduceViewController *ctl = [[NoticeChangeIntroduceViewController alloc] init];
+    ctl.isBoKeIntro = YES;
+    ctl.bokeId = self.bokeModel.podcast_no;
+    ctl.induce = self.bokeModel.podcast_intro;
+    __weak typeof(self) weakSelf = self;
+    ctl.changeBokeIntroBlock = ^(NSString * _Nonnull intro, NSString * _Nonnull bokeId) {
+        weakSelf.bokeModel.podcast_intro = intro;
+        [weakSelf refreshBokeUI];
+    };
+    [[NoticeTools getTopViewController].navigationController pushViewController:ctl animated:YES];
 }
 
 - (void)playClick{
