@@ -9,16 +9,19 @@
 #import "NoticeTopicViewController.h"
 #import "NoticeTopicCell.h"
 #import "NoticeLocalTopicCell.h"
-#import "KMTagListView.h"
+#import "NoticeMorelikeTopicController.h"
+
 #import "NoticeTopiceVoicesListViewController.h"
-@interface NoticeTopicViewController ()<UITextFieldDelegate,NoticeTopiceCancelDelegate,KMTagListViewDelegate>
+@interface NoticeTopicViewController ()<UITextFieldDelegate,NoticeTopiceCancelDelegate>
 @property (nonatomic, strong) NSMutableArray *localArr;
 @property (nonatomic, strong) NSMutableArray *serachArr;
+@property (nonatomic, strong) NSMutableArray *likeArr;
 @property (nonatomic, strong) UITextField *topicField;
 @property (nonatomic, assign) BOOL isLocal;
-@property (nonatomic, strong) UIView *footView;
 @property (nonatomic, strong) UIButton *moreButton;
 @property (nonatomic, strong) UIView *headerSectionView;
+@property (nonatomic, strong) UIView *headerHotSectionView;
+@property (nonatomic, strong) UIView *headerLikeSectionView;
 @end
 
 @implementation NoticeTopicViewController
@@ -37,12 +40,14 @@
     self.navBarView.backButton.hidden = YES;
     
     self.moreButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, 44)];
-    self.moreButton.backgroundColor = [[UIColor colorWithHexString:@"#FFFFFF"] colorWithAlphaComponent:1];
+    self.moreButton.backgroundColor = [[UIColor colorWithHexString:@"#F7F8FC"] colorWithAlphaComponent:1];
     self.moreButton.titleLabel.font = FOURTHTEENTEXTFONTSIZE;
     [self.moreButton setTitleColor:[UIColor colorWithHexString:@"#8A8F99"] forState:UIControlStateNormal];
     [self.moreButton setTitle:[NoticeTools getLocalStrWith:@"topic.history"] forState:UIControlStateNormal];
     [self.moreButton addTarget:self action:@selector(lookMore) forControlEvents:UIControlEventTouchUpInside];
-
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(20, 43, DR_SCREEN_WIDTH-20, 1)];
+    line.backgroundColor = [UIColor colorWithHexString:@"#F0F1F5"];
+    [self.moreButton addSubview:line];
 
     self.topicField = [[UITextField alloc] initWithFrame:CGRectMake(10, 0,DR_SCREEN_WIDTH-67-20-10, 32)];
     self.topicField.tintColor = [UIColor colorWithHexString:@"#0099E6"];
@@ -61,7 +66,7 @@
         }
     }
 
-    UIView *backV = [[UIView alloc] initWithFrame:CGRectMake(20, (NAVIGATION_BAR_HEIGHT-STATUS_BAR_HEIGHT-32)/2+STATUS_BAR_HEIGHT, DR_SCREEN_WIDTH-87, 32)];
+    UIView *backV = [[UIView alloc] initWithFrame:CGRectMake(15, (NAVIGATION_BAR_HEIGHT-STATUS_BAR_HEIGHT-32)/2+STATUS_BAR_HEIGHT, DR_SCREEN_WIDTH-15-62, 32)];
     backV.layer.cornerRadius = 16;
     backV.layer.masksToBounds = YES;
     backV.backgroundColor = [[UIColor colorWithHexString:@"#FFFFFF"] colorWithAlphaComponent:1];
@@ -70,50 +75,95 @@
     
     self.tableView.frame = CGRectMake(0, NAVIGATION_BAR_HEIGHT, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT-NAVIGATION_BAR_HEIGHT);
 
+    self.likeArr = [[NSMutableArray alloc] init];
     self.hotArr = [NSMutableArray new];
     self.serachArr = [NSMutableArray new];
     self.localArr = [NoticeTools getTopicArr];
-    
-    self.footView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, 0)];
-    UIImageView *iamgeV = [[UIImageView alloc] initWithFrame:CGRectMake(15, 13, 24, 24)];
-    iamgeV.image = UIImageNamed(@"img_topic");
-    [self.footView addSubview:iamgeV];
-    
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(iamgeV.frame)+10, 16, 100, 16)];
-    label.font = XGSIXBoldFontSize;
-    label.textColor = [UIColor colorWithHexString:@"#25262E"];
-    label.text = [NoticeTools getLocalStrWith:@"search.hotTopic"];
-    [self.footView addSubview:label];
-    
+
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(DR_SCREEN_WIDTH-67,STATUS_BAR_HEIGHT, 57, NAVIGATION_BAR_HEIGHT-STATUS_BAR_HEIGHT);
+    btn.frame = CGRectMake(DR_SCREEN_WIDTH-62,STATUS_BAR_HEIGHT, 62, NAVIGATION_BAR_HEIGHT-STATUS_BAR_HEIGHT);
     [btn setTitle:[NoticeTools getLocalStrWith:@"main.cancel"] forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor colorWithHexString:@"#25262E"] forState:UIControlStateNormal];
     btn.titleLabel.font = FIFTHTEENTEXTFONTSIZE;
     [btn addTarget:self action:@selector(cancelClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
     
-    [self request];
     
     [self.tableView registerClass:[NoticeLocalTopicCell class] forCellReuseIdentifier:@"locallCell"];
     [self.tableView registerClass:[NoticeTopicCell class] forCellReuseIdentifier:@"topicCell"];
     self.tableView.frame = CGRectMake(0, NAVIGATION_BAR_HEIGHT, DR_SCREEN_WIDTH, DR_SCREEN_HEIGHT-NAVIGATION_BAR_HEIGHT);
     
-    self.headerSectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, 48)];
-    self.headerSectionView.backgroundColor = [[UIColor colorWithHexString:@"#14151A"] colorWithAlphaComponent:0];
-
-    UILabel *titL = [[UILabel alloc] initWithFrame:CGRectMake(15, 8,100, 40)];
-    titL.text = [NoticeTools getLocalStrWith:@"search.recent"];
-    titL.font = FOURTHTEENTEXTFONTSIZE;
-    titL.textColor = [[UIColor colorWithHexString:@"#5C5F66"] colorWithAlphaComponent:1];
-    [self.headerSectionView addSubview:titL];
-    
-    UIButton *deleteBtn = [[UIButton alloc] initWithFrame:CGRectMake(DR_SCREEN_WIDTH-10-40, 8, 40, 40)];
-    [deleteBtn addTarget:self action:@selector(deleteLocalClick) forControlEvents:UIControlEventTouchUpInside];
-    [deleteBtn setImage:UIImageNamed(@"img_deletetopictm") forState:UIControlStateNormal];
-    [self.headerSectionView addSubview:deleteBtn];
-
     self.view.backgroundColor = [UIColor colorWithHexString:@"#F7F8FC"];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestLike) name:@"NOTICEREFRESHTOPICNOTICE" object:nil];
+    [self request];
+    [self requestLike];
+}
+
+- (UIView *)headerSectionView{
+    if(!_headerSectionView){
+        _headerSectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, 48)];
+        _headerSectionView.backgroundColor = [[UIColor colorWithHexString:@"#14151A"] colorWithAlphaComponent:0];
+        _headerSectionView.backgroundColor = self.view.backgroundColor;
+        UILabel *titL = [[UILabel alloc] initWithFrame:CGRectMake(15, 8,100, 40)];
+        titL.text = [NoticeTools getLocalStrWith:@"search.recent"];
+        titL.font = XGFifthBoldFontSize;
+        titL.textColor = [[UIColor colorWithHexString:@"#25262E"] colorWithAlphaComponent:1];
+        [_headerSectionView addSubview:titL];
+        
+        UIButton *deleteBtn = [[UIButton alloc] initWithFrame:CGRectMake(DR_SCREEN_WIDTH-10-40, 8, 40, 40)];
+        [deleteBtn addTarget:self action:@selector(deleteLocalClick) forControlEvents:UIControlEventTouchUpInside];
+        [deleteBtn setImage:UIImageNamed(@"img_deletetopictm") forState:UIControlStateNormal];
+        [_headerSectionView addSubview:deleteBtn];
+    }
+    return _headerSectionView;
+}
+
+- (UIView *)headerLikeSectionView{
+    if(!_headerLikeSectionView){
+        _headerLikeSectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, 48)];
+        _headerLikeSectionView.backgroundColor = self.view.backgroundColor;
+        UILabel *titL = [[UILabel alloc] initWithFrame:CGRectMake(15, 8,100, 40)];
+        titL.text = @"我收藏的";
+        titL.font = XGFifthBoldFontSize;
+        titL.textColor = [[UIColor colorWithHexString:@"#25262E"] colorWithAlphaComponent:1];
+        [_headerLikeSectionView addSubview:titL];
+  
+        UIImageView *moreimg = [[UIImageView alloc] initWithFrame:CGRectMake(DR_SCREEN_WIDTH-15-20,14, 20, 20)];
+        moreimg.image = UIImageNamed(@"img_sctoipcall");
+        [_headerLikeSectionView addSubview:moreimg ];
+        
+        _headerLikeSectionView.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(moreLike)];
+        [_headerLikeSectionView addGestureRecognizer:tap];
+    }
+    return _headerLikeSectionView;
+}
+
+- (void)moreLike{
+    NoticeMorelikeTopicController *ctl = [[NoticeMorelikeTopicController alloc] init];
+    __weak typeof(self) weakSelf = self;
+    ctl.topicBlock = ^(NoticeTopicModel * _Nonnull topic) {
+        if(weakSelf.topicBlock){
+            weakSelf.topicBlock(topic);
+        }
+        [weakSelf.navigationController popViewControllerAnimated:NO];
+    };
+    [self.navigationController pushViewController:ctl animated:YES];
+}
+
+- (UIView *)headerHotSectionView{
+    if(!_headerHotSectionView){
+        _headerHotSectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, 48)];
+        _headerHotSectionView.backgroundColor = [[UIColor colorWithHexString:@"#14151A"] colorWithAlphaComponent:0];
+        _headerHotSectionView.backgroundColor = self.view.backgroundColor;
+        UILabel *titL = [[UILabel alloc] initWithFrame:CGRectMake(15, 8,100, 40)];
+        titL.text = @"热门话题";
+        titL.font = XGFifthBoldFontSize;
+        titL.textColor = [[UIColor colorWithHexString:@"#FF9E3C"] colorWithAlphaComponent:1];
+        [_headerHotSectionView addSubview:titL];
+  
+    }
+    return _headerHotSectionView;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -134,77 +184,86 @@
     [self.tableView reloadData];
 }
 
-
-#pragma mark - KMTagListViewDelegate
--(void)ptl_TagListView:(KMTagListView *)tagListView didSelectTagViewAtIndex:(NSInteger)index selectContent:(NSString *)content {
-    if (self.isSearch) {
-        NoticeTopicModel *model = self.hotArr[index];
-        NoticeTopiceVoicesListViewController *ctl = [[NoticeTopiceVoicesListViewController alloc] init];
-        ctl.topicId = model.topic_id;
-        ctl.topicName = model.topic_name;
-         [self.navigationController pushViewController:ctl animated:YES];
-        return;
-    }
-    if (self.topicBlock) {
-        self.topicBlock(self.hotArr[index]);
-    }
-    [self.navigationController popViewControllerAnimated:YES];
-    
-}
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-   
-    if (!self.isLocal) {
-        if (self.localArr.count) {//判断是否存在
-            for (NoticeTopicModel *model in self.localArr) {
-                if ([model.topic_name isEqualToString:[self.serachArr[indexPath.row] topic_name]]) {//如果存在一样的，不保存，直接回调
-                    if (self.isSearch) {
-                        NoticeTopiceVoicesListViewController *ctl = [[NoticeTopiceVoicesListViewController alloc] init];
-                        ctl.topicName = model.topic_name;
-                        [self.navigationController pushViewController:ctl animated:YES];
+    if(indexPath.section == 0){
+        if (!self.isLocal) {
+            if (self.localArr.count) {//判断是否存在
+                for (NoticeTopicModel *model in self.localArr) {
+                    if ([model.topic_name isEqualToString:[self.serachArr[indexPath.row] topic_name]]) {//如果存在一样的，不保存，直接回调
+                        if (self.isSearch) {
+                            NoticeTopiceVoicesListViewController *ctl = [[NoticeTopiceVoicesListViewController alloc] init];
+                            ctl.topicName = model.topic_name;
+                            [self.navigationController pushViewController:ctl animated:YES];
+                            return;
+                        }
+                        if (self.topicBlock) {
+                            self.topicBlock(model);
+                        }
+                        [self.navigationController popViewControllerAnimated:YES];
                         return;
                     }
-                    if (self.topicBlock) {
-                        self.topicBlock(model);
-                    }
-                    [self.navigationController popViewControllerAnimated:YES];
-                    return;
                 }
             }
+            if ((self.serachArr.count < indexPath.row+1)) {
+                return;
+            }
+            [self.localArr insertObject:self.serachArr[indexPath.row] atIndex:0];//保存乎执行回调
+            if (self.localArr.count == 11) {
+                [self.localArr removeObjectAtIndex:10];
+            }
+            NSArray *arr = [NSArray arrayWithArray:self.localArr];
+            [NoticeTools saveTopicArr:arr];
+            
+            if (self.isSearch) {//是否是搜索话题
+                NoticeTopiceVoicesListViewController *ctl = [[NoticeTopiceVoicesListViewController alloc] init];
+                ctl.topicName = [self.serachArr[indexPath.row] topic_name];
+                [self.navigationController pushViewController:ctl animated:YES];
+                return;
+            }
+            
+            if (self.topicBlock) {
+                self.topicBlock(self.serachArr[indexPath.row]);
+            }
+            [self.navigationController popViewControllerAnimated:YES];
+        }else{
+            if (!self.localArr.count) {
+                return;
+            }
+            if (self.isSearch) {//是否是搜索话题
+                NoticeTopiceVoicesListViewController *ctl = [[NoticeTopiceVoicesListViewController alloc] init];
+                ctl.topicName = [self.localArr[indexPath.row] topic_name];
+                [self.navigationController pushViewController:ctl animated:YES];
+                return;
+            }
+            if (self.topicBlock) {
+                self.topicBlock(self.localArr[indexPath.row]);
+            }
+            [self.navigationController popViewControllerAnimated:YES];
         }
-        if ((self.serachArr.count < indexPath.row+1)) {
-            return;
-        }
-        [self.localArr insertObject:self.serachArr[indexPath.row] atIndex:0];//保存乎执行回调
-        if (self.localArr.count == 11) {
-            [self.localArr removeObjectAtIndex:10];
-        }
-        NSArray *arr = [NSArray arrayWithArray:self.localArr];
-        [NoticeTools saveTopicArr:arr];
-        
-        if (self.isSearch) {//是否是搜索话题
+    }else if (indexPath.section == 2){
+        if (self.isSearch) {
+            NoticeTopicModel *model = self.hotArr[indexPath.row];
             NoticeTopiceVoicesListViewController *ctl = [[NoticeTopiceVoicesListViewController alloc] init];
-            ctl.topicName = [self.serachArr[indexPath.row] topic_name];
-            [self.navigationController pushViewController:ctl animated:YES];
+            ctl.topicId = model.topic_id;
+            ctl.topicName = model.topic_name;
+             [self.navigationController pushViewController:ctl animated:YES];
             return;
         }
-        
         if (self.topicBlock) {
-            self.topicBlock(self.serachArr[indexPath.row]);
+            self.topicBlock(self.hotArr[indexPath.row]);
         }
         [self.navigationController popViewControllerAnimated:YES];
-    }else{
-        if (!self.localArr.count) {
-            return;
-        }
-        if (self.isSearch) {//是否是搜索话题
+    }else if (indexPath.section == 1){
+        if (self.isSearch) {
+            NoticeTopicModel *model = self.likeArr[indexPath.row];
             NoticeTopiceVoicesListViewController *ctl = [[NoticeTopiceVoicesListViewController alloc] init];
-            ctl.topicName = [self.localArr[indexPath.row] topic_name];
-            [self.navigationController pushViewController:ctl animated:YES];
+            ctl.topicId = model.topic_id;
+            ctl.topicName = model.topic_name;
+             [self.navigationController pushViewController:ctl animated:YES];
             return;
         }
         if (self.topicBlock) {
-            self.topicBlock(self.localArr[indexPath.row]);
+            self.topicBlock(self.likeArr[indexPath.row]);
         }
         [self.navigationController popViewControllerAnimated:YES];
     }
@@ -265,6 +324,27 @@
     }];
 }
 
+- (void)requestLike{
+    [[DRNetWorking shareInstance] requestNoNeedLoginWithPath:@"topicCollection?type=0" Accept:@"application/vnd.shengxi.v5.5.3+json" isPost:NO parmaer:nil page:0 success:^(NSDictionary *dict, BOOL success) {
+        if (success) {
+            if ([dict[@"data"] isEqual:[NSNull null]]) {
+                return ;
+            }
+            [self.likeArr removeAllObjects];
+            for (NSDictionary *dic in dict[@"data"]) {
+                NoticeTopicModel *topicM = [NoticeTopicModel mj_objectWithKeyValues:dic];
+                topicM.isCollection = YES;
+                [self.likeArr addObject:topicM];
+            }
+            if (self.likeArr.count) {
+
+                [self.tableView reloadData];
+            }
+        }
+    } fail:^(NSError *error) {
+    }];
+}
+
 - (void)request{
     if (self.hotArr.count) {
         NSMutableArray *arrary = [NSMutableArray new];
@@ -272,16 +352,7 @@
             [arrary addObject:topicM.name];
             [self.hotArr addObject:topicM];
         }
-        self.tableView.tableFooterView = self.footView;
-        KMTagListView *tagV = [[KMTagListView alloc]initWithFrame:CGRectMake(0,16+16+14, self.view.frame.size.width, 0)];
-        tagV.delegate_ = self;
-        [tagV setupSubViewsWithTitles:arrary];
-        
-        CGRect rect = tagV.frame;
-        rect.size.height = tagV.contentSize.height;
-        tagV.frame = rect;
-        self.footView.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, rect.size.height+46);
-        [self.footView addSubview:tagV];
+
         [self.tableView reloadData];
         return;
     }
@@ -291,23 +362,11 @@
                 return ;
             }
             [self.hotArr removeAllObjects];
-            NSMutableArray *arrary = [NSMutableArray new];
             for (NSDictionary *dic in dict[@"data"]) {
                 NoticeTopicModel *topicM = [NoticeTopicModel mj_objectWithKeyValues:dic];
-                [arrary addObject:topicM.name];
                 [self.hotArr addObject:topicM];
             }
             if (self.hotArr.count) {
-                self.tableView.tableFooterView = self.footView;
-                KMTagListView *tagV = [[KMTagListView alloc]initWithFrame:CGRectMake(0,16+16+14, self.view.frame.size.width, 0)];
-                tagV.delegate_ = self;
-                [tagV setupSubViewsWithTitles:arrary];
-                
-                CGRect rect = tagV.frame;
-                rect.size.height = tagV.contentSize.height;
-                tagV.frame = rect;
-                self.footView.frame = CGRectMake(0, 0, DR_SCREEN_WIDTH, rect.size.height+46);
-                [self.footView addSubview:tagV];
                 [self.tableView reloadData];
             }
         }
@@ -317,88 +376,118 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (self.isLocal) {
+    if(indexPath.section == 0){
+        if (self.isLocal) {
+            NoticeLocalTopicCell *cell = [tableView dequeueReusableCellWithIdentifier:@"locallCell"];
+            cell.type = 1;
+            cell.topicM = self.localArr[indexPath.row];
+            cell.index = indexPath.row;
+            cell.delegate = self;
+
+            return cell;
+        }else{
+            NoticeTopicCell *cell1 = [tableView dequeueReusableCellWithIdentifier:@"topicCell"];
+            cell1.isDraw = self.isDraw;
+            cell1.topicM = self.serachArr[indexPath.row];
+            
+            if (indexPath.row == self.serachArr.count-1) {
+                cell1.line.hidden = YES;
+            }else{
+                cell1.line.hidden = NO;
+            }
+            return cell1;
+        }
+    }else {
         NoticeLocalTopicCell *cell = [tableView dequeueReusableCellWithIdentifier:@"locallCell"];
-        cell.topicM = self.localArr[indexPath.row];
+        cell.type = indexPath.section==1?2:3;
+        cell.topicM = indexPath.section == 1? self.likeArr[indexPath.row]:self.hotArr[indexPath.row];
         cell.index = indexPath.row;
         cell.delegate = self;
-        if (indexPath.row == self.localArr.count-1) {
-            cell.line.hidden = YES;
-        }else{
-            cell.line.hidden = NO;
-        }
         return cell;
-    }else{
-        NoticeTopicCell *cell1 = [tableView dequeueReusableCellWithIdentifier:@"topicCell"];
-        cell1.isDraw = self.isDraw;
-        cell1.topicM = self.serachArr[indexPath.row];
-        
-        if (indexPath.row == self.serachArr.count-1) {
-            cell1.line.hidden = YES;
-        }else{
-            cell1.line.hidden = NO;
-        }
-        return cell1;
     }
+
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (!self.isLocal) {
-        return 56;
+    if(indexPath.section == 0){
+        if (!self.isLocal) {
+            return 56;
+        }
     }
+  
     return 44;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if (!self.isLocal) {
-        return self.serachArr.count;
-    }
-    if (!_isMore) {
+    if(section == 0){
+        if (!self.isLocal) {
+            return self.serachArr.count;
+        }
+        if (!_isMore) {
+            return self.localArr.count;
+        }
+        if (self.localArr.count > 3) {
+            return 3;
+        }
         return self.localArr.count;
+    }else if (section == 1){
+        return self.likeArr.count > 3?3:self.likeArr.count;
     }
-    if (self.localArr.count > 3) {
-        return 3;
-    }
-    return self.localArr.count;
+    return self.hotArr.count;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 1;
+    return 3;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    if (self.localArr.count && self.isLocal) {
-        return 48;
+    if(section == 0){
+        if (self.localArr.count && self.isLocal) {
+            return 48;
+        }
+        return 0;
+    }else if (section == 1){
+        return self.likeArr.count?48:0;
     }
-    return 8;
+    return 48;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    if(section == 0){
+        if (self.isLocal && self.localArr.count) {
+            return self.headerSectionView;
+        }
+    }else if (section == 1){
+        return self.likeArr.count? self.headerLikeSectionView:[UIView new];
+    }
+  
+    return self.headerHotSectionView;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-    if (!self.isLocal) {
-        return [UIView new];
+    if(section == 0){
+        if (!self.isLocal) {
+            return [UIView new];
+        }
+        if (self.localArr.count > 3 && _isMore) {
+            return self.moreButton;
+        }
     }
-    if (self.localArr.count > 3 && _isMore) {
-        return self.moreButton;
-    }
+
     return [UIView new];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    if (!self.isLocal) {
-        return 0;
+    if(section == 0){
+        if (!self.isLocal) {
+            return 0;
+        }
+        if (self.localArr.count > 3) {
+            return 44;
+        }
     }
-    if (self.localArr.count > 3) {
-        return 44;
-    }
-    return 0;
-}
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    if (self.isLocal && self.localArr.count) {
-        return self.headerSectionView;
-    }
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, 8)];
-    return view;
+    return 0;
 }
 
 - (void)cancelHistoryTipicIn:(NSInteger)index{

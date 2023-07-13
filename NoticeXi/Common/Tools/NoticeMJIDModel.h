@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *resultStatus;
 @property (nonatomic, strong) NSString *auth_code;
 @property (nonatomic, strong) NSString *result_code;
-
+@property (nonatomic, strong) NSString *is_collcetion;
 @property (nonatomic, strong) NSString *identity_name;
 @property (nonatomic, strong) NSString *identity_img_url;
 @end

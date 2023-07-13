@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *http_img_url;
 @property (nonatomic, strong) NSString *title;
 
-
+@property (nonatomic, assign) BOOL isCollection;
 @property (nonatomic, strong) NSAttributedString *fiveAttTextStr;
 @property (nonatomic, assign) BOOL isMoreFiveLines;//是否超过五行文字
 @property (nonatomic, assign) CGFloat fiveTextHeight;//五行文字高度

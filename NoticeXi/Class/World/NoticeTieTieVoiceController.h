@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *year;
 @property (nonatomic, strong) NSString *month;
 @property (nonatomic, strong) NSString *day;
+- (void)refreshData;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -9,7 +9,6 @@
 #import "NoticeHeaderDataView.h"
 #import "BaseNavigationController.h"
 #import "NoticeTabbarController.h"
-#import "NoticeTopicViewController.h"
 #import "NoticeAdMainCell.h"
 #import "NoticePickerShowController.h"
 #import "NoticeNewUserOrderController.h"

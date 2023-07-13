@@ -6,11 +6,11 @@
 //  Copyright © 2022 zhaoxiaoer. All rights reserved.
 //
 
-#import "NoticeBaseListController.h"
+#import "WMPageController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NoticeTieTieSignController : NoticeBaseListController
+@interface NoticeTieTieSignController : WMPageController
 
 @end
 

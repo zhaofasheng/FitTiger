@@ -24,7 +24,10 @@
         self.label.font = SIXTEENTEXTFONTSIZE;
         self.label.backgroundColor = [UIColor colorWithHexString:@"#EBECF0"];
         self.label.textColor = [UIColor colorWithHexString:@"#A1A7B3"];
-        self.label.layer.borderColor = self.label.backgroundColor.CGColor;
+        self.label.layer.borderColor = [UIColor colorWithHexString:@"#0099E6"].CGColor;
+        
+        [self.contentView addSubview:self.imageView];
+        self.imageView.hidden = YES;
         
         [self.contentView addSubview:self.label];
         
@@ -40,7 +43,7 @@
         [self.contentView addSubview:self.statusImageView];
         self.statusImageView.hidden = YES;
         
-        self.backgroundColor = [UIColor colorWithHexString:@"#F7F8FC"];
+        self.backgroundColor = [[UIColor colorWithHexString:@"#F7F8FC"] colorWithAlphaComponent:0];
         self.contentView.backgroundColor = self.backgroundColor;
     }
     return self;
@@ -62,25 +65,35 @@
         }
     }
     
-    if(nomerModel.choiceEd){
-        self.label.textColor = [UIColor colorWithHexString:@"#FFA6A6"];
-        self.label.backgroundColor = [UIColor colorWithHexString:@"#25262E"];
+    if(nomerModel.img_url.length > 10){
+        self.imageView.hidden = NO;
+        [self.imageView sd_setImageWithURL:[NSURL URLWithString:nomerModel.img_url]];
     }else{
-        if (nomerModel.voice.intValue) {
-            self.label.textColor = [UIColor whiteColor];
-            self.label.backgroundColor = [UIColor colorWithHexString:@"#FFA6A6"];
-        }else{
-            if (nomerModel.isToday) {
-                self.label.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
-                self.label.textColor = [UIColor colorWithHexString:@"#FFA6A6"];
-            }
-        }
+        self.imageView.hidden = YES;
+    }
+    
+    self.label.layer.cornerRadius = 4;
+    
+    if (nomerModel.voice.intValue) {//有心情
+        self.label.textColor = [UIColor whiteColor];
+        self.label.backgroundColor = [UIColor colorWithHexString:@"#FFA6A6"];
+    }else{
+        self.label.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
+        self.label.textColor = [UIColor colorWithHexString:@"#25262E"];
+    }
+    
+    if(nomerModel.choiceEd){//选中
+        self.label.layer.borderWidth = 2;
+    }else{
+        self.label.layer.borderWidth = 0;
     }
 
     if (nomerModel.isToday) {
         self.label.text = @"今天";
     }
    
+    
+    
     self.userInteractionEnabled = self.isCanTap?YES: NO;
     if (nomerModel.isNextMonth || nomerModel.isLastMonth) {
         self.label.hidden = YES;
@@ -93,6 +106,19 @@
         self.contentView.backgroundColor = self.backgroundColor;
     }
 }
+
+- (UIImageView *)imageView{
+    if(!_imageView){
+        _imageView = [[UIImageView alloc] initWithFrame:self.label.frame];
+        _imageView.contentMode = UIViewContentModeScaleAspectFill;
+        _imageView.clipsToBounds = YES;
+        UIView *mbV = [[UIView alloc] initWithFrame:_imageView.bounds];
+        mbV.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:0.2];
+        [_imageView addSubview:mbV];
+    }
+    return _imageView;
+}
+
 
 - (void)setSmallModel:(LXCalendarDayModel *)smallModel{
     _smallModel = smallModel;

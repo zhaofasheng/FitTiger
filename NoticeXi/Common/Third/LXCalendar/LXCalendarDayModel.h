@@ -66,4 +66,5 @@
 
 @property (nonatomic, strong) NSString *collection;//贴贴数量
 @property (nonatomic, strong) NSString *voice;//心情数量
+@property (nonatomic, strong) NSString *img_url;
 @end

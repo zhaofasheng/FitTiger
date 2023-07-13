@@ -18,17 +18,19 @@
 #import "NoticeClipImage.h"
 #import "NewReplyVoiceView.h"
 @interface NoticerTopicSearchResultNewController ()<LCActionSheetDelegate,NoticeWhiteNewVoiceListClickDelegate,NoticeRecordDelegate,NewSendTextDelegate>
-
+@property (nonatomic, strong) FSCustomButton *likeTopicBtn;
 @property (nonatomic, assign) BOOL isDown;  //YES  下拉
 @property (nonatomic, assign) NSInteger page;
 @property (nonatomic, strong) NSString *lastId;
 @property (nonatomic, strong) UILabel *numL;
 @property (nonatomic, assign) BOOL isNew;
+@property (nonatomic, assign) BOOL isCollection;
 @property (nonatomic, assign) BOOL oldType;
 @property (nonatomic, strong) NoticeVoiceListModel *priModel;
 @property (nonatomic, strong) NoticeVoiceListModel *oldModel;
 @property (nonatomic, strong) NoticeVoiceListModel *hsVoiceM;
 @property (nonatomic, strong) UILabel *topicL;
+@property (nonatomic, strong) UIView *headV;
 @end
 
 @implementation NoticerTopicSearchResultNewController
@@ -68,7 +70,7 @@
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DR_SCREEN_WIDTH, 30+6+17+10)];
     self.tableView.tableHeaderView = headerView;
-    
+    self.headV = headerView;
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20,10, 20, 20)];
     imageView.image = UIImageNamed(@"Image_huatitu");
     [headerView addSubview:imageView];
@@ -87,6 +89,20 @@
     
 
     self.view.backgroundColor = [UIColor colorWithHexString:@"#F7F8FC"];
+}
+
+- (FSCustomButton *)likeTopicBtn{
+    if(!_likeTopicBtn){
+        _likeTopicBtn = [[FSCustomButton alloc] initWithFrame:CGRectMake(DR_SCREEN_WIDTH-66-15, (self.headV.frame.size.height-24)/2, 66, 24)];
+        _likeTopicBtn.titleLabel.font = TWOTEXTFONTSIZE;
+        [_likeTopicBtn setTitle:@"收藏话题" forState:UIControlStateNormal];
+        [_likeTopicBtn setTitleColor:[UIColor colorWithHexString:@"#456DA0"] forState:UIControlStateNormal];
+        [_likeTopicBtn setImage:UIImageNamed(@"img_sctoipc") forState:UIControlStateNormal];
+        _likeTopicBtn.buttonImagePosition = FSCustomButtonImagePositionLeft;
+        [_likeTopicBtn addTarget:self action:@selector(likeTopic) forControlEvents:UIControlEventTouchUpInside];
+        [self.headV addSubview:_likeTopicBtn];
+    }
+    return _likeTopicBtn;
 }
 
 - (void)setTopicName:(NSString *)topicName{
@@ -123,13 +139,42 @@
     }];
 }
 
+- (void)likeTopic{
+    if(!self.topicName){
+        return;
+    }
+    //
+    [self showHUD];
+    NSMutableDictionary *parm = [[NSMutableDictionary alloc] init];
+    [parm setObject:self.isCollection?@"2":@"1" forKey:@"type"];
+    [parm setObject:self.topicName forKey:@"topicName"];
+    [[DRNetWorking shareInstance] requestNoNeedLoginWithPath:@"topicCollection" Accept:@"application/vnd.shengxi.v5.5.3+json" isPost:YES parmaer:parm page:0 success:^(NSDictionary *dict, BOOL success) {
+        if (success) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTICEREFRESHTOPICNOTICE" object:nil];
+            self.isCollection = self.isCollection?NO:YES;
+            if(self.isCollection){
+                [self.likeTopicBtn setTitle:@"已收藏" forState:UIControlStateNormal];
+                [self.likeTopicBtn setTitleColor:[UIColor colorWithHexString:@"#8A8F99"] forState:UIControlStateNormal];
+                [self.likeTopicBtn setImage:UIImageNamed(@"img_sctoipcn") forState:UIControlStateNormal];
+            }else{
+                [self.likeTopicBtn setTitle:@"收藏话题" forState:UIControlStateNormal];
+                [self.likeTopicBtn setTitleColor:[UIColor colorWithHexString:@"#456DA0"] forState:UIControlStateNormal];
+                [self.likeTopicBtn setImage:UIImageNamed(@"img_sctoipc") forState:UIControlStateNormal];
+            }
+        }
+        [self hideHUD];
+    } fail:^(NSError *error) {
+        [self hideHUD];
+    }];
+}
+
 - (void)request{
     
     NSString *url = nil;
     if (!self.topicId) {
         self.topicId = @"0";
     }
-    
+
     NSString *topName = [self.topicName stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"`#%^{}\"[]|\\<>"]];
     if (self.isDown) {
         [self reSetPlayerData];
@@ -156,7 +201,16 @@
             NoticeMJIDModel *allM = [NoticeMJIDModel mj_objectWithKeyValues:dict[@"data"]];
             NSString *num = allM.total;
             NSString *str = [NSString stringWithFormat:@"%d%@",num.intValue,[NoticeTools getLocalStrWith:@"search.num"]];
-            
+            self.isCollection = allM.is_collcetion.boolValue;
+            if(allM.is_collcetion.boolValue){
+                [self.likeTopicBtn setTitle:@"已收藏" forState:UIControlStateNormal];
+                [self.likeTopicBtn setTitleColor:[UIColor colorWithHexString:@"#8A8F99"] forState:UIControlStateNormal];
+                [self.likeTopicBtn setImage:UIImageNamed(@"img_sctoipcn") forState:UIControlStateNormal];
+            }else{
+                [self.likeTopicBtn setTitle:@"收藏话题" forState:UIControlStateNormal];
+                [self.likeTopicBtn setTitleColor:[UIColor colorWithHexString:@"#456DA0"] forState:UIControlStateNormal];
+                [self.likeTopicBtn setImage:UIImageNamed(@"img_sctoipc") forState:UIControlStateNormal];
+            }
             if (self.isDown == YES) {
                 self.numL.attributedText = [DDHAttributedMode setColorString:str setColor:[UIColor colorWithHexString:@"#25262E"] setLengthString:num beginSize:0];
                 self.isPushMoreToPlayer = NO;

@@ -21,5 +21,6 @@
 @property(nonatomic,strong)LXCalendarDayModel *choiceModel;
 @property (nonatomic, strong) NoticeTieTieModel *currentTieTieModel;
 @property (nonatomic, strong) NSMutableArray *netDataArr;
+@property (nonatomic, strong) UIImageView *imageView;
 
 @end

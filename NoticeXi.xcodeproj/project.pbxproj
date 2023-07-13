@@ -1257,6 +1257,8 @@
 		A44AAA402178861500D1833B /* NoticeXiUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = A44AAA3F2178861500D1833B /* NoticeXiUITests.m */; };
 		A451DBFE23853C2500D9048F /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A451DBFD23853C2500D9048F /* MediaPlayer.framework */; };
 		A457329A2A5E46FB0029C4CB /* NoticeUserBokeListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A45732992A5E46FB0029C4CB /* NoticeUserBokeListController.swift */; };
+		A457329F2A5FA9580029C4CB /* NoticeMorelikeTopicController.m in Sources */ = {isa = PBXBuildFile; fileRef = A457329E2A5FA9580029C4CB /* NoticeMorelikeTopicController.m */; };
+		A45732A22A5FD7B30029C4CB /* NoticeTieTieRliDayVoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = A45732A12A5FD7B30029C4CB /* NoticeTieTieRliDayVoiceController.m */; };
 		A45957C62A4001860017A852 /* NoticeSuperMangerClickPersongController.m in Sources */ = {isa = PBXBuildFile; fileRef = A45957C52A4001860017A852 /* NoticeSuperMangerClickPersongController.m */; };
 		A45F696D2A26EB6F004A325D /* NoticeBodyController.m in Sources */ = {isa = PBXBuildFile; fileRef = A45F696C2A26EB6F004A325D /* NoticeBodyController.m */; };
 		A45F69702A26ECD7004A325D /* NoticeTeamsController.m in Sources */ = {isa = PBXBuildFile; fileRef = A45F696F2A26ECD7004A325D /* NoticeTeamsController.m */; };
@@ -3642,6 +3644,10 @@
 		A44AAA412178861500D1833B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A451DBFD23853C2500D9048F /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		A45732992A5E46FB0029C4CB /* NoticeUserBokeListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeUserBokeListController.swift; sourceTree = "<group>"; };
+		A457329D2A5FA9580029C4CB /* NoticeMorelikeTopicController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NoticeMorelikeTopicController.h; sourceTree = "<group>"; };
+		A457329E2A5FA9580029C4CB /* NoticeMorelikeTopicController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NoticeMorelikeTopicController.m; sourceTree = "<group>"; };
+		A45732A02A5FD7B30029C4CB /* NoticeTieTieRliDayVoiceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NoticeTieTieRliDayVoiceController.h; sourceTree = "<group>"; };
+		A45732A12A5FD7B30029C4CB /* NoticeTieTieRliDayVoiceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NoticeTieTieRliDayVoiceController.m; sourceTree = "<group>"; };
 		A45957C42A4001860017A852 /* NoticeSuperMangerClickPersongController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NoticeSuperMangerClickPersongController.h; sourceTree = "<group>"; };
 		A45957C52A4001860017A852 /* NoticeSuperMangerClickPersongController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NoticeSuperMangerClickPersongController.m; sourceTree = "<group>"; };
 		A45F696B2A26EB6F004A325D /* NoticeBodyController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NoticeBodyController.h; sourceTree = "<group>"; };
@@ -5812,6 +5818,8 @@
 				A41645A729C9826800446CE7 /* NoticeSendEmilController.m */,
 				A41645AC29C9826800446CE7 /* NoticeTieTieSignController.h */,
 				A416459A29C9826800446CE7 /* NoticeTieTieSignController.m */,
+				A45732A02A5FD7B30029C4CB /* NoticeTieTieRliDayVoiceController.h */,
+				A45732A12A5FD7B30029C4CB /* NoticeTieTieRliDayVoiceController.m */,
 				A41645A129C9826800446CE7 /* NoticeTieTieVoiceController.h */,
 				A41645B029C9826800446CE7 /* NoticeTieTieVoiceController.m */,
 				A41645F829C9826900446CE7 /* NoticeTreeController.h */,
@@ -6125,6 +6133,8 @@
 				A416467729C9826900446CE7 /* NoticeTopicViewController.m */,
 				A416467E29C9826900446CE7 /* NoticeUserTopiceListController.h */,
 				A416467629C9826900446CE7 /* NoticeUserTopiceListController.m */,
+				A457329D2A5FA9580029C4CB /* NoticeMorelikeTopicController.h */,
+				A457329E2A5FA9580029C4CB /* NoticeMorelikeTopicController.m */,
 			);
 			path = Topic;
 			sourceTree = "<group>";
@@ -8295,6 +8305,7 @@
 				A4164DA729C9827200446CE7 /* NoticeDataLikeCell.m in Sources */,
 				A4164C4929C9827000446CE7 /* ZFSDateFormatUtil.m in Sources */,
 				A4164A9A29C9826E00446CE7 /* NoticeChatSaveModel.m in Sources */,
+				A457329F2A5FA9580029C4CB /* NoticeMorelikeTopicController.m in Sources */,
 				A4164D7E29C9827200446CE7 /* NoticeManagerWorldCell.m in Sources */,
 				A4164EBB29C9827500446CE7 /* NoticeBBSComentInputView.m in Sources */,
 				A4164E9529C9827400446CE7 /* NoticeLelveImageView.m in Sources */,
@@ -8863,6 +8874,7 @@
 				A4164DE129C9827300446CE7 /* NoticeVoiceAlbumAndChatAlbumController.m in Sources */,
 				A4164F4029C9827500446CE7 /* BaseTableViewController.m in Sources */,
 				A4164B5C29C9826F00446CE7 /* YZC_AlertView.m in Sources */,
+				A45732A22A5FD7B30029C4CB /* NoticeTieTieRliDayVoiceController.m in Sources */,
 				A4164CAB29C9827100446CE7 /* NoticeRetestHeaderView.m in Sources */,
 				A4164CFF29C9827200446CE7 /* NoticeChatTopicM.m in Sources */,
 				A4164E1429C9827300446CE7 /* NoticeVoiceListButtonView.m in Sources */,

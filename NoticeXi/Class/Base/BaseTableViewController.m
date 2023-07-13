@@ -40,7 +40,6 @@
     [self.view addSubview:self.tableView];
    
     //进入后台停止播放
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopPlayingNotice) name:@"backgroundstopPlayervoice" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getVoiceTopSet:) name:@"SETTOPNOTICENTERION" object:nil];//
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getcancelCollection:) name:@"cancelCollectionNotification" object:nil];//NOLIKEVOICENotification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getCollection:) name:@"collectionNotification" object:nil];
