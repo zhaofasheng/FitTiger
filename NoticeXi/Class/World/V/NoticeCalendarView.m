@@ -196,6 +196,7 @@
                 NoticeTieTieCaleModel *tModel = sameYearArr[0];
                 self.choiceDay.collection = tModel.collection;
                 self.choiceDay.voice = tModel.voice;
+                self.choiceDay.img_url = tModel.img_url;
             }
         }
     }

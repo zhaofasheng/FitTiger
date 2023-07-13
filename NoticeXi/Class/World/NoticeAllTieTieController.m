@@ -91,7 +91,7 @@ static NSString *const DRMerchantCollectionViewCellID = @"DRTILICollectionViewCe
 
 - (void)requestWithYear:(NSString *)year{
     [self showHUD];
-    [[DRNetWorking shareInstance] requestNoNeedLoginWithPath:[NSString stringWithFormat:@"users/voices/calendar?year=%@",year] Accept:@"application/vnd.shengxi.v5.4.5+json" isPost:NO parmaer:nil page:0 success:^(NSDictionary * _Nullable dict, BOOL success) {
+    [[DRNetWorking shareInstance] requestNoNeedLoginWithPath:[NSString stringWithFormat:@"users/voices/calendar?year=%@",year] Accept:@"application/vnd.shengxi.v5.5.3+json" isPost:NO parmaer:nil page:0 success:^(NSDictionary * _Nullable dict, BOOL success) {
         [self hideHUD];
         if (success) {
             NoticeTieTieCaleModel *yearModel = [NoticeTieTieCaleModel mj_objectWithKeyValues:dict[@"data"]];

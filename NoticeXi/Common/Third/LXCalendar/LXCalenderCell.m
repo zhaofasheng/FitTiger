@@ -22,13 +22,13 @@
         self.label.layer.masksToBounds = YES;
         self.label.textAlignment = NSTextAlignmentCenter;
         self.label.font = SIXTEENTEXTFONTSIZE;
-        self.label.backgroundColor = [UIColor colorWithHexString:@"#EBECF0"];
+        self.label.backgroundColor = [[UIColor colorWithHexString:@"#EBECF0"] colorWithAlphaComponent:0];
         self.label.textColor = [UIColor colorWithHexString:@"#A1A7B3"];
         self.label.layer.borderColor = [UIColor colorWithHexString:@"#0099E6"].CGColor;
         
-        [self.contentView addSubview:self.imageView];
-        self.imageView.hidden = YES;
         
+        self.imageView.hidden = YES;
+        [self.contentView addSubview:self.imageView];
         [self.contentView addSubview:self.label];
         
         self.smallTimeL = [[UILabel alloc] initWithFrame:CGRectMake(5, CGRectGetMaxY(self.label.frame)+3, self.label.frame.size.width, 16)];
@@ -37,14 +37,11 @@
         self.smallTimeL.layer.cornerRadius = 8;
         self.smallTimeL.layer.masksToBounds = YES;
         [self.contentView addSubview:self.smallTimeL];
-        
-        self.statusImageView = [[UIImageView alloc] initWithFrame:self.label.frame];
-        self.statusImageView.image = UIImageNamed(@"Image_notietiefurture");
-        [self.contentView addSubview:self.statusImageView];
-        self.statusImageView.hidden = YES;
-        
+    
         self.backgroundColor = [[UIColor colorWithHexString:@"#F7F8FC"] colorWithAlphaComponent:0];
         self.contentView.backgroundColor = self.backgroundColor;
+        
+        
     }
     return self;
 }
@@ -62,14 +59,8 @@
         if (sameYearArr.count) {
             NoticeTieTieCaleModel *tModel = sameYearArr[0];
             nomerModel.voice = tModel.voice;
+            nomerModel.img_url = tModel.img_url;
         }
-    }
-    
-    if(nomerModel.img_url.length > 10){
-        self.imageView.hidden = NO;
-        [self.imageView sd_setImageWithURL:[NSURL URLWithString:nomerModel.img_url]];
-    }else{
-        self.imageView.hidden = YES;
     }
     
     self.label.layer.cornerRadius = 4;
@@ -80,6 +71,14 @@
     }else{
         self.label.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
         self.label.textColor = [UIColor colorWithHexString:@"#25262E"];
+    }
+    
+    if(nomerModel.img_url.length > 10){
+        self.imageView.hidden = NO;
+        self.label.backgroundColor = [[UIColor colorWithHexString:@"#EBECF0"] colorWithAlphaComponent:0];
+        [self.imageView sd_setImageWithURL:[NSURL URLWithString:nomerModel.img_url]];
+    }else{
+        self.imageView.hidden = YES;
     }
     
     if(nomerModel.choiceEd){//选中
@@ -143,11 +142,12 @@
     if (self.netDataArr.count  && !smallModel.voice.intValue) {
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"day == %@ && month == %@  && year = %@",smallModel.dayName,smallModel.monthName,smallModel.yearName];//谓词过滤查找数组中年份相同的数据,这里找到年份相同的数据 "yearName"为数组里面的属性值key，必须为字符串
         NSArray *sameYearArr = [self.netDataArr filteredArrayUsingPredicate:predicate];
+    
         if (sameYearArr.count) {
             NoticeTieTieCaleModel *tModel = sameYearArr[0];
             smallModel.voice = tModel.voice;
-            
         }
+      
     }
     
     if (smallModel.voice.intValue) {

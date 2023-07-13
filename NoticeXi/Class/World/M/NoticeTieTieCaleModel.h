@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *day;//日期天
 @property (nonatomic, strong) NSString *collection;
 @property (nonatomic, strong) NSString *voice;
-
+@property (nonatomic, strong) NSString *img_url;
 
 @end
 
