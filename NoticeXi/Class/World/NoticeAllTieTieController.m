@@ -99,7 +99,7 @@ static NSString *const DRMerchantCollectionViewCellID = @"DRTILICollectionViewCe
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"yearName == %@",yearModel.year];//谓词过滤查找数组中年份相同的数据,这里找到年份相同的数据 "yearName"为数组里面的属性值key，必须为字符串
             NSArray *sameYearArr = [self.monthArr filteredArrayUsingPredicate:predicate];
            
-            for (LXCalendarMonthModel *mondateM in sameYearArr) {//这里for循环打印为了方便看效果，实际代码中用不上
+            for (LXCalendarMonthModel *mondateM in sameYearArr) {
                 for (NoticeTieTieCaleModel *monsM in yearModel.monthModels) {
                     if (mondateM.month == monsM.month.intValue) {
                         mondateM.daysModel = monsM.dayModels;

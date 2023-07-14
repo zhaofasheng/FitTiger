@@ -72,13 +72,12 @@
         self.label.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
         self.label.textColor = [UIColor colorWithHexString:@"#25262E"];
     }
-    
-    if(nomerModel.img_url.length > 10){
+
+    self.imageView.hidden = YES;
+    if(nomerModel.img_url.length > 10 && nomerModel.img_url){
         self.imageView.hidden = NO;
         self.label.backgroundColor = [[UIColor colorWithHexString:@"#EBECF0"] colorWithAlphaComponent:0];
         [self.imageView sd_setImageWithURL:[NSURL URLWithString:nomerModel.img_url]];
-    }else{
-        self.imageView.hidden = YES;
     }
     
     if(nomerModel.choiceEd){//选中
@@ -96,6 +95,7 @@
     self.userInteractionEnabled = self.isCanTap?YES: NO;
     if (nomerModel.isNextMonth || nomerModel.isLastMonth) {
         self.label.hidden = YES;
+        _imageView.hidden = YES;
     }else{
         self.label.hidden = NO;
     }
@@ -111,6 +111,7 @@
         _imageView = [[UIImageView alloc] initWithFrame:self.label.frame];
         _imageView.contentMode = UIViewContentModeScaleAspectFill;
         _imageView.clipsToBounds = YES;
+        _imageView.layer.cornerRadius = 4;
         UIView *mbV = [[UIView alloc] initWithFrame:_imageView.bounds];
         mbV.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:0.2];
         [_imageView addSubview:mbV];

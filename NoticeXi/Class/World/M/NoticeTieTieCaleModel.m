@@ -28,6 +28,7 @@
         self.dayModels = [[NSMutableArray alloc] init];
         for (NSDictionary *dayDic in days) {
             NoticeTieTieCaleModel *dayModel = [NoticeTieTieCaleModel mj_objectWithKeyValues:dayDic];
+      
             [self.dayModels addObject:dayModel];
         }
     }
