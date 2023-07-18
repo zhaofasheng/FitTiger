@@ -29,10 +29,12 @@
 @property (nonatomic, strong) NSMutableArray *localdataArr;
 @property (nonatomic, strong) UIImageView *joinBtn;
 @property (nonatomic, assign) BOOL canLoad;
-@property (nonatomic, strong) NoticeNoReandView *readView;
 @property (nonatomic, assign) BOOL isDown;//YES  下拉
 @property (nonatomic, strong) NSString *lastId;
 @property (nonatomic, assign) BOOL isFirst;
+@property (nonatomic, assign) NSInteger newMsgNum;
+@property (nonatomic, strong) UIView *newsessageView;
+@property (nonatomic, strong) UILabel *newmessageL;
 @property (nonatomic, strong) UIView *moreMessageView;
 @property (nonatomic, strong) UILabel *messageL;
 @property (nonatomic, strong) UIView *footView;
@@ -45,7 +47,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.canLoad = YES;
-    
+    self.newMsgNum = 0;
     
     self.navBarView.titleL.text = self.teamModel.title;
     self.navBarView.titleL.textColor = [UIColor colorWithHexString:@"#25262E"];
@@ -101,6 +103,8 @@
     
     //发送音频
     self.teamChatInputView.uploadVoiceBlock = ^(NSString * _Nonnull localPath, NSString * _Nonnull timeLength, NSString * _Nonnull upSuccessPath, BOOL upSuccess,NSString *bucketId) {
+     
+     
         if(upSuccess){
             [weakSelf sendVocieWith:localPath time:timeLength upSuccessPath:upSuccessPath success:upSuccess bucketid:bucketId];
         }else{
@@ -136,6 +140,7 @@
     
     self.teamChatInputView.orignYBlock = ^(CGFloat y) {
         weakSelf.tableView.frame = CGRectMake(0, NAVIGATION_BAR_HEIGHT, DR_SCREEN_WIDTH, y-NAVIGATION_BAR_HEIGHT);
+        weakSelf.canLoad = YES;
         [weakSelf scroToBottom];
     };
     
@@ -688,6 +693,13 @@
         }
         [self.localdataArr addObject:chat];
         [self.tableView reloadData];
+        
+        
+        if(!self.canLoad){
+            self.newMsgNum++;
+            self.newsessageView.hidden = NO;
+            self.newmessageL.text = [NSString stringWithFormat:@"新消息 +%ld",self.newMsgNum > 99?99:self.newMsgNum];
+        }
     }
     
     [self scroToBottom];
@@ -966,12 +978,37 @@
     [self requestWith:url isLocation:YES isUnReadNum:NO chatId:chatId];
 }
 
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    CGPoint offset = scrollView.contentOffset;
+    CGRect bounds = scrollView.bounds;
+    CGSize size = scrollView.contentSize;
+    UIEdgeInsets inset = scrollView.contentInset;
+    float y = offset.y + bounds.size.height - inset.bottom;
+    float h = size.height;
+    
+    if(y > h -50) {
+        self.newMsgNum = 0;
+        self.canLoad = YES;
+        _newsessageView.hidden = YES;
+    }else{
+        self.canLoad = NO;
+    }
+}
+
+
+- (void)newReadTap{
+    _newsessageView.hidden = YES;
+    self.canLoad = YES;
+    [self scroToBottom];
+}
+
 - (void)scroToBottom{
     if (!self.canLoad) {
         return;
     }
-    
-    _readView.hidden = YES;
+    self.newMsgNum = 0;
+    _newsessageView.hidden = YES;
     if (self.dataArr.count) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.dataArr.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     }
@@ -1133,7 +1170,7 @@
 
 - (UIView *)moreMessageView{
     if (!_moreMessageView) {
-        _moreMessageView = [[UIView alloc] initWithFrame:CGRectMake(DR_SCREEN_WIDTH-104, NAVIGATION_BAR_HEIGHT+175, 104, 48)];
+        _moreMessageView = [[UIView alloc] initWithFrame:CGRectMake(DR_SCREEN_WIDTH-104, NAVIGATION_BAR_HEIGHT+125, 104, 48)];
         [self.view addSubview:_moreMessageView];
         _moreMessageView.hidden = YES;
         _moreMessageView.userInteractionEnabled = YES;
@@ -1157,5 +1194,28 @@
     return _moreMessageView;
 }
 
+
+
+- (UIView *)newsessageView{
+    if (!_newsessageView) {
+        _newsessageView = [[UIView alloc] initWithFrame:CGRectMake(DR_SCREEN_WIDTH-104, DR_SCREEN_HEIGHT-self.teamChatInputView.frame.size.height-BOTTOM_HEIGHT-20-48, 104, 48)];
+        [self.view addSubview:_newsessageView];
+        _newsessageView.hidden = YES;
+        _newsessageView.userInteractionEnabled = YES;
+        [_newsessageView setCornerOnLeft:24];
+        
+        _newmessageL = [[UILabel alloc] initWithFrame:CGRectMake(0, 0,104, 48)];
+        _newmessageL.font = THRETEENTEXTFONTSIZE;
+        _newmessageL.textAlignment = NSTextAlignmentCenter;
+        [_newsessageView addSubview:_newmessageL];
+        _newmessageL.textColor = [UIColor whiteColor];
+        
+        _newsessageView.backgroundColor = [UIColor colorWithHexString:@"#0099E6"];
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(newReadTap)];
+        [_newsessageView addGestureRecognizer:tap];
+    }
+    return _newsessageView;
+}
 
 @end

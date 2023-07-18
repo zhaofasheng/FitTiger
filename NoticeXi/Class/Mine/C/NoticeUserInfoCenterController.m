@@ -312,6 +312,14 @@
         _bokeVC = [[NoticeUserBokeListController alloc] init];
         _bokeVC.userid = self.isOther? self.userId:[NoticeTools getuserId];
         _bokeVC.isOhter = self.isOther;
+        __weak typeof(self) weakSelf = self;
+        _bokeVC.stopPlayMusicBlock = ^(BOOL stop) {
+           
+            if (weakSelf.navHeaderView.currentModel.status == 1) {
+                [weakSelf.navHeaderView playTap];
+            }
+            [weakSelf.navHeaderView.audioPlayer stopPlaying];
+        };
     }
     return _bokeVC;
 }

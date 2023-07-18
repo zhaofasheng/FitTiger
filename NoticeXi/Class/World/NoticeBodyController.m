@@ -43,7 +43,7 @@
     [super viewDidLoad];
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view.backgroundColor = [[UIColor colorWithHexString:@"#F7F8FC"] colorWithAlphaComponent:1];
-
+ 
     UIButton *msgBtn = [[UIButton alloc] initWithFrame:CGRectMake(DR_SCREEN_WIDTH-15-24, STATUS_BAR_HEIGHT+(NAVIGATION_BAR_HEIGHT-STATUS_BAR_HEIGHT-24)/2, 24, 24)];
     [msgBtn setBackgroundImage:UIImageNamed(@"msgClick_imgw") forState:UIControlStateNormal];
     [self.menuView addSubview:msgBtn];
@@ -172,6 +172,18 @@
         _teamsVC = [[NoticeTeamsController alloc] init];
     }
     return _teamsVC;
+}
+
+- (void)changeSelectGroup{
+    self.selectIndex = 1;
+    [NoticeComTools removeWithKey:@"groupMsg"];
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    if([[NoticeComTools getInputWithKey:@"groupMsg"] boolValue]){
+        [self changeSelectGroup];
+    }
 }
 
 @end

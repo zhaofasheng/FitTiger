@@ -60,6 +60,15 @@
     NoticeTeamChatModel *chat = [NoticeTeamChatModel mj_objectWithKeyValues:message.data];
 
     if ([message.action isEqualToString:@"revoke"] || [message.action isEqualToString:@"delete"]) {//撤回消息
+        for (NoticeGroupListModel *team in self.dataArr) {
+            if([team.teamId isEqualToString:chat.mass_id]){
+                if(team.lastMsgModel){
+                    team.lastMsgModel.status = [message.action isEqualToString:@"revoke"]? @"4":@"3";
+                }
+                [self.tableView reloadData];
+                break;
+            }
+        }
         return;
     }
     

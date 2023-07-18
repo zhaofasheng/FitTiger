@@ -50,7 +50,7 @@
         
         UIImageView *backImageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 12, DR_SCREEN_WIDTH-40, 472)];
         backImageView.image = UIImageNamed(@"playvoice_backsimg");
-        [backImageView setAllCorner:5];
+        [backImageView setAllCorner:15];
         backImageView.userInteractionEnabled = YES;
         [self.headerView addSubview:backImageView];
         self.cdplayView = backImageView;
@@ -274,10 +274,7 @@
         _bgmChoiceView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0];
         _bgmChoiceView.hidden = YES;
         
-        _bgmChoiceView.layer.shadowColor = [UIColor blackColor].CGColor;
-        _bgmChoiceView.layer.shadowOpacity = 0.8f;
-        _bgmChoiceView.layer.shadowRadius = 4.f;
-        _bgmChoiceView.layer.shadowOffset = CGSizeMake(4,4);
+        
     }
     return _bgmChoiceView;
 }

@@ -82,11 +82,9 @@ static NSString *const DRMerchantCollectionViewCellID = @"DRTILICollectionViewCe
         [self.merchantCollectionView scrollToItemAtIndexPath:nextIndexPath atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
     }
 
-    
     for (NSInteger i = otherMonth.year; i <= todayMonth.year; i++) {
         [self requestWithYear:[NSString stringWithFormat:@"%ld",i]];
     }
-    
 }
 
 - (void)requestWithYear:(NSString *)year{

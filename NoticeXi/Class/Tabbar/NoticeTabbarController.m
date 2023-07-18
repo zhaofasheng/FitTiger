@@ -240,7 +240,8 @@
     if (![NoticeSaveModel getUserInfo]) {
         return;
     }
-
+//
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeSelectGroup) name:@"GROUPMASSAGENOTICE" object:nil];//社团消息推送
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(leaderTap:) name:@"NOTICELEAERTAPNOTICE" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshUserInfo) name:@"REFRESHUUSERINFOFORNOTICATION" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeSelect:) name:@"CHANGETHEROOTSELECT" object:nil];
@@ -862,6 +863,11 @@ static NSInteger lastIdx = 0;
         [self axcAE_TabBar:self.axcTabBar selectIndex:1];
     }
     
+}
+
+- (void)changeSelectGroup{
+    
+    [self axcAE_TabBar:self.axcTabBar selectIndex:1];
 }
 
 

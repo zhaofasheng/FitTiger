@@ -190,6 +190,7 @@
     [nav.topViewController.navigationController.view.layer addAnimation:test forKey:@"pushanimation"];
     
     if (model.push_type.intValue == 10) {//私聊
+
         NoticeSCViewController *vc = [[NoticeSCViewController alloc] init];
         vc.toUser = [NSString stringWithFormat:@"%@%@",socketADD,model.push_user_id];
         vc.toUserId = model.push_user_id;
@@ -306,6 +307,9 @@
     }else if (model.push_type.intValue ==77674){
         NoticeHasServeredController *ctl = [[NoticeHasServeredController alloc] init];
         [[NoticeTools getTopViewController].navigationController pushViewController:ctl animated:NO];
+    }else if (model.push_type.intValue ==77700){//社团
+        [NoticeComTools saveInput:@"1" saveKey:@"groupMsg"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GROUPMASSAGENOTICE" object:nil];
     }
     
     if (@available(iOS 10.0, *)) {

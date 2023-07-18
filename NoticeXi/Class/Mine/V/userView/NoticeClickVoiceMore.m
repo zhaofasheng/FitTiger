@@ -27,9 +27,7 @@
         if ([model.subUserModel.userId isEqualToString:@"1"]) {
             arr = @[model.is_top.boolValue?[NoticeTools getLocalStrWith:@"more.canzd"] :[NoticeTools getLocalStrWith:@"more.zdvocie"],[NoticeTools getLocalStrWith:@"sendTextt.reSend"],[NoticeTools getLocalStrWith:@"more.addzj"],model.is_shared.intValue?[NoticeTools getLocalStrWith:@"mineme.canceltd"]:[NoticeTools getLocalStrWith:@"em.td"],[NoticeTools getLocalStrWith:@"groupManager.del"],model.topAt.intValue? @"取消置顶为小二有话说":@"置顶为小二有话说"];
         }
-        if (model.is_private.boolValue) {
-            arr = @[[NoticeTools getLocalStrWith:@"mineme.cancelonglyself"],[NoticeTools getLocalStrWith:@"groupManager.del"]];
-        }
+
     }else{
         arr = @[model.is_top.boolValue?[NoticeTools getLocalStrWith:@"more.canzd"] :[NoticeTools getLocalStrWith:@"more.zdvocie"],[NoticeTools getLocalStrWith:@"sendTextt.reSend"],[NoticeTools getLocalStrWith:@"more.addzj"],[NoticeTools getLocalStrWith:@"py.share"],[NoticeTools getLocalStrWith:@"n.setfanwei"],model.note_num.intValue?[NSString stringWithFormat:@"%@ %@",[NoticeTools getLocalStrWith:@"more.saytoself"],model.note_num]: [NoticeTools getLocalStrWith:@"more.saytoself"],[NoticeTools getLocalStrWith:@"groupManager.del"]];
         if ([model.subUserModel.userId isEqualToString:@"1"]) {

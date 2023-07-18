@@ -65,6 +65,15 @@
     self.msgL.hidden = groupModel.lastMsgModel.contentType?NO:YES;
     [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:groupModel.lastMsgModel.fromUserM.avatar_url] placeholderImage:[UIImage imageNamed:@"Image_jynohe"]];
     self.msgL.text = groupModel.lastMsgModel.contentType==1?groupModel.lastMsgModel.content:(groupModel.lastMsgModel.contentType==2?@"「图片」":@"「语音」");
+    
+    if ([groupModel.lastMsgModel.status isEqualToString:@"4"]) {
+        self.msgL.text = @"消息已撤回";
+    }
+    
+    if ([groupModel.lastMsgModel.status isEqualToString:@"3"]) {
+        self.msgL.text = @"消息已删除";
+    }
+    
     if (groupModel.lastMsgModel.contentType > 3) {
         self.msgL.text = @"请更新到最新版本查看";
     }

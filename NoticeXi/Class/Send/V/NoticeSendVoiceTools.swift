@@ -22,7 +22,7 @@ class NoticeSendVoiceTools: UIView {
         line.backgroundColor = UIColor(hexString: "#F0F1F5")
         self.addSubview(line)
         
-        self.imgButton.frame = CGRect(x: 20, y: 4, width: 30, height: 46)
+        self.imgButton.frame = CGRect(x: 20, y: 2, width: 30, height: 46)
         self.imgButton.setImage(UIImage(named: "senimgv_img"), for: .normal)
         self.imgButton.titleLabel?.font = UIFont.systemFont(ofSize: 10)
         self.imgButton.setTitle(NoticeTools.getLocalStr(with: "group.imgs"), for: .normal)
@@ -30,7 +30,7 @@ class NoticeSendVoiceTools: UIView {
         self.imgButton.buttonImagePosition = FSCustomButtonImagePositionTop
         self.addSubview(self.imgButton)
         
-        self.topicButton.frame = CGRect(x: 84, y: 4, width: 30, height: 46)
+        self.topicButton.frame = CGRect(x: 84, y: 2, width: 30, height: 46)
         self.topicButton.setImage(UIImage(named: "senTopicv_img"), for: .normal)
         self.topicButton.titleLabel?.font = UIFont.systemFont(ofSize: 10)
         self.topicButton.setTitle(NoticeTools.getLocalStr(with: "search.topic"), for: .normal)
@@ -38,7 +38,7 @@ class NoticeSendVoiceTools: UIView {
         self.topicButton.buttonImagePosition = FSCustomButtonImagePositionTop
         self.addSubview(self.topicButton)
         
-        self.bgmButton.frame = CGRect(x: 148, y: 4, width: 30, height: 46)
+        self.bgmButton.frame = CGRect(x: 148, y: 2, width: 30, height: 46)
         self.bgmButton.setImage(UIImage(named: "senbgmv_img"), for: .normal)
         self.bgmButton.titleLabel?.font = UIFont.systemFont(ofSize: 10)
         self.bgmButton.setTitle("BGM", for: .normal)

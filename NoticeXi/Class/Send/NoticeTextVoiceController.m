@@ -291,7 +291,7 @@
     //缓存进来的
     if (self.isSave) {
         [self setVoiceOpen:self.saveModel.voiceIdentity.intValue-1];
-        [self.toolsView.bgmButton setBackgroundImage:UIImageNamed(@"toool_statusn") forState:UIControlStateNormal];
+        [self.toolsView.bgmButton setImage:UIImageNamed(@"toool_statusn") forState:UIControlStateNormal];
         self.text = self.saveModel.textContent;
         
         self.textView.text = self.text;
@@ -626,9 +626,9 @@
     NSDictionary *userInfo = notification.userInfo;
     CGRect keyboardF = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     if (!self.isRecodering) {
-        self.toolsView.frame = CGRectMake(0, DR_SCREEN_HEIGHT-keyboardF.size.height-self.toolsView.frame.size.height-10, DR_SCREEN_HEIGHT, 50);
-      
+        self.toolsView.frame = CGRectMake(0, DR_SCREEN_HEIGHT-keyboardF.size.height-self.toolsView.frame.size.height-10, DR_SCREEN_HEIGHT, 60);
     }
+    
     self.keyBordHeight = keyboardF.size.height;
     _plaL.frame = CGRectMake(19, 15, DR_SCREEN_WIDTH-19-5, 14);
     self.imageViewS.frame = CGRectMake(15, -self.imageViewS.frame.size.height-50-10, self.imageViewS.frame.size.width, self.imageViewS.frame.size.width);

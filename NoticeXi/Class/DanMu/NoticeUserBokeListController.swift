@@ -18,6 +18,7 @@ class NoticeUserBokeListController: BaseTableViewController,JXPagerViewListViewD
     public var collectionView : UICollectionView?
     var isDwon = true
     var danmuArr = [NoticeDanMuModel]()
+    @objc public var stopPlayMusicBlock :((_ stop :Bool) ->Void)?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white.withAlphaComponent(0)
@@ -54,7 +55,7 @@ class NoticeUserBokeListController: BaseTableViewController,JXPagerViewListViewD
     }
     
     func request(){
-        var url = String(format: "user/podcast/%@?pageNo=%ld", self.userid!,self.pageNo)
+        let url = String(format: "user/podcast/%@?pageNo=%ld", self.userid!,self.pageNo)
   
         DRNetWorking.shareInstance()?.requestNoNeedLogin(withPath: url, accept: "application/vnd.shengxi.v5.5.3+json", isPost: false, parmaer: nil, page: 0, success: { [weak self] (dict, success) in
             self?.collectionView?.mj_header.endRefreshing()
@@ -75,18 +76,17 @@ class NoticeUserBokeListController: BaseTableViewController,JXPagerViewListViewD
                     self?.danmuArr.append(model!)
                 }
                 
-             
+                
                 self?.collectionView?.reloadData()
             }
- 
-            }, fail: {[weak self] (error) in
-               
-                self?.collectionView?.mj_header.endRefreshing()
-                self?.collectionView?.mj_footer.endRefreshing()
+        }, fail: {[weak self] (error) in
+            self?.collectionView?.mj_header.endRefreshing()
+            self?.collectionView?.mj_footer.endRefreshing()
         })
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.stopPlayMusicBlock?(true)
         let bokeM = self.danmuArr[indexPath.row]
         let ctl = NoticeDanMuController()
         ctl.bokeModel = bokeM

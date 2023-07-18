@@ -9,6 +9,7 @@
 #import "NoticeCollcetionVoiceCell.h"
 #import "NoticeBingGanListView.h"
 #import "NoticerTopicSearchResultNewController.h"
+#import "UIView+Shadow.h"
 @implementation NoticeCollcetionVoiceCell
 
 - (instancetype)initWithFrame:(CGRect)frame{
@@ -39,6 +40,8 @@
         self.voicePlayBackImageView.image = UIImageNamed(@"voice_cdimg");
         [self.contentView addSubview:self.voicePlayBackImageView];
         self.voicePlayBackImageView.userInteractionEnabled = YES;
+        [self.voicePlayBackImageView setButtonShadowWithbuttonRadius:self.voicePlayBackImageView.frame.size.width];
+        
         self.voiceShowImageView.hidden = YES;
         
         self.voiceShowImageView = [[UIImageView alloc] initWithFrame:CGRectMake(29, 29, self.voicePlayBackImageView.frame.size.width-58, self.voicePlayBackImageView.frame.size.width-58)];
